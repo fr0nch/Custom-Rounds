@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/untrustedmodders/plugify/refs/heads/main/schemas/plugin.schema.json",
   "name": "customrounds",
-  "version": "1.2.0",
+  "version": "1.0.1",
   "description": "Provides feature for building custom rounds",
   "author": "Fr4nch",
   "website": "https://github.com/fr0nch",
