@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/fr0nch/Custom-Rounds/compare/v1.1.0...v1.2.0) (2025-11-30)
+
+
+### Features
+
+* add verification step for generated files in CI workflow ([f1212bd](https://github.com/fr0nch/Custom-Rounds/commit/f1212bd6e853bf4ef663d2bc15dedce2abb96fa1))
+
 ## [1.1.0](https://github.com/fr0nch/Custom-Rounds/compare/v1.0.1...v1.1.0) (2025-11-30)
 
 
