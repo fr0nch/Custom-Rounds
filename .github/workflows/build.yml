@@ -46,28 +46,38 @@ jobs:
         id: extract_version
         run: |
           VERSION=""
+          FROM_CHORE=false
           if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.pull_request.title }}" == chore* ]]; then
             # Извлекаем версию из "chore(main): release customrounds v1.2.3"
             VERSION=$(echo "${{ github.event.pull_request.title }}" | grep -oP 'v\K[0-9]+\.[0-9]+\.[0-9]+' || echo "")
+            if [ -n "$VERSION" ]; then
+              FROM_CHORE=true
+            else
+              # Если не найдена в PR title, берем из manifest как fallback
+              VERSION=$(jq -r '.[]' .github/release-please-manifest.json)
+            fi
+          else
+            # При пуше берем текущую версию из manifest
+            VERSION=$(jq -r '.[]' .github/release-please-manifest.json)
           fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "has_version=$([[ -n "$VERSION" ]] && echo "true" || echo "false")" >> $GITHUB_OUTPUT
-          echo "Extracted version: $VERSION"
+          echo "from_chore=$FROM_CHORE" >> $GITHUB_OUTPUT
+          echo "Extracted version: $VERSION (from_chore: $FROM_CHORE)"
 
       - name: Setup Go
-        if: steps.extract_version.outputs.has_version == 'true'
+        if: steps.extract_version.outputs.from_chore == 'true'
         uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
 
       - name: Run generator
-        if: steps.extract_version.outputs.has_version == 'true'
+        if: steps.extract_version.outputs.from_chore == 'true'
         id: generator
         run: go run generator.go -version="${{ steps.extract_version.outputs.version }}"
 
       - name: Commit generated files
-        if: steps.extract_version.outputs.has_version == 'true'
+        if: steps.extract_version.outputs.from_chore == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -83,6 +93,20 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           config-file: .github/release-please-config.json
           manifest-file: .github/release-please-manifest.json
+
+      - name: Create source code archives
+        if: steps.release.outputs.release_created
+        run: |
+          mkdir -p source-archives
+          zip -r source-archives/source-code-${{ steps.release.outputs.version }}.zip . -x ".git/*" ".github/*" "build/*" ".gitignore" -q
+          tar -czf source-archives/source-code-${{ steps.release.outputs.version }}.tar.gz --exclude='.git' --exclude='.github' --exclude='build' --exclude='.gitignore' .
+
+      - name: Upload source archives to release
+        if: steps.release.outputs.release_created && !env.ACT
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.release.outputs.tag_name }}
+          files: source-archives/*
 
   build:
     needs: setup
