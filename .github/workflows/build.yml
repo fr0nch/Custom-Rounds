@@ -70,6 +70,11 @@ jobs:
           ref: main
           fetch-depth: 0
 
+      - name: Install git
+        run: |
+          apt-get update
+          apt-get install -y git
+
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
@@ -82,12 +87,6 @@ jobs:
 
       - name: Commit generated files
         run: |
-          if [ ! -d .git ]; then
-            git init
-            git remote add origin https://github.com/${{ github.repository }}.git
-            git fetch origin main
-            git checkout main
-          fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add cs2-${{ env.PROJECT_NAME }}.pplugin
