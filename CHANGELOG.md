@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/fr0nch/Custom-Rounds/compare/v1.2.0...v1.2.1) (2025-11-30)
+
+
+### Bug Fixes
+
+* create and upload source code archives in CI workflow ([0a8eaa4](https://github.com/fr0nch/Custom-Rounds/commit/0a8eaa4a0cacd7685fdd672221f44873fec19ac0))
+
 ## [1.2.0](https://github.com/fr0nch/Custom-Rounds/compare/v1.1.0...v1.2.0) (2025-11-30)
 
 
