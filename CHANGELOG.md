@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.7](https://github.com/fr0nch/Custom-Rounds/compare/v1.2.6...v1.2.7) (2025-11-30)
+
+
+### Bug Fixes
+
+* change checkout ([9dee29a](https://github.com/fr0nch/Custom-Rounds/commit/9dee29a5b6a06456280784a6eb7baf1974613073))
+* change checkout ([5ac3827](https://github.com/fr0nch/Custom-Rounds/commit/5ac3827f4f460dd967bc8e34667b4356c81fc4da))
+* change checkout ([94b6587](https://github.com/fr0nch/Custom-Rounds/commit/94b6587fd64e5837641e2d28886f5ef8afe01b22))
+
 ## [1.2.6](https://github.com/fr0nch/Custom-Rounds/compare/v1.2.5...v1.2.6) (2025-11-30)
 
 
