@@ -78,7 +78,7 @@ jobs:
 
       - name: Run generator
         id: generator
-        run: go run generator.go -version="${{ steps.release.outputs.version }}"
+        run: go run generator.go -version="${{ needs.setup.outputs.version }}"
 
       - name: Commit generated files
         run: |
