@@ -1,0 +1,173 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - LICENSE
+      - README.md
+      - '*.md'
+      - 'docs/**'
+  pull_request:
+    paths-ignore:
+      - LICENSE
+      - README.md
+      - '*.md'
+      - 'docs/**'
+
+env:
+  PROJECT_NAME: customrounds
+  GO_VERSION: '1.25'
+
+jobs:
+  setup:
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      repository-projects: write
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+      version: ${{ steps.release.outputs.version }}
+      github_sha_short: ${{ steps.vars.outputs.github_sha_short }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set output variables
+        id: vars
+        run: echo "github_sha_short=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+
+      - name: Generate Release
+        if: ${{ !env.ACT }}
+        uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          config-file: .github/release-please-config.json
+          manifest-file: .github/release-please-manifest.json
+
+      - name: Setup Go
+        if: steps.release.outputs.release_created
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+
+      - name: Run generator
+        if: steps.release.outputs.release_created
+        id: generator
+        run: go run generator.go -version="${{ steps.release.outputs.version }}"
+
+      - name: Commit generated files
+        if: steps.release.outputs.release_created
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add cs2-${{ env.PROJECT_NAME }}.pplugin
+          git diff --staged --quiet || git commit -m "chore: generate files [skip ci]"
+          git push
+
+  build:
+    needs: setup
+    if: ${{ needs.setup.outputs.release_created }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            goos: linux
+            goarch: amd64
+            platform: linux64
+            ext: .so
+            container: registry.gitlab.steamos.cloud/steamrt/sniper/sdk:latest
+    runs-on: ${{ matrix.os }}
+    container: ${{ matrix.container }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Download generated files
+        uses: actions/download-artifact@v4
+        with:
+          name: generated-files
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+
+
+      - name: Get dependencies
+        run: go mod download
+
+      - name: Build
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: 1
+        run: |
+          go build -v -buildmode=c-shared -ldflags="-s -w" -buildvcs=false -o libcs2-${{ env.PROJECT_NAME }}${{ matrix.ext }}
+
+      - name: Prepare artifacts
+        shell: bash
+        run: |
+          mkdir -p build/${{ matrix.platform }}/cs2-${{ env.PROJECT_NAME }}/bin
+          cp libcs2-${{ env.PROJECT_NAME }}${{ matrix.ext }} build/${{ matrix.platform }}/cs2-${{ env.PROJECT_NAME }}/bin/
+          if [ -f cs2-${{ env.PROJECT_NAME }}.pplugin ]; then
+            cp cs2-${{ env.PROJECT_NAME }}.pplugin build/${{ matrix.platform }}/cs2-${{ env.PROJECT_NAME }}/
+          fi
+          if [ -f README.md ]; then
+            cp README.md build/${{ matrix.platform }}/cs2-${{ env.PROJECT_NAME }}/
+          fi
+          if [ -f LICENSE ]; then
+            cp LICENSE build/${{ matrix.platform }}/cs2-${{ env.PROJECT_NAME }}/
+          fi
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.PROJECT_NAME }}-${{ matrix.platform }}-${{ needs.setup.outputs.github_sha_short }}
+          path: build/${{ matrix.platform }}/
+          retention-days: 7
+  package:
+    needs: ["setup", "build"]
+    if: ${{ needs.setup.outputs.release_created }}
+    strategy:
+      matrix:
+        include:
+          - platform: linux64
+            ext: tar.gz
+    runs-on: ubuntu-latest
+    outputs:
+      url: ${{ steps.release.outputs.url }}
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.PROJECT_NAME }}-${{ matrix.platform }}-${{ needs.setup.outputs.github_sha_short }}
+          path: artifacts/${{ matrix.platform }}
+
+      - name: Compress build artifacts
+        run: |
+          mkdir -p packages
+          cd artifacts/${{ matrix.platform }}
+          if [ "${{ matrix.ext }}" == "zip" ]; then
+            zip -r ../../packages/cs2-${{ env.PROJECT_NAME }}-${{ matrix.platform }}-${{ needs.setup.outputs.tag_name }}.zip cs2-${{ env.PROJECT_NAME }}
+          else
+            tar -czf ../../packages/cs2-${{ env.PROJECT_NAME }}-${{ matrix.platform }}-${{ needs.setup.outputs.tag_name }}.tar.gz cs2-${{ env.PROJECT_NAME }}
+          fi
+
+      - name: Upload release asset
+        if: ${{ !env.ACT }}
+        uses: softprops/action-gh-release@v1
+        id: release
+        with:
+          tag_name: ${{ needs.setup.outputs.tag_name }}
+          files: |
+            packages/*

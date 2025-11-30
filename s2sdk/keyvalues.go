@@ -1,0 +1,590 @@
+package s2sdk
+
+/*
+#include "keyvalues.h"
+#cgo noescape Kv1Create
+#cgo noescape Kv1Destroy
+#cgo noescape Kv1GetName
+#cgo noescape Kv1SetName
+#cgo noescape Kv1FindKey
+#cgo noescape Kv1FindKeyOrCreate
+#cgo noescape Kv1CreateKey
+#cgo noescape Kv1CreateNewKey
+#cgo noescape Kv1AddSubKey
+#cgo noescape Kv1GetFirstSubKey
+#cgo noescape Kv1GetNextKey
+#cgo noescape Kv1GetColor
+#cgo noescape Kv1SetColor
+#cgo noescape Kv1GetInt
+#cgo noescape Kv1SetInt
+#cgo noescape Kv1GetFloat
+#cgo noescape Kv1SetFloat
+#cgo noescape Kv1GetString
+#cgo noescape Kv1SetString
+#cgo noescape Kv1GetPtr
+#cgo noescape Kv1SetPtr
+#cgo noescape Kv1GetBool
+#cgo noescape Kv1SetBool
+#cgo noescape Kv1MakeCopy
+#cgo noescape Kv1Clear
+#cgo noescape Kv1IsEmpty
+*/
+import "C"
+import (
+	"github.com/untrustedmodders/go-plugify"
+	"reflect"
+	"unsafe"
+)
+
+var _ = reflect.TypeOf(0)
+var _ = unsafe.Sizeof(0)
+var _ = plugify.Plugin.Loaded
+
+// Generated with https://github.com/untrustedmodders/plugify-module-golang/blob/main/generator/generator.py from s2sdk (group: keyvalues)
+
+// Kv1Create
+//
+//	@brief Creates a new KeyValues instance
+//
+//	@param setName: The name to assign to this KeyValues instance
+//
+//	@return Pointer to the newly created KeyValues object
+func Kv1Create(setName string) uintptr {
+	var __retVal uintptr
+	__setName := plugify.ConstructString(setName)
+	plugify.Block{
+		Try: func() {
+			__retVal = uintptr(C.Kv1Create((*C.String)(unsafe.Pointer(&__setName))))
+		},
+		Finally: func() {
+			// Perform cleanup.
+			plugify.DestroyString(&__setName)
+		},
+	}.Do()
+	return __retVal
+}
+
+// Kv1Destroy
+//
+//	@brief Destroys a KeyValues instance
+//
+//	@param kv: Pointer to the KeyValues object to destroy
+func Kv1Destroy(kv uintptr) {
+	__kv := C.uintptr_t(kv)
+	C.Kv1Destroy(__kv)
+}
+
+// Kv1GetName
+//
+//	@brief Gets the section name of a KeyValues instance
+//
+//	@param kv: Pointer to the KeyValues object
+//
+//	@return The name of the KeyValues section
+func Kv1GetName(kv uintptr) string {
+	var __retVal string
+	var __retVal_native plugify.PlgString
+	__kv := C.uintptr_t(kv)
+	plugify.Block{
+		Try: func() {
+			__native := C.Kv1GetName(__kv)
+			__retVal_native = *(*plugify.PlgString)(unsafe.Pointer(&__native))
+			// Unmarshal - Convert native data to managed data.
+			__retVal = plugify.GetStringData(&__retVal_native)
+		},
+		Finally: func() {
+			// Perform cleanup.
+			plugify.DestroyString(&__retVal_native)
+		},
+	}.Do()
+	return __retVal
+}
+
+// Kv1SetName
+//
+//	@brief Sets the section name of a KeyValues instance
+//
+//	@param kv: Pointer to the KeyValues object
+//	@param name: The new name to assign to this KeyValues section
+func Kv1SetName(kv uintptr, name string) {
+	__kv := C.uintptr_t(kv)
+	__name := plugify.ConstructString(name)
+	plugify.Block{
+		Try: func() {
+			C.Kv1SetName(__kv, (*C.String)(unsafe.Pointer(&__name)))
+		},
+		Finally: func() {
+			// Perform cleanup.
+			plugify.DestroyString(&__name)
+		},
+	}.Do()
+}
+
+// Kv1FindKey
+//
+//	@brief Finds a key by name
+//
+//	@param kv: Pointer to the KeyValues object to search in
+//	@param keyName: The name of the key to find
+//
+//	@return Pointer to the found KeyValues subkey, or NULL if not found
+func Kv1FindKey(kv uintptr, keyName string) uintptr {
+	var __retVal uintptr
+	__kv := C.uintptr_t(kv)
+	__keyName := plugify.ConstructString(keyName)
+	plugify.Block{
+		Try: func() {
+			__retVal = uintptr(C.Kv1FindKey(__kv, (*C.String)(unsafe.Pointer(&__keyName))))
+		},
+		Finally: func() {
+			// Perform cleanup.
+			plugify.DestroyString(&__keyName)
+		},
+	}.Do()
+	return __retVal
+}
+
+// Kv1FindKeyOrCreate
+//
+//	@brief Finds a key by name or creates it if it doesn't exist
+//
+//	@param kv: Pointer to the KeyValues object to search in
+//	@param keyName: The name of the key to find or create
+//
+//	@return Pointer to the found or newly created KeyValues subkey (never NULL)
+func Kv1FindKeyOrCreate(kv uintptr, keyName string) uintptr {
+	var __retVal uintptr
+	__kv := C.uintptr_t(kv)
+	__keyName := plugify.ConstructString(keyName)
+	plugify.Block{
+		Try: func() {
+			__retVal = uintptr(C.Kv1FindKeyOrCreate(__kv, (*C.String)(unsafe.Pointer(&__keyName))))
+		},
+		Finally: func() {
+			// Perform cleanup.
+			plugify.DestroyString(&__keyName)
+		},
+	}.Do()
+	return __retVal
+}
+
+// Kv1CreateKey
+//
+//	@brief Creates a new subkey with the specified name
+//
+//	@param kv: Pointer to the parent KeyValues object
+//	@param keyName: The name for the new key
+//
+//	@return Pointer to the newly created KeyValues subkey
+func Kv1CreateKey(kv uintptr, keyName string) uintptr {
+	var __retVal uintptr
+	__kv := C.uintptr_t(kv)
+	__keyName := plugify.ConstructString(keyName)
+	plugify.Block{
+		Try: func() {
+			__retVal = uintptr(C.Kv1CreateKey(__kv, (*C.String)(unsafe.Pointer(&__keyName))))
+		},
+		Finally: func() {
+			// Perform cleanup.
+			plugify.DestroyString(&__keyName)
+		},
+	}.Do()
+	return __retVal
+}
+
+// Kv1CreateNewKey
+//
+//	@brief Creates a new subkey with an autogenerated name
+//
+//	@param kv: Pointer to the parent KeyValues object
+//
+//	@return Pointer to the newly created KeyValues subkey
+func Kv1CreateNewKey(kv uintptr) uintptr {
+	var __retVal uintptr
+	__kv := C.uintptr_t(kv)
+	__retVal = uintptr(C.Kv1CreateNewKey(__kv))
+	return __retVal
+}
+
+// Kv1AddSubKey
+//
+//	@brief Adds a subkey to this KeyValues instance
+//
+//	@param kv: Pointer to the parent KeyValues object
+//	@param subKey: Pointer to the KeyValues object to add as a child
+func Kv1AddSubKey(kv uintptr, subKey uintptr) {
+	__kv := C.uintptr_t(kv)
+	__subKey := C.uintptr_t(subKey)
+	C.Kv1AddSubKey(__kv, __subKey)
+}
+
+// Kv1GetFirstSubKey
+//
+//	@brief Gets the first subkey in the list
+//
+//	@param kv: Pointer to the parent KeyValues object
+//
+//	@return Pointer to the first subkey, or NULL if there are no children
+func Kv1GetFirstSubKey(kv uintptr) uintptr {
+	var __retVal uintptr
+	__kv := C.uintptr_t(kv)
+	__retVal = uintptr(C.Kv1GetFirstSubKey(__kv))
+	return __retVal
+}
+
+// Kv1GetNextKey
+//
+//	@brief Gets the next sibling key in the list
+//
+//	@param kv: Pointer to the current KeyValues object
+//
+//	@return Pointer to the next sibling key, or NULL if this is the last sibling
+func Kv1GetNextKey(kv uintptr) uintptr {
+	var __retVal uintptr
+	__kv := C.uintptr_t(kv)
+	__retVal = uintptr(C.Kv1GetNextKey(__kv))
+	return __retVal
+}
+
+// Kv1GetColor
+//
+//	@brief Gets a color value from a key
+//
+//	@param kv: Pointer to the KeyValues object
+//	@param keyName: The name of the key to retrieve the color from
+//	@param defaultValue: The default color value to return if the key is not found
+//
+//	@return The color value as a 32-bit integer (RGBA)
+func Kv1GetColor(kv uintptr, keyName string, defaultValue int32) int32 {
+	var __retVal int32
+	__kv := C.uintptr_t(kv)
+	__keyName := plugify.ConstructString(keyName)
+	__defaultValue := C.int32_t(defaultValue)
+	plugify.Block{
+		Try: func() {
+			__retVal = int32(C.Kv1GetColor(__kv, (*C.String)(unsafe.Pointer(&__keyName)), __defaultValue))
+		},
+		Finally: func() {
+			// Perform cleanup.
+			plugify.DestroyString(&__keyName)
+		},
+	}.Do()
+	return __retVal
+}
+
+// Kv1SetColor
+//
+//	@brief Sets a color value for a key
+//
+//	@param kv: Pointer to the KeyValues object
+//	@param keyName: The name of the key to set the color for
+//	@param value: The color value as a 32-bit integer (RGBA)
+func Kv1SetColor(kv uintptr, keyName string, value int32) {
+	__kv := C.uintptr_t(kv)
+	__keyName := plugify.ConstructString(keyName)
+	__value := C.int32_t(value)
+	plugify.Block{
+		Try: func() {
+			C.Kv1SetColor(__kv, (*C.String)(unsafe.Pointer(&__keyName)), __value)
+		},
+		Finally: func() {
+			// Perform cleanup.
+			plugify.DestroyString(&__keyName)
+		},
+	}.Do()
+}
+
+// Kv1GetInt
+//
+//	@brief Gets an integer value from a key
+//
+//	@param kv: Pointer to the KeyValues object
+//	@param keyName: The name of the key to retrieve the integer from
+//	@param defaultValue: The default value to return if the key is not found
+//
+//	@return The integer value associated with the key, or defaultValue if not found
+func Kv1GetInt(kv uintptr, keyName string, defaultValue int32) int32 {
+	var __retVal int32
+	__kv := C.uintptr_t(kv)
+	__keyName := plugify.ConstructString(keyName)
+	__defaultValue := C.int32_t(defaultValue)
+	plugify.Block{
+		Try: func() {
+			__retVal = int32(C.Kv1GetInt(__kv, (*C.String)(unsafe.Pointer(&__keyName)), __defaultValue))
+		},
+		Finally: func() {
+			// Perform cleanup.
+			plugify.DestroyString(&__keyName)
+		},
+	}.Do()
+	return __retVal
+}
+
+// Kv1SetInt
+//
+//	@brief Sets an integer value for a key
+//
+//	@param kv: Pointer to the KeyValues object
+//	@param keyName: The name of the key to set the integer for
+//	@param value: The integer value to set
+func Kv1SetInt(kv uintptr, keyName string, value int32) {
+	__kv := C.uintptr_t(kv)
+	__keyName := plugify.ConstructString(keyName)
+	__value := C.int32_t(value)
+	plugify.Block{
+		Try: func() {
+			C.Kv1SetInt(__kv, (*C.String)(unsafe.Pointer(&__keyName)), __value)
+		},
+		Finally: func() {
+			// Perform cleanup.
+			plugify.DestroyString(&__keyName)
+		},
+	}.Do()
+}
+
+// Kv1GetFloat
+//
+//	@brief Gets a float value from a key
+//
+//	@param kv: Pointer to the KeyValues object
+//	@param keyName: The name of the key to retrieve the float from
+//	@param defaultValue: The default value to return if the key is not found
+//
+//	@return The float value associated with the key, or defaultValue if not found
+func Kv1GetFloat(kv uintptr, keyName string, defaultValue float32) float32 {
+	var __retVal float32
+	__kv := C.uintptr_t(kv)
+	__keyName := plugify.ConstructString(keyName)
+	__defaultValue := C.float(defaultValue)
+	plugify.Block{
+		Try: func() {
+			__retVal = float32(C.Kv1GetFloat(__kv, (*C.String)(unsafe.Pointer(&__keyName)), __defaultValue))
+		},
+		Finally: func() {
+			// Perform cleanup.
+			plugify.DestroyString(&__keyName)
+		},
+	}.Do()
+	return __retVal
+}
+
+// Kv1SetFloat
+//
+//	@brief Sets a float value for a key
+//
+//	@param kv: Pointer to the KeyValues object
+//	@param keyName: The name of the key to set the float for
+//	@param value: The float value to set
+func Kv1SetFloat(kv uintptr, keyName string, value float32) {
+	__kv := C.uintptr_t(kv)
+	__keyName := plugify.ConstructString(keyName)
+	__value := C.float(value)
+	plugify.Block{
+		Try: func() {
+			C.Kv1SetFloat(__kv, (*C.String)(unsafe.Pointer(&__keyName)), __value)
+		},
+		Finally: func() {
+			// Perform cleanup.
+			plugify.DestroyString(&__keyName)
+		},
+	}.Do()
+}
+
+// Kv1GetString
+//
+//	@brief Gets a string value from a key
+//
+//	@param kv: Pointer to the KeyValues object
+//	@param keyName: The name of the key to retrieve the string from
+//	@param defaultValue: The default string to return if the key is not found
+//
+//	@return The string value associated with the key, or defaultValue if not found
+func Kv1GetString(kv uintptr, keyName string, defaultValue string) string {
+	var __retVal string
+	var __retVal_native plugify.PlgString
+	__kv := C.uintptr_t(kv)
+	__keyName := plugify.ConstructString(keyName)
+	__defaultValue := plugify.ConstructString(defaultValue)
+	plugify.Block{
+		Try: func() {
+			__native := C.Kv1GetString(__kv, (*C.String)(unsafe.Pointer(&__keyName)), (*C.String)(unsafe.Pointer(&__defaultValue)))
+			__retVal_native = *(*plugify.PlgString)(unsafe.Pointer(&__native))
+			// Unmarshal - Convert native data to managed data.
+			__retVal = plugify.GetStringData(&__retVal_native)
+		},
+		Finally: func() {
+			// Perform cleanup.
+			plugify.DestroyString(&__retVal_native)
+			plugify.DestroyString(&__keyName)
+			plugify.DestroyString(&__defaultValue)
+		},
+	}.Do()
+	return __retVal
+}
+
+// Kv1SetString
+//
+//	@brief Sets a string value for a key
+//
+//	@param kv: Pointer to the KeyValues object
+//	@param keyName: The name of the key to set the string for
+//	@param value: The string value to set
+func Kv1SetString(kv uintptr, keyName string, value string) {
+	__kv := C.uintptr_t(kv)
+	__keyName := plugify.ConstructString(keyName)
+	__value := plugify.ConstructString(value)
+	plugify.Block{
+		Try: func() {
+			C.Kv1SetString(__kv, (*C.String)(unsafe.Pointer(&__keyName)), (*C.String)(unsafe.Pointer(&__value)))
+		},
+		Finally: func() {
+			// Perform cleanup.
+			plugify.DestroyString(&__keyName)
+			plugify.DestroyString(&__value)
+		},
+	}.Do()
+}
+
+// Kv1GetPtr
+//
+//	@brief Gets a pointer value from a key
+//
+//	@param kv: Pointer to the KeyValues object
+//	@param keyName: The name of the key to retrieve the pointer from
+//	@param defaultValue: The default pointer to return if the key is not found
+//
+//	@return The pointer value associated with the key, or defaultValue if not found
+func Kv1GetPtr(kv uintptr, keyName string, defaultValue uintptr) uintptr {
+	var __retVal uintptr
+	__kv := C.uintptr_t(kv)
+	__keyName := plugify.ConstructString(keyName)
+	__defaultValue := C.uintptr_t(defaultValue)
+	plugify.Block{
+		Try: func() {
+			__retVal = uintptr(C.Kv1GetPtr(__kv, (*C.String)(unsafe.Pointer(&__keyName)), __defaultValue))
+		},
+		Finally: func() {
+			// Perform cleanup.
+			plugify.DestroyString(&__keyName)
+		},
+	}.Do()
+	return __retVal
+}
+
+// Kv1SetPtr
+//
+//	@brief Sets a pointer value for a key
+//
+//	@param kv: Pointer to the KeyValues object
+//	@param keyName: The name of the key to set the pointer for
+//	@param value: The pointer value to set
+func Kv1SetPtr(kv uintptr, keyName string, value uintptr) {
+	__kv := C.uintptr_t(kv)
+	__keyName := plugify.ConstructString(keyName)
+	__value := C.uintptr_t(value)
+	plugify.Block{
+		Try: func() {
+			C.Kv1SetPtr(__kv, (*C.String)(unsafe.Pointer(&__keyName)), __value)
+		},
+		Finally: func() {
+			// Perform cleanup.
+			plugify.DestroyString(&__keyName)
+		},
+	}.Do()
+}
+
+// Kv1GetBool
+//
+//	@brief Gets a boolean value from a key
+//
+//	@param kv: Pointer to the KeyValues object
+//	@param keyName: The name of the key to retrieve the boolean from
+//	@param defaultValue: The default value to return if the key is not found
+//
+//	@return The boolean value associated with the key, or defaultValue if not found
+func Kv1GetBool(kv uintptr, keyName string, defaultValue bool) bool {
+	var __retVal bool
+	__kv := C.uintptr_t(kv)
+	__keyName := plugify.ConstructString(keyName)
+	__defaultValue := C.bool(defaultValue)
+	plugify.Block{
+		Try: func() {
+			__retVal = bool(C.Kv1GetBool(__kv, (*C.String)(unsafe.Pointer(&__keyName)), __defaultValue))
+		},
+		Finally: func() {
+			// Perform cleanup.
+			plugify.DestroyString(&__keyName)
+		},
+	}.Do()
+	return __retVal
+}
+
+// Kv1SetBool
+//
+//	@brief Sets a boolean value for a key
+//
+//	@param kv: Pointer to the KeyValues object
+//	@param keyName: The name of the key to set the boolean for
+//	@param value: The boolean value to set
+func Kv1SetBool(kv uintptr, keyName string, value bool) {
+	__kv := C.uintptr_t(kv)
+	__keyName := plugify.ConstructString(keyName)
+	__value := C.bool(value)
+	plugify.Block{
+		Try: func() {
+			C.Kv1SetBool(__kv, (*C.String)(unsafe.Pointer(&__keyName)), __value)
+		},
+		Finally: func() {
+			// Perform cleanup.
+			plugify.DestroyString(&__keyName)
+		},
+	}.Do()
+}
+
+// Kv1MakeCopy
+//
+//	@brief Makes a deep copy of a KeyValues tree
+//
+//	@param kv: Pointer to the KeyValues object to copy
+//
+//	@return Pointer to the newly allocated copy of the KeyValues tree
+func Kv1MakeCopy(kv uintptr) uintptr {
+	var __retVal uintptr
+	__kv := C.uintptr_t(kv)
+	__retVal = uintptr(C.Kv1MakeCopy(__kv))
+	return __retVal
+}
+
+// Kv1Clear
+//
+//	@brief Clears all subkeys and the current value
+//
+//	@param kv: Pointer to the KeyValues object to clear
+func Kv1Clear(kv uintptr) {
+	__kv := C.uintptr_t(kv)
+	C.Kv1Clear(__kv)
+}
+
+// Kv1IsEmpty
+//
+//	@brief Checks if a key exists and has no value or subkeys
+//
+//	@param kv: Pointer to the KeyValues object
+//	@param keyName: The name of the key to check
+//
+//	@return true if the key exists and is empty, false otherwise
+func Kv1IsEmpty(kv uintptr, keyName string) bool {
+	var __retVal bool
+	__kv := C.uintptr_t(kv)
+	__keyName := plugify.ConstructString(keyName)
+	plugify.Block{
+		Try: func() {
+			__retVal = bool(C.Kv1IsEmpty(__kv, (*C.String)(unsafe.Pointer(&__keyName))))
+		},
+		Finally: func() {
+			// Perform cleanup.
+			plugify.DestroyString(&__keyName)
+		},
+	}.Do()
+	return __retVal
+}

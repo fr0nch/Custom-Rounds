@@ -1,0 +1,45 @@
+{
+	"settings": {
+
+		"restart_delay":			5.0,
+		"respawn_type":				0
+	},
+	"rounds": [
+		{
+			"name": "Test AWP NoScope",
+
+			"weapons": {
+				"give":			["weapon_awp", "weapon_ssg08"],
+
+				"attributes": {
+					"weapon_awp": {
+						"m_nZoomLevels": 0,
+						"m_nZoomFOV1": 0,
+						"m_flZoomTime0": 0.0
+					},
+					"weapon_ssg08": {
+						"m_nZoomLevels": 0,
+						"m_nZoomFOV1": 0,
+						"m_flZoomTime0": 0.0
+					}
+				},
+
+				"block":		"1",
+				"clear_map":	"2",
+				"save":			"0"
+			},
+			"cmd": "mp_round_restart"
+		},
+		{
+			"name": "Xm1014 + Deagle",
+
+			"weapons": {
+				"give": 			["weapon_xm1014", "weapon_deagle"],
+
+				"block":		"1",
+				"clear_map":	"2",
+				"save":			"0"
+			}
+		}
+	]
+}

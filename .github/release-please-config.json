@@ -1,0 +1,11 @@
+{
+  "packages": {
+    ".": {
+      "release-type": "simple",
+      "extra-files": [
+        "cs2-customrounds.pplugin"
+      ]
+    }
+  }
+}
+
