@@ -71,6 +71,14 @@ jobs:
           git diff --staged --quiet || git commit -m "chore: generate files [skip ci]"
           git push
 
+      - name: Upload generated files
+        if: steps.release.outputs.release_created
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-files
+          path: cs2-${{ env.PROJECT_NAME }}.pplugin
+          retention-days: 1
+
   build:
     needs: setup
     if: ${{ needs.setup.outputs.release_created }}
@@ -95,6 +103,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: generated-files
+          path: ./
 
       - name: Setup Go
         uses: actions/setup-go@v5
