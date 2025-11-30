@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.6](https://github.com/fr0nch/Custom-Rounds/compare/v1.2.5...v1.2.6) (2025-11-30)
+
+
+### Bug Fixes
+
+* enhance version extraction logic to fallback on release-please manifest if PR title is empty ([cc9d883](https://github.com/fr0nch/Custom-Rounds/commit/cc9d88397099cf44dacf224854b7b93b0d29214a))
+* simplify version extraction logic in CI workflow for pull requests ([7cf5291](https://github.com/fr0nch/Custom-Rounds/commit/7cf5291f02eb91cd63463a4dbbf20f1e6a03cbe9))
+
 ## [1.2.5](https://github.com/fr0nch/Custom-Rounds/compare/v1.2.4...v1.2.5) (2025-11-30)
 
 
