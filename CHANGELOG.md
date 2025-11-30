@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.11](https://github.com/fr0nch/Custom-Rounds/compare/v1.2.10...v1.2.11) (2025-11-30)
+
+
+### Bug Fixes
+
+* install git in CI workflow and remove redundant initialization steps ([7863bdc](https://github.com/fr0nch/Custom-Rounds/commit/7863bdc22019dbe8ad4db5fe0270d0fcd7f1adaa))
+
 ## [1.2.10](https://github.com/fr0nch/Custom-Rounds/compare/v1.2.9...v1.2.10) (2025-11-30)
 
 
