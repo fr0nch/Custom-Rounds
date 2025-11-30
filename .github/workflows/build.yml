@@ -35,6 +35,9 @@ jobs:
       github_sha_short: ${{ steps.vars.outputs.github_sha_short }}
       release_version: ${{ steps.extract_version.outputs.version }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Set output variables
         id: vars
         run: echo "github_sha_short=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
