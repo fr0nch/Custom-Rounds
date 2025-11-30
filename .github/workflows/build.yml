@@ -33,6 +33,7 @@ jobs:
       tag_name: ${{ steps.release.outputs.tag_name }}
       version: ${{ steps.release.outputs.version }}
       github_sha_short: ${{ steps.vars.outputs.github_sha_short }}
+      release_version: ${{ steps.extract_version.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -40,6 +41,44 @@ jobs:
       - name: Set output variables
         id: vars
         run: echo "github_sha_short=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+
+      - name: Extract version from PR title
+        id: extract_version
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.pull_request.title }}" == chore* ]]; then
+            # Извлекаем версию из "chore(main): release customrounds v1.2.3"
+            VERSION=$(echo "${{ github.event.pull_request.title }}" | grep -oP 'v\K[0-9]+\.[0-9]+\.[0-9]+' || echo "")
+            if [ -z "$VERSION" ]; then
+              # Если не найдена, берем из manifest
+              VERSION=$(jq -r '.[]' .github/release-please-manifest.json)
+            fi
+          else
+            # При пуше берем текущую версию из manifest
+            VERSION=$(jq -r '.[]' .github/release-please-manifest.json)
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Extracted version: $VERSION"
+
+      - name: Setup Go
+        if: github.event_name == 'pull_request'
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+
+      - name: Run generator
+        if: github.event_name == 'pull_request'
+        id: generator
+        run: go run generator.go -version="${{ steps.extract_version.outputs.version }}"
+
+      - name: Commit generated files
+        if: github.event_name == 'pull_request'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add cs2-${{ env.PROJECT_NAME }}.pplugin
+          git diff --staged --quiet || git commit -m "chore: generate files [skip ci]" || true
+          git push || true
 
       - name: Generate Release
         if: ${{ !env.ACT }}
@@ -49,44 +88,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           config-file: .github/release-please-config.json
           manifest-file: .github/release-please-manifest.json
-
-      - name: Setup Go
-        if: steps.release.outputs.release_created
-        uses: actions/setup-go@v5
-        with:
-          go-version: ${{ env.GO_VERSION }}
-          cache: true
-
-      - name: Run generator
-        if: steps.release.outputs.release_created
-        id: generator
-        run: go run generator.go -version="${{ steps.release.outputs.version }}"
-
-      - name: Commit generated files
-        if: steps.release.outputs.release_created
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add cs2-${{ env.PROJECT_NAME }}.pplugin
-          git diff --staged --quiet || git commit -m "chore: generate files [skip ci]"
-          git push
-
-      - name: Create source code archives
-        if: steps.release.outputs.release_created
-        run: |
-          mkdir -p source-archives
-          zip -r source-archives/source-code.zip . -x ".git/*" ".github/*" "build/*" ".gitignore"
-          tar -czf source-archives/source-code.tar.gz --exclude='.git' --exclude='.github' --exclude='build' --exclude='.gitignore' .
-
-      - name: Upload generated files and source archives
-        if: steps.release.outputs.release_created
-        uses: actions/upload-artifact@v4
-        with:
-          name: release-assets
-          path: |
-            cs2-${{ env.PROJECT_NAME }}.pplugin
-            source-archives/
-          retention-days: 1
 
   build:
     needs: setup
@@ -109,22 +110,14 @@ jobs:
           ref: main
           fetch-depth: 0
 
-      - name: Download generated files
-        uses: actions/download-artifact@v4
-        with:
-          name: release-assets
-          path: ./
-
       - name: Verify generated files
         run: |
           if [ ! -f cs2-${{ env.PROJECT_NAME }}.pplugin ]; then
-            echo "Generated file not found! Checking git status..."
-            git status
-            git log --oneline -5
+            echo "Generated file not found!"
+            ls -la cs2-*
             exit 1
           fi
           echo "✓ Generated file found"
-          cat cs2-${{ env.PROJECT_NAME }}.pplugin | head -20
 
       - name: Setup Go
         uses: actions/setup-go@v5
@@ -183,11 +176,6 @@ jobs:
           name: ${{ env.PROJECT_NAME }}-${{ matrix.platform }}-${{ needs.setup.outputs.github_sha_short }}
           path: artifacts/${{ matrix.platform }}
 
-      - name: Download source archives
-        uses: actions/download-artifact@v4
-        with:
-          name: release-assets
-          path: ./
 
       - name: Compress build artifacts
         run: |
@@ -205,6 +193,4 @@ jobs:
         id: release
         with:
           tag_name: ${{ needs.setup.outputs.tag_name }}
-          files: |
-            packages/*
-            source-archives/*
+          files: packages/*
