@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/fr0nch/Custom-Rounds/compare/v1.0.1...v1.1.0) (2025-11-30)
+
+
+### Features
+
+* add artifact upload step to CI workflow ([975e602](https://github.com/fr0nch/Custom-Rounds/commit/975e60208e065a13303159ec96564533aa06de51))
+
 ## [1.0.1](https://github.com/fr0nch/Custom-Rounds/compare/v1.0.0...v1.0.1) (2025-11-30)
 
 
