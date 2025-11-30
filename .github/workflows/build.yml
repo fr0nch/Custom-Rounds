@@ -45,40 +45,23 @@ jobs:
       - name: Extract version from PR title
         id: extract_version
         run: |
-          MANIFEST_VERSION=$(jq -r '.[]' .github/release-please-manifest.json)
-          VERSION=""
-          SHOULD_RUN=false
-          
-          if [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.pull_request.title }}" == chore* ]]; then
-            VERSION=$(echo "${{ github.event.pull_request.title }}" | grep -oP 'v\K[0-9]+\.[0-9]+\.[0-9]+' || echo "")
-          fi
-          
-          if [[ "${{ github.event_name }}" == "push" ]]; then
-            VERSION=$MANIFEST_VERSION
-          fi
-          
-          if [ -n "$VERSION" ] && [ "$VERSION" != "$MANIFEST_VERSION" ]; then
-            SHOULD_RUN=true
-          fi
+          VERSION=$(echo "${{ github.event.pull_request.title }}" | grep -oP 'v\K[0-9]+\.[0-9]+\.[0-9]+' || echo "")          
           
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "should_run=$SHOULD_RUN" >> $GITHUB_OUTPUT
-          echo "Extracted version: $VERSION (should_run: $SHOULD_RUN, manifest: $MANIFEST_VERSION)"
+          echo "Extracted version: $VERSION"
 
       - name: Setup Go
-        if: steps.extract_version.outputs.should_run == 'true'
         uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
           cache: true
 
       - name: Run generator
-        if: steps.extract_version.outputs.should_run == 'true'
         id: generator
         run: go run generator.go -version="${{ steps.extract_version.outputs.version }}"
 
       - name: Commit generated files
-        if: steps.extract_version.outputs.should_run == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
