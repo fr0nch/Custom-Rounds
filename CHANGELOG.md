@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.4](https://github.com/fr0nch/Custom-Rounds/compare/v1.2.3...v1.2.4) (2025-11-30)
+
+
+### Bug Fixes
+
+* enhance version extraction and add source code archive creation in CI workflow ([417a02a](https://github.com/fr0nch/Custom-Rounds/commit/417a02ae88ff0ac828c82e5cc9d35c75360cb4d9))
+
 ## [1.2.3](https://github.com/fr0nch/Custom-Rounds/compare/v1.2.2...v1.2.3) (2025-11-30)
 
 
