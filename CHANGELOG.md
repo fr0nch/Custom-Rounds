@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/fr0nch/Custom-Rounds/compare/v1.0.0...v1.0.1) (2025-11-30)
+
+
+### Bug Fixes
+
+* add new plugin ([3d75f73](https://github.com/fr0nch/Custom-Rounds/commit/3d75f7363d835738cdeb73c57fb764b861163c15))
+
 ## [1.2.0](https://github.com/fr0nch/Custom-Rounds/compare/v1.1.0...v1.2.0) (2025-11-30)
 
 
