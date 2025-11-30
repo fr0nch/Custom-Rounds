@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/fr0nch/Custom-Rounds/compare/v1.2.1...v1.2.2) (2025-11-30)
+
+
+### Bug Fixes
+
+* extract version from PR title and update release generation process ([2fcd07a](https://github.com/fr0nch/Custom-Rounds/commit/2fcd07aa16f96b8167b6b6b967cb1a9a1821cfe7))
+
 ## [1.2.1](https://github.com/fr0nch/Custom-Rounds/compare/v1.2.0...v1.2.1) (2025-11-30)
 
 
