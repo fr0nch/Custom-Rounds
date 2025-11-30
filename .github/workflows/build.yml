@@ -45,10 +45,13 @@ jobs:
       - name: Extract version from PR title
         id: extract_version
         run: |
-          VERSION=$(echo "${{ github.event.pull_request.title }}" | grep -oP 'v\K[0-9]+\.[0-9]+\.[0-9]+' || echo "")          
+          VERSION=$(echo "${{ github.event.pull_request.title }}" | grep -oP 'v\K[0-9]+\.[0-9]+\.[0-9]+' || echo "")
+          
+          if [ -z "$VERSION" ]; then
+            VERSION=$(jq -r '.[]' .github/release-please-manifest.json)
+          fi
           
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "should_run=$SHOULD_RUN" >> $GITHUB_OUTPUT
           echo "Extracted version: $VERSION"
 
       - name: Setup Go
