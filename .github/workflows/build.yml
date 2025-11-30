@@ -71,12 +71,21 @@ jobs:
           git diff --staged --quiet || git commit -m "chore: generate files [skip ci]"
           git push
 
-      - name: Upload generated files
+      - name: Create source code archives
+        if: steps.release.outputs.release_created
+        run: |
+          mkdir -p source-archives
+          zip -r source-archives/source-code.zip . -x ".git/*" ".github/*" "build/*" ".gitignore"
+          tar -czf source-archives/source-code.tar.gz --exclude='.git' --exclude='.github' --exclude='build' --exclude='.gitignore' .
+
+      - name: Upload generated files and source archives
         if: steps.release.outputs.release_created
         uses: actions/upload-artifact@v4
         with:
-          name: generated-files
-          path: cs2-${{ env.PROJECT_NAME }}.pplugin
+          name: release-assets
+          path: |
+            cs2-${{ env.PROJECT_NAME }}.pplugin
+            source-archives/
           retention-days: 1
 
   build:
@@ -103,7 +112,7 @@ jobs:
       - name: Download generated files
         uses: actions/download-artifact@v4
         with:
-          name: generated-files
+          name: release-assets
           path: ./
 
       - name: Verify generated files
@@ -174,6 +183,12 @@ jobs:
           name: ${{ env.PROJECT_NAME }}-${{ matrix.platform }}-${{ needs.setup.outputs.github_sha_short }}
           path: artifacts/${{ matrix.platform }}
 
+      - name: Download source archives
+        uses: actions/download-artifact@v4
+        with:
+          name: release-assets
+          path: ./
+
       - name: Compress build artifacts
         run: |
           mkdir -p packages
@@ -192,3 +207,4 @@ jobs:
           tag_name: ${{ needs.setup.outputs.tag_name }}
           files: |
             packages/*
+            source-archives/*
