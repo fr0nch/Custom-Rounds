@@ -64,9 +64,6 @@ jobs:
         id: generator
         run: go run generator.go -version="${{ steps.extract_version.outputs.version }}"
 
-      - name: Checkout
-        uses: actions/checkout@v4
-
       - name: Commit generated files
         run: |
           git config user.name "github-actions[bot]"
@@ -74,6 +71,9 @@ jobs:
           git add cs2-${{ env.PROJECT_NAME }}.pplugin
           git diff --staged --quiet || git commit -m "chore: generate files [skip ci]" || true
           git push || true
+
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Generate Release
         if: ${{ !env.ACT }}
