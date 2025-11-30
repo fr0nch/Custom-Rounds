@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.10](https://github.com/fr0nch/Custom-Rounds/compare/v1.2.9...v1.2.10) (2025-11-30)
+
+
+### Bug Fixes
+
+* ensure git repository initialization and remote setup in CI workflow ([613ccf2](https://github.com/fr0nch/Custom-Rounds/commit/613ccf2c2b54101eb03c5aa0b982411763ca888c))
+
 ## [1.2.9](https://github.com/fr0nch/Custom-Rounds/compare/v1.2.8...v1.2.9) (2025-11-30)
 
 
