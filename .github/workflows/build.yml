@@ -97,13 +97,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
+          ref: main
+          fetch-depth: 0
 
       - name: Download generated files
         uses: actions/download-artifact@v4
         with:
           name: generated-files
           path: ./
+
+      - name: Verify generated files
+        run: |
+          if [ ! -f cs2-${{ env.PROJECT_NAME }}.pplugin ]; then
+            echo "Generated file not found! Checking git status..."
+            git status
+            git log --oneline -5
+            exit 1
+          fi
+          echo "✓ Generated file found"
+          cat cs2-${{ env.PROJECT_NAME }}.pplugin | head -20
 
       - name: Setup Go
         uses: actions/setup-go@v5
