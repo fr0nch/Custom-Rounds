@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.9](https://github.com/fr0nch/Custom-Rounds/compare/v1.2.8...v1.2.9) (2025-11-30)
+
+
+### Bug Fixes
+
+* update version extraction in generator step of CI workflow ([ae5585f](https://github.com/fr0nch/Custom-Rounds/commit/ae5585f4d0595d470c331d3680059995211faaf0))
+
 ## [1.2.8](https://github.com/fr0nch/Custom-Rounds/compare/v1.2.7...v1.2.8) (2025-11-30)
 
 
