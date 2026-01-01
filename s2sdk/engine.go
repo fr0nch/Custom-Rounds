@@ -26,16 +26,20 @@ package s2sdk
 */
 import "C"
 import (
+	"errors"
 	"github.com/untrustedmodders/go-plugify"
 	"reflect"
+	"runtime"
 	"unsafe"
 )
 
+var _ = errors.New("")
 var _ = reflect.TypeOf(0)
+var _ = runtime.GOOS
 var _ = unsafe.Sizeof(0)
 var _ = plugify.Plugin.Loaded
 
-// Generated with https://github.com/untrustedmodders/plugify-module-golang/blob/main/generator/generator.py from s2sdk (group: engine)
+// Generated from s2sdk (group: engine)
 
 // FindModule
 //
@@ -297,7 +301,7 @@ func IsServerPaused() bool {
 //
 //	@param callback: A callback function to be executed on the next frame.
 //	@param userData: An array intended to hold user-related data, allowing for elements of any type.
-func QueueTaskForNextFrame(callback TaskCallback, userData []interface{}) {
+func QueueTaskForNextFrame(callback TaskCallback, userData []any) {
 	__callback := plugify.GetFunctionPointerForDelegate(callback)
 	__userData := plugify.ConstructVectorVariant(userData)
 	plugify.Block{
@@ -317,7 +321,7 @@ func QueueTaskForNextFrame(callback TaskCallback, userData []interface{}) {
 //
 //	@param callback: A callback function to be executed on the next world update.
 //	@param userData: An array intended to hold user-related data, allowing for elements of any type.
-func QueueTaskForNextWorldUpdate(callback TaskCallback, userData []interface{}) {
+func QueueTaskForNextWorldUpdate(callback TaskCallback, userData []any) {
 	__callback := plugify.GetFunctionPointerForDelegate(callback)
 	__userData := plugify.ConstructVectorVariant(userData)
 	plugify.Block{

@@ -15,16 +15,20 @@ package s2sdk
 */
 import "C"
 import (
+	"errors"
 	"github.com/untrustedmodders/go-plugify"
 	"reflect"
+	"runtime"
 	"unsafe"
 )
 
+var _ = errors.New("")
 var _ = reflect.TypeOf(0)
+var _ = runtime.GOOS
 var _ = unsafe.Sizeof(0)
 var _ = plugify.Plugin.Loaded
 
-// Generated with https://github.com/untrustedmodders/plugify-module-golang/blob/main/generator/generator.py from s2sdk (group: bodies)
+// Generated from s2sdk (group: bodies)
 
 // AddBodyImpulseAtPosition
 //

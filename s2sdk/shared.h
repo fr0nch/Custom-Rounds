@@ -4,6 +4,12 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#if defined(_WIN32)
+#define PLUGIFY_EXPORT __declspec(dllexport)
+#else
+#define PLUGIFY_EXPORT __attribute__((visibility("default")))
+#endif
+
 typedef struct String { char* data; size_t size; size_t cap; } String;
 typedef struct Vector { void* begin; void* end; void* capacity; } Vector;
 typedef struct Vector2 { float x, y; } Vector2;
@@ -37,7 +43,4 @@ typedef struct Variant {
 #endif
 	uint8_t current;
 } Variant;
-
-extern void* Plugify_GetMethodPtr(const char* methodName);
-extern void Plugify_GetMethodPtr2(const char* methodName, void** addressDest);
 

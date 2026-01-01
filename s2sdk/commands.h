@@ -1,67 +1,70 @@
 #pragma once
 
-#include "s2sdk.h"
+#include "shared.h"
 
-static bool AddAdminCommand(String* name, int64_t adminFlags, String* description, int64_t flags, void* callback, uint8_t type) {
-	typedef bool (*AddAdminCommandFn)(String*, int64_t, String*, int64_t, void*, uint8_t);
-	static AddAdminCommandFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.AddAdminCommand", (void**)&__func);
-	return __func(name, adminFlags, description, flags, callback, type);
+extern bool (*__s2sdk_AddAdminCommand)(String*, int64_t, String*, int64_t, void*, uint8_t);
+
+static bool AddAdminCommand(String* name, int64_t adminFlags, String* description, int64_t flags, void* callback, uint8_t type_) {
+	return __s2sdk_AddAdminCommand(name, adminFlags, description, flags, callback, type_);
 }
 
-static bool AddConsoleCommand(String* name, String* description, int64_t flags, void* callback, uint8_t type) {
-	typedef bool (*AddConsoleCommandFn)(String*, String*, int64_t, void*, uint8_t);
-	static AddConsoleCommandFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.AddConsoleCommand", (void**)&__func);
-	return __func(name, description, flags, callback, type);
+extern bool (*__s2sdk_AddConsoleCommand)(String*, String*, int64_t, void*, uint8_t);
+
+static bool AddConsoleCommand(String* name, String* description, int64_t flags, void* callback, uint8_t type_) {
+	return __s2sdk_AddConsoleCommand(name, description, flags, callback, type_);
 }
+
+extern bool (*__s2sdk_RemoveCommand)(String*, void*);
 
 static bool RemoveCommand(String* name, void* callback) {
-	typedef bool (*RemoveCommandFn)(String*, void*);
-	static RemoveCommandFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.RemoveCommand", (void**)&__func);
-	return __func(name, callback);
+	return __s2sdk_RemoveCommand(name, callback);
 }
 
-static bool AddCommandListener(String* name, void* callback, uint8_t type) {
-	typedef bool (*AddCommandListenerFn)(String*, void*, uint8_t);
-	static AddCommandListenerFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.AddCommandListener", (void**)&__func);
-	return __func(name, callback, type);
+extern bool (*__s2sdk_AddCommandListener)(String*, void*, uint8_t);
+
+static bool AddCommandListener(String* name, void* callback, uint8_t type_) {
+	return __s2sdk_AddCommandListener(name, callback, type_);
 }
 
-static bool RemoveCommandListener(String* name, void* callback, uint8_t type) {
-	typedef bool (*RemoveCommandListenerFn)(String*, void*, uint8_t);
-	static RemoveCommandListenerFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.RemoveCommandListener", (void**)&__func);
-	return __func(name, callback, type);
+extern bool (*__s2sdk_RemoveCommandListener)(String*, void*, uint8_t);
+
+static bool RemoveCommandListener(String* name, void* callback, uint8_t type_) {
+	return __s2sdk_RemoveCommandListener(name, callback, type_);
 }
+
+extern void (*__s2sdk_ServerCommand)(String*);
 
 static void ServerCommand(String* command) {
-	typedef void (*ServerCommandFn)(String*);
-	static ServerCommandFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.ServerCommand", (void**)&__func);
-	__func(command);
+	__s2sdk_ServerCommand(command);
 }
+
+extern String (*__s2sdk_ServerCommandEx)(String*);
 
 static String ServerCommandEx(String* command) {
-	typedef String (*ServerCommandExFn)(String*);
-	static ServerCommandExFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.ServerCommandEx", (void**)&__func);
-	return __func(command);
+	return __s2sdk_ServerCommandEx(command);
 }
+
+extern void (*__s2sdk_ClientCommand)(int32_t, String*);
 
 static void ClientCommand(int32_t playerSlot, String* command) {
-	typedef void (*ClientCommandFn)(int32_t, String*);
-	static ClientCommandFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.ClientCommand", (void**)&__func);
-	__func(playerSlot, command);
+	__s2sdk_ClientCommand(playerSlot, command);
 }
 
+extern void (*__s2sdk_FakeClientCommand)(int32_t, String*);
+
 static void FakeClientCommand(int32_t playerSlot, String* command) {
-	typedef void (*FakeClientCommandFn)(int32_t, String*);
-	static FakeClientCommandFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.FakeClientCommand", (void**)&__func);
-	__func(playerSlot, command);
+	__s2sdk_FakeClientCommand(playerSlot, command);
+}
+
+extern Vector (*__s2sdk_GetAllConCommands)(int64_t);
+
+static Vector GetAllConCommands(int64_t flags) {
+	return __s2sdk_GetAllConCommands(flags);
+}
+
+extern Vector (*__s2sdk_GetAllCommands)();
+
+static Vector GetAllCommands() {
+	return __s2sdk_GetAllCommands();
 }
 

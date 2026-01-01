@@ -1,74 +1,64 @@
 #pragma once
 
-#include "s2sdk.h"
+#include "shared.h"
+
+extern void (*__s2sdk_AddBodyImpulseAtPosition)(int32_t, Vector3*, Vector3*);
 
 static void AddBodyImpulseAtPosition(int32_t entityHandle, Vector3* position, Vector3* impulse) {
-	typedef void (*AddBodyImpulseAtPositionFn)(int32_t, Vector3*, Vector3*);
-	static AddBodyImpulseAtPositionFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.AddBodyImpulseAtPosition", (void**)&__func);
-	__func(entityHandle, position, impulse);
+	__s2sdk_AddBodyImpulseAtPosition(entityHandle, position, impulse);
 }
+
+extern void (*__s2sdk_AddBodyVelocity)(int32_t, Vector3*, Vector3*);
 
 static void AddBodyVelocity(int32_t entityHandle, Vector3* linearVelocity, Vector3* angularVelocity) {
-	typedef void (*AddBodyVelocityFn)(int32_t, Vector3*, Vector3*);
-	static AddBodyVelocityFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.AddBodyVelocity", (void**)&__func);
-	__func(entityHandle, linearVelocity, angularVelocity);
+	__s2sdk_AddBodyVelocity(entityHandle, linearVelocity, angularVelocity);
 }
+
+extern void (*__s2sdk_DetachBodyFromParent)(int32_t);
 
 static void DetachBodyFromParent(int32_t entityHandle) {
-	typedef void (*DetachBodyFromParentFn)(int32_t);
-	static DetachBodyFromParentFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.DetachBodyFromParent", (void**)&__func);
-	__func(entityHandle);
+	__s2sdk_DetachBodyFromParent(entityHandle);
 }
+
+extern int32_t (*__s2sdk_GetBodySequence)(int32_t);
 
 static int32_t GetBodySequence(int32_t entityHandle) {
-	typedef int32_t (*GetBodySequenceFn)(int32_t);
-	static GetBodySequenceFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.GetBodySequence", (void**)&__func);
-	return __func(entityHandle);
+	return __s2sdk_GetBodySequence(entityHandle);
 }
+
+extern bool (*__s2sdk_IsBodyAttachedToParent)(int32_t);
 
 static bool IsBodyAttachedToParent(int32_t entityHandle) {
-	typedef bool (*IsBodyAttachedToParentFn)(int32_t);
-	static IsBodyAttachedToParentFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.IsBodyAttachedToParent", (void**)&__func);
-	return __func(entityHandle);
+	return __s2sdk_IsBodyAttachedToParent(entityHandle);
 }
+
+extern int32_t (*__s2sdk_LookupBodySequence)(int32_t, String*);
 
 static int32_t LookupBodySequence(int32_t entityHandle, String* name) {
-	typedef int32_t (*LookupBodySequenceFn)(int32_t, String*);
-	static LookupBodySequenceFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.LookupBodySequence", (void**)&__func);
-	return __func(entityHandle, name);
+	return __s2sdk_LookupBodySequence(entityHandle, name);
 }
+
+extern float (*__s2sdk_SetBodySequenceDuration)(int32_t, String*);
 
 static float SetBodySequenceDuration(int32_t entityHandle, String* sequenceName) {
-	typedef float (*SetBodySequenceDurationFn)(int32_t, String*);
-	static SetBodySequenceDurationFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.SetBodySequenceDuration", (void**)&__func);
-	return __func(entityHandle, sequenceName);
+	return __s2sdk_SetBodySequenceDuration(entityHandle, sequenceName);
 }
+
+extern void (*__s2sdk_SetBodyAngularVelocity)(int32_t, Vector3*);
 
 static void SetBodyAngularVelocity(int32_t entityHandle, Vector3* angVelocity) {
-	typedef void (*SetBodyAngularVelocityFn)(int32_t, Vector3*);
-	static SetBodyAngularVelocityFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.SetBodyAngularVelocity", (void**)&__func);
-	__func(entityHandle, angVelocity);
+	__s2sdk_SetBodyAngularVelocity(entityHandle, angVelocity);
 }
+
+extern void (*__s2sdk_SetBodyMaterialGroup)(int32_t, String*);
 
 static void SetBodyMaterialGroup(int32_t entityHandle, String* materialGroup) {
-	typedef void (*SetBodyMaterialGroupFn)(int32_t, String*);
-	static SetBodyMaterialGroupFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.SetBodyMaterialGroup", (void**)&__func);
-	__func(entityHandle, materialGroup);
+	__s2sdk_SetBodyMaterialGroup(entityHandle, materialGroup);
 }
 
+extern void (*__s2sdk_SetBodyVelocity)(int32_t, Vector3*);
+
 static void SetBodyVelocity(int32_t entityHandle, Vector3* velocity) {
-	typedef void (*SetBodyVelocityFn)(int32_t, Vector3*);
-	static SetBodyVelocityFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.SetBodyVelocity", (void**)&__func);
-	__func(entityHandle, velocity);
+	__s2sdk_SetBodyVelocity(entityHandle, velocity);
 }
 

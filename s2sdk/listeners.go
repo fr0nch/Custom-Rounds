@@ -30,6 +30,8 @@ package s2sdk
 #cgo noescape OnEntityDeleted_Unregister
 #cgo noescape OnEntityParentChanged_Register
 #cgo noescape OnEntityParentChanged_Unregister
+#cgo noescape OnServerCheckTransmit_Register
+#cgo noescape OnServerCheckTransmit_Unregister
 #cgo noescape OnServerStartup_Register
 #cgo noescape OnServerStartup_Unregister
 #cgo noescape OnServerActivate_Register
@@ -51,16 +53,20 @@ package s2sdk
 */
 import "C"
 import (
+	"errors"
 	"github.com/untrustedmodders/go-plugify"
 	"reflect"
+	"runtime"
 	"unsafe"
 )
 
+var _ = errors.New("")
 var _ = reflect.TypeOf(0)
+var _ = runtime.GOOS
 var _ = unsafe.Sizeof(0)
 var _ = plugify.Plugin.Loaded
 
-// Generated with https://github.com/untrustedmodders/plugify-module-golang/blob/main/generator/generator.py from s2sdk (group: listeners)
+// Generated from s2sdk (group: listeners)
 
 // OnClientConnect_Register
 //
@@ -340,6 +346,26 @@ func OnEntityParentChanged_Register(callback OnEntityParentChangedCallback) {
 func OnEntityParentChanged_Unregister(callback OnEntityParentChangedCallback) {
 	__callback := plugify.GetFunctionPointerForDelegate(callback)
 	C.OnEntityParentChanged_Unregister(__callback)
+}
+
+// OnServerCheckTransmit_Register
+//
+//	@brief Register callback to event.
+//
+//	@param callback: Function callback.
+func OnServerCheckTransmit_Register(callback OnServerCheckTransmitCallback) {
+	__callback := plugify.GetFunctionPointerForDelegate(callback)
+	C.OnServerCheckTransmit_Register(__callback)
+}
+
+// OnServerCheckTransmit_Unregister
+//
+//	@brief Unregister callback to event.
+//
+//	@param callback: Function callback.
+func OnServerCheckTransmit_Unregister(callback OnServerCheckTransmitCallback) {
+	__callback := plugify.GetFunctionPointerForDelegate(callback)
+	C.OnServerCheckTransmit_Unregister(__callback)
 }
 
 // OnServerStartup_Register

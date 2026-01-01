@@ -1,7 +1,7 @@
 package main
 
 import (
-	. "customrounds/s2sdk"
+	"customrounds/s2sdk"
 	"encoding/json"
 	"fmt"
 	"math/rand"
@@ -84,7 +84,7 @@ func CancelNextRound(client int32) bool {
 func StartRound(name string, client int32) bool {
 	CRDebug("[Natives] Native 'StartRound' start call.")
 
-	warmupPeriod := GetEntSchema2(Plugin.GameRules, "CCSGameRules", "m_bWarmupPeriod", 0) > 0
+	warmupPeriod := s2sdk.GetEntSchema2(Plugin.GameRules, "CCSGameRules", "m_bWarmupPeriod", 0) > 0
 
 	if warmupPeriod {
 		CRDebug("[StartRound] Cannot start round '%s' during the warmup period.", name)
@@ -102,7 +102,7 @@ func StartRound(name string, client int32) bool {
 	}
 
 	if ForwardOnForceRoundStart(&name, client) {
-		TerminateRound(Plugin.RestartDelay, CSRoundEndReason_Draw)
+		s2sdk.TerminateRound(Plugin.RestartDelay, s2sdk.CSRoundEndReason_Draw)
 		Plugin.CreateRound("", false, roundSettings)
 
 		CRDebug("[StartRound] Round name: '%s'.", name)
@@ -130,7 +130,7 @@ func StopRound(client int32) bool {
 		return false
 	}
 
-	TerminateRound(Plugin.RestartDelay, CSRoundEndReason_Draw)
+	s2sdk.TerminateRound(Plugin.RestartDelay, s2sdk.CSRoundEndReason_Draw)
 
 	CRDebug("[Natives] Native 'StopRound' end call.")
 

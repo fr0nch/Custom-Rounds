@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	. "customrounds/s2sdk"
+	"customrounds/s2sdk"
 
 	"github.com/untrustedmodders/go-plugify"
 )
@@ -133,8 +133,8 @@ func (cr *CustomRoundsPlugin) CreateRound(name string, current bool, round map[s
 
 func TimerSpawn(timer uint32, userData []any) {
 	client := userData[0].(int32)
-	if IsClientInGame(client) && IsClientAlive(client) /*&& !IsFakeClient(client)*/ {
-		CRDebug("[Hooks] Function 'TimerSpawn' called. Client: %s[%d].", GetClientName(client), client)
+	if s2sdk.IsClientInGame(client) && s2sdk.IsClientAlive(client) /*&& !IsFakeClient(client)*/ {
+		CRDebug("[Hooks] Function 'TimerSpawn' called. Client: %s[%d].", s2sdk.GetClientName(client), client)
 		ForwardOnPlayerSpawn(client)
 	}
 }
@@ -142,8 +142,8 @@ func TimerSpawn(timer uint32, userData []any) {
 func NextFrameSpawn(userData []any) {
 	client := userData[0].(int32)
 
-	if IsClientInGame(client) && IsClientAlive(client) /*&& !IsFakeClient(client)*/ {
-		CRDebug("[Hooks] Function 'frame_spawn' called. Client: %s[%d].", GetClientName(client), client)
+	if s2sdk.IsClientInGame(client) && s2sdk.IsClientAlive(client) /*&& !IsFakeClient(client)*/ {
+		CRDebug("[Hooks] Function 'frame_spawn' called. Client: %s[%d].", s2sdk.GetClientName(client), client)
 		ForwardOnPlayerSpawn(client)
 	}
 }

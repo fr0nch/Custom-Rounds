@@ -1,7 +1,7 @@
 package main
 
 import (
-	. "customrounds/s2sdk"
+	"customrounds/s2sdk"
 	"runtime/debug"
 
 	"github.com/untrustedmodders/go-plugify"
@@ -49,35 +49,28 @@ func init() {
 func (cr *CustomRoundsPlugin) OnPluginStart() {
 	// FCVAR_SERVER_CAN_EXECUTE - the server is allowed to execute this command on clients via ClientCommand/NET_StringCmd/CBaseClientState::ProcessStringCmd.
 	// ConVarFlag_Release - Cvars tagged with this are the only cvars avaliable to customers
-	var flags = ConVarFlag_LinkedConcommand | ConVarFlag_Release | ConVarFlag_ClientCanExecute
-	AddConsoleCommand("cr_reload", "", flags, CommandReloadConfig, HookMode_Post)
+	var flags = s2sdk.ConVarFlag_LinkedConcommand | s2sdk.ConVarFlag_Release | s2sdk.ConVarFlag_ClientCanExecute
+	s2sdk.AddConsoleCommand("cr_reload", "", flags, CommandReloadConfig, s2sdk.HookMode_Post)
 
-	//cr.LoadConfig()
 	cr.HookEvents()
-
-	OnServerActivate_Register(cr.OnServerActivate)
 
 	CRDebug("Plugin successfully loaded.")
 }
 
 func (cr *CustomRoundsPlugin) OnPluginEnd() {
 	CRDebug("Plugin stopped")
-	OnServerActivate_Unregister(cr.OnServerActivate)
+	cr.UnhookEvents()
 }
 
 func (cr *CustomRoundsPlugin) OnPluginPanic() []byte {
 	return debug.Stack() // workaround for could not import runtime/debug inside plugify package
 }
 
-func (cr *CustomRoundsPlugin) OnServerActivate() {
-	cr.GameRules = GetGameRules()
-}
-
-func CommandReloadConfig(caller int32, context int32, arguments []string) ResultType {
+func CommandReloadConfig(caller int32, context int32, arguments []string) s2sdk.ResultType {
 	ReloadConfig()
-	ReplyToCommand(context, caller, "[CustomRounds] Config successfully reloaded")
+	s2sdk.ReplyToCommand(context, caller, "[CustomRounds] Config successfully reloaded")
 
-	return ResultType_Continue
+	return s2sdk.ResultType_Continue
 }
 
 func main() {}

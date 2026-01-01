@@ -1,151 +1,130 @@
 #pragma once
 
-#include "s2sdk.h"
+#include "shared.h"
+
+extern uintptr_t (*__s2sdk_FindModule)(String*);
 
 static uintptr_t FindModule(String* name) {
-	typedef uintptr_t (*FindModuleFn)(String*);
-	static FindModuleFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.FindModule", (void**)&__func);
-	return __func(name);
+	return __s2sdk_FindModule(name);
 }
+
+extern uintptr_t (*__s2sdk_FindInterface)(String*);
 
 static uintptr_t FindInterface(String* name) {
-	typedef uintptr_t (*FindInterfaceFn)(String*);
-	static FindInterfaceFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.FindInterface", (void**)&__func);
-	return __func(name);
+	return __s2sdk_FindInterface(name);
 }
+
+extern uintptr_t (*__s2sdk_QueryInterface)(String*, String*);
 
 static uintptr_t QueryInterface(String* module, String* name) {
-	typedef uintptr_t (*QueryInterfaceFn)(String*, String*);
-	static QueryInterfaceFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.QueryInterface", (void**)&__func);
-	return __func(module, name);
+	return __s2sdk_QueryInterface(module, name);
 }
+
+extern String (*__s2sdk_GetGameDirectory)();
 
 static String GetGameDirectory() {
-	typedef String (*GetGameDirectoryFn)();
-	static GetGameDirectoryFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.GetGameDirectory", (void**)&__func);
-	return __func();
+	return __s2sdk_GetGameDirectory();
 }
+
+extern String (*__s2sdk_GetCurrentMap)();
 
 static String GetCurrentMap() {
-	typedef String (*GetCurrentMapFn)();
-	static GetCurrentMapFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.GetCurrentMap", (void**)&__func);
-	return __func();
+	return __s2sdk_GetCurrentMap();
 }
+
+extern bool (*__s2sdk_IsMapValid)(String*);
 
 static bool IsMapValid(String* mapname) {
-	typedef bool (*IsMapValidFn)(String*);
-	static IsMapValidFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.IsMapValid", (void**)&__func);
-	return __func(mapname);
+	return __s2sdk_IsMapValid(mapname);
 }
+
+extern float (*__s2sdk_GetGameTime)();
 
 static float GetGameTime() {
-	typedef float (*GetGameTimeFn)();
-	static GetGameTimeFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.GetGameTime", (void**)&__func);
-	return __func();
+	return __s2sdk_GetGameTime();
 }
+
+extern int32_t (*__s2sdk_GetGameTickCount)();
 
 static int32_t GetGameTickCount() {
-	typedef int32_t (*GetGameTickCountFn)();
-	static GetGameTickCountFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.GetGameTickCount", (void**)&__func);
-	return __func();
+	return __s2sdk_GetGameTickCount();
 }
+
+extern float (*__s2sdk_GetGameFrameTime)();
 
 static float GetGameFrameTime() {
-	typedef float (*GetGameFrameTimeFn)();
-	static GetGameFrameTimeFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.GetGameFrameTime", (void**)&__func);
-	return __func();
+	return __s2sdk_GetGameFrameTime();
 }
+
+extern double (*__s2sdk_GetEngineTime)();
 
 static double GetEngineTime() {
-	typedef double (*GetEngineTimeFn)();
-	static GetEngineTimeFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.GetEngineTime", (void**)&__func);
-	return __func();
+	return __s2sdk_GetEngineTime();
 }
+
+extern int32_t (*__s2sdk_GetMaxClients)();
 
 static int32_t GetMaxClients() {
-	typedef int32_t (*GetMaxClientsFn)();
-	static GetMaxClientsFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.GetMaxClients", (void**)&__func);
-	return __func();
+	return __s2sdk_GetMaxClients();
 }
+
+extern void (*__s2sdk_Precache)(String*);
 
 static void Precache(String* resource) {
-	typedef void (*PrecacheFn)(String*);
-	static PrecacheFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.Precache", (void**)&__func);
-	__func(resource);
+	__s2sdk_Precache(resource);
 }
+
+extern bool (*__s2sdk_IsPrecached)(String*);
 
 static bool IsPrecached(String* resource) {
-	typedef bool (*IsPrecachedFn)(String*);
-	static IsPrecachedFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.IsPrecached", (void**)&__func);
-	return __func(resource);
+	return __s2sdk_IsPrecached(resource);
 }
+
+extern uintptr_t (*__s2sdk_GetEconItemSystem)();
 
 static uintptr_t GetEconItemSystem() {
-	typedef uintptr_t (*GetEconItemSystemFn)();
-	static GetEconItemSystemFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.GetEconItemSystem", (void**)&__func);
-	return __func();
+	return __s2sdk_GetEconItemSystem();
 }
+
+extern bool (*__s2sdk_IsServerPaused)();
 
 static bool IsServerPaused() {
-	typedef bool (*IsServerPausedFn)();
-	static IsServerPausedFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.IsServerPaused", (void**)&__func);
-	return __func();
+	return __s2sdk_IsServerPaused();
 }
+
+extern void (*__s2sdk_QueueTaskForNextFrame)(void*, Vector*);
 
 static void QueueTaskForNextFrame(void* callback, Vector* userData) {
-	typedef void (*QueueTaskForNextFrameFn)(void*, Vector*);
-	static QueueTaskForNextFrameFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.QueueTaskForNextFrame", (void**)&__func);
-	__func(callback, userData);
+	__s2sdk_QueueTaskForNextFrame(callback, userData);
 }
+
+extern void (*__s2sdk_QueueTaskForNextWorldUpdate)(void*, Vector*);
 
 static void QueueTaskForNextWorldUpdate(void* callback, Vector* userData) {
-	typedef void (*QueueTaskForNextWorldUpdateFn)(void*, Vector*);
-	static QueueTaskForNextWorldUpdateFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.QueueTaskForNextWorldUpdate", (void**)&__func);
-	__func(callback, userData);
+	__s2sdk_QueueTaskForNextWorldUpdate(callback, userData);
 }
+
+extern float (*__s2sdk_GetSoundDuration)(String*);
 
 static float GetSoundDuration(String* name) {
-	typedef float (*GetSoundDurationFn)(String*);
-	static GetSoundDurationFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.GetSoundDuration", (void**)&__func);
-	return __func(name);
+	return __s2sdk_GetSoundDuration(name);
 }
+
+extern void (*__s2sdk_EmitSound)(int32_t, String*, int32_t, float, float);
 
 static void EmitSound(int32_t entityHandle, String* sound, int32_t pitch, float volume, float delay) {
-	typedef void (*EmitSoundFn)(int32_t, String*, int32_t, float, float);
-	static EmitSoundFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.EmitSound", (void**)&__func);
-	__func(entityHandle, sound, pitch, volume, delay);
+	__s2sdk_EmitSound(entityHandle, sound, pitch, volume, delay);
 }
+
+extern void (*__s2sdk_StopSound)(int32_t, String*);
 
 static void StopSound(int32_t entityHandle, String* sound) {
-	typedef void (*StopSoundFn)(int32_t, String*);
-	static StopSoundFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.StopSound", (void**)&__func);
-	__func(entityHandle, sound);
+	__s2sdk_StopSound(entityHandle, sound);
 }
 
+extern void (*__s2sdk_EmitSoundToClient)(int32_t, int32_t, String*, float, int32_t, int32_t, int32_t, Vector3*, float);
+
 static void EmitSoundToClient(int32_t playerSlot, int32_t channel, String* sound, float volume, int32_t soundLevel, int32_t flags, int32_t pitch, Vector3* origin, float soundTime) {
-	typedef void (*EmitSoundToClientFn)(int32_t, int32_t, String*, float, int32_t, int32_t, int32_t, Vector3*, float);
-	static EmitSoundToClientFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.EmitSoundToClient", (void**)&__func);
-	__func(playerSlot, channel, sound, volume, soundLevel, flags, pitch, origin, soundTime);
+	__s2sdk_EmitSoundToClient(playerSlot, channel, sound, volume, soundLevel, flags, pitch, origin, soundTime);
 }
 

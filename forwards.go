@@ -1,7 +1,6 @@
 package main
 
 import (
-	_ "customrounds/s2sdk"
 	"encoding/json"
 	"sort"
 	"sync"

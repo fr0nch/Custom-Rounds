@@ -1,144 +1,124 @@
 #pragma once
 
-#include "s2sdk.h"
+#include "shared.h"
+
+extern float (*__s2sdk_AnglesDiff)(float, float);
 
 static float AnglesDiff(float angle1, float angle2) {
-	typedef float (*AnglesDiffFn)(float, float);
-	static AnglesDiffFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.AnglesDiff", (void**)&__func);
-	return __func(angle1, angle2);
+	return __s2sdk_AnglesDiff(angle1, angle2);
 }
+
+extern Vector3 (*__s2sdk_AnglesToVector)(Vector3*);
 
 static Vector3 AnglesToVector(Vector3* angles) {
-	typedef Vector3 (*AnglesToVectorFn)(Vector3*);
-	static AnglesToVectorFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.AnglesToVector", (void**)&__func);
-	return __func(angles);
+	return __s2sdk_AnglesToVector(angles);
 }
+
+extern Vector4 (*__s2sdk_AxisAngleToQuaternion)(Vector3*, float);
 
 static Vector4 AxisAngleToQuaternion(Vector3* axis, float angle) {
-	typedef Vector4 (*AxisAngleToQuaternionFn)(Vector3*, float);
-	static AxisAngleToQuaternionFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.AxisAngleToQuaternion", (void**)&__func);
-	return __func(axis, angle);
+	return __s2sdk_AxisAngleToQuaternion(axis, angle);
 }
+
+extern Vector3 (*__s2sdk_CalcClosestPointOnEntityOBB)(int32_t, Vector3*);
 
 static Vector3 CalcClosestPointOnEntityOBB(int32_t entityHandle, Vector3* position) {
-	typedef Vector3 (*CalcClosestPointOnEntityOBBFn)(int32_t, Vector3*);
-	static CalcClosestPointOnEntityOBBFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.CalcClosestPointOnEntityOBB", (void**)&__func);
-	return __func(entityHandle, position);
+	return __s2sdk_CalcClosestPointOnEntityOBB(entityHandle, position);
 }
+
+extern float (*__s2sdk_CalcDistanceBetweenEntityOBB)(int32_t, int32_t);
 
 static float CalcDistanceBetweenEntityOBB(int32_t entityHandle1, int32_t entityHandle2) {
-	typedef float (*CalcDistanceBetweenEntityOBBFn)(int32_t, int32_t);
-	static CalcDistanceBetweenEntityOBBFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.CalcDistanceBetweenEntityOBB", (void**)&__func);
-	return __func(entityHandle1, entityHandle2);
+	return __s2sdk_CalcDistanceBetweenEntityOBB(entityHandle1, entityHandle2);
 }
+
+extern float (*__s2sdk_CalcDistanceToLineSegment2D)(Vector3*, Vector3*, Vector3*);
 
 static float CalcDistanceToLineSegment2D(Vector3* p, Vector3* vLineA, Vector3* vLineB) {
-	typedef float (*CalcDistanceToLineSegment2DFn)(Vector3*, Vector3*, Vector3*);
-	static CalcDistanceToLineSegment2DFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.CalcDistanceToLineSegment2D", (void**)&__func);
-	return __func(p, vLineA, vLineB);
+	return __s2sdk_CalcDistanceToLineSegment2D(p, vLineA, vLineB);
 }
+
+extern Vector3 (*__s2sdk_CrossVectors)(Vector3*, Vector3*);
 
 static Vector3 CrossVectors(Vector3* v1, Vector3* v2) {
-	typedef Vector3 (*CrossVectorsFn)(Vector3*, Vector3*);
-	static CrossVectorsFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.CrossVectors", (void**)&__func);
-	return __func(v1, v2);
+	return __s2sdk_CrossVectors(v1, v2);
 }
+
+extern float (*__s2sdk_ExponentDecay)(float, float, float);
 
 static float ExponentDecay(float decayTo, float decayTime, float dt) {
-	typedef float (*ExponentDecayFn)(float, float, float);
-	static ExponentDecayFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.ExponentDecay", (void**)&__func);
-	return __func(decayTo, decayTime, dt);
+	return __s2sdk_ExponentDecay(decayTo, decayTime, dt);
 }
+
+extern Vector3 (*__s2sdk_LerpVectors)(Vector3*, Vector3*, float);
 
 static Vector3 LerpVectors(Vector3* start, Vector3* end, float factor) {
-	typedef Vector3 (*LerpVectorsFn)(Vector3*, Vector3*, float);
-	static LerpVectorsFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.LerpVectors", (void**)&__func);
-	return __func(start, end, factor);
+	return __s2sdk_LerpVectors(start, end, factor);
 }
+
+extern Vector3 (*__s2sdk_QSlerp)(Vector3*, Vector3*, float);
 
 static Vector3 QSlerp(Vector3* fromAngle, Vector3* toAngle, float time) {
-	typedef Vector3 (*QSlerpFn)(Vector3*, Vector3*, float);
-	static QSlerpFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.QSlerp", (void**)&__func);
-	return __func(fromAngle, toAngle, time);
+	return __s2sdk_QSlerp(fromAngle, toAngle, time);
 }
+
+extern Vector3 (*__s2sdk_RotateOrientation)(Vector3*, Vector3*);
 
 static Vector3 RotateOrientation(Vector3* a1, Vector3* a2) {
-	typedef Vector3 (*RotateOrientationFn)(Vector3*, Vector3*);
-	static RotateOrientationFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.RotateOrientation", (void**)&__func);
-	return __func(a1, a2);
+	return __s2sdk_RotateOrientation(a1, a2);
 }
+
+extern Vector3 (*__s2sdk_RotatePosition)(Vector3*, Vector3*, Vector3*);
 
 static Vector3 RotatePosition(Vector3* rotationOrigin, Vector3* rotationAngle, Vector3* vectorToRotate) {
-	typedef Vector3 (*RotatePositionFn)(Vector3*, Vector3*, Vector3*);
-	static RotatePositionFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.RotatePosition", (void**)&__func);
-	return __func(rotationOrigin, rotationAngle, vectorToRotate);
+	return __s2sdk_RotatePosition(rotationOrigin, rotationAngle, vectorToRotate);
 }
+
+extern Vector4 (*__s2sdk_RotateQuaternionByAxisAngle)(Vector4*, Vector3*, float);
 
 static Vector4 RotateQuaternionByAxisAngle(Vector4* q, Vector3* axis, float angle) {
-	typedef Vector4 (*RotateQuaternionByAxisAngleFn)(Vector4*, Vector3*, float);
-	static RotateQuaternionByAxisAngleFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.RotateQuaternionByAxisAngle", (void**)&__func);
-	return __func(q, axis, angle);
+	return __s2sdk_RotateQuaternionByAxisAngle(q, axis, angle);
 }
+
+extern Vector3 (*__s2sdk_RotationDelta)(Vector3*, Vector3*);
 
 static Vector3 RotationDelta(Vector3* src, Vector3* dest) {
-	typedef Vector3 (*RotationDeltaFn)(Vector3*, Vector3*);
-	static RotationDeltaFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.RotationDelta", (void**)&__func);
-	return __func(src, dest);
+	return __s2sdk_RotationDelta(src, dest);
 }
+
+extern Vector3 (*__s2sdk_RotationDeltaAsAngularVelocity)(Vector3*, Vector3*);
 
 static Vector3 RotationDeltaAsAngularVelocity(Vector3* a1, Vector3* a2) {
-	typedef Vector3 (*RotationDeltaAsAngularVelocityFn)(Vector3*, Vector3*);
-	static RotationDeltaAsAngularVelocityFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.RotationDeltaAsAngularVelocity", (void**)&__func);
-	return __func(a1, a2);
+	return __s2sdk_RotationDeltaAsAngularVelocity(a1, a2);
 }
+
+extern Vector4 (*__s2sdk_SplineQuaternions)(Vector4*, Vector4*, float);
 
 static Vector4 SplineQuaternions(Vector4* q0, Vector4* q1, float t) {
-	typedef Vector4 (*SplineQuaternionsFn)(Vector4*, Vector4*, float);
-	static SplineQuaternionsFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.SplineQuaternions", (void**)&__func);
-	return __func(q0, q1, t);
+	return __s2sdk_SplineQuaternions(q0, q1, t);
 }
+
+extern Vector3 (*__s2sdk_SplineVectors)(Vector3*, Vector3*, float);
 
 static Vector3 SplineVectors(Vector3* v0, Vector3* v1, float t) {
-	typedef Vector3 (*SplineVectorsFn)(Vector3*, Vector3*, float);
-	static SplineVectorsFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.SplineVectors", (void**)&__func);
-	return __func(v0, v1, t);
+	return __s2sdk_SplineVectors(v0, v1, t);
 }
+
+extern Vector3 (*__s2sdk_VectorToAngles)(Vector3*);
 
 static Vector3 VectorToAngles(Vector3* input) {
-	typedef Vector3 (*VectorToAnglesFn)(Vector3*);
-	static VectorToAnglesFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.VectorToAngles", (void**)&__func);
-	return __func(input);
+	return __s2sdk_VectorToAngles(input);
 }
+
+extern float (*__s2sdk_RandomFlt)(float, float);
 
 static float RandomFlt(float min, float max) {
-	typedef float (*RandomFltFn)(float, float);
-	static RandomFltFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.RandomFlt", (void**)&__func);
-	return __func(min, max);
+	return __s2sdk_RandomFlt(min, max);
 }
 
+extern int32_t (*__s2sdk_RandomInt)(int32_t, int32_t);
+
 static int32_t RandomInt(int32_t min, int32_t max) {
-	typedef int32_t (*RandomIntFn)(int32_t, int32_t);
-	static RandomIntFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.RandomInt", (void**)&__func);
-	return __func(min, max);
+	return __s2sdk_RandomInt(min, max);
 }
 

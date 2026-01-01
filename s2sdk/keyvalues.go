@@ -7,7 +7,7 @@ package s2sdk
 #cgo noescape Kv1GetName
 #cgo noescape Kv1SetName
 #cgo noescape Kv1FindKey
-#cgo noescape Kv1FindKeyOrCreate
+#cgo noescape Kv1FindOrCreateKey
 #cgo noescape Kv1CreateKey
 #cgo noescape Kv1CreateNewKey
 #cgo noescape Kv1AddSubKey
@@ -31,16 +31,20 @@ package s2sdk
 */
 import "C"
 import (
+	"errors"
 	"github.com/untrustedmodders/go-plugify"
 	"reflect"
+	"runtime"
 	"unsafe"
 )
 
+var _ = errors.New("")
 var _ = reflect.TypeOf(0)
+var _ = runtime.GOOS
 var _ = unsafe.Sizeof(0)
 var _ = plugify.Plugin.Loaded
 
-// Generated with https://github.com/untrustedmodders/plugify-module-golang/blob/main/generator/generator.py from s2sdk (group: keyvalues)
+// Generated from s2sdk (group: keyvalues)
 
 // Kv1Create
 //
@@ -144,7 +148,7 @@ func Kv1FindKey(kv uintptr, keyName string) uintptr {
 	return __retVal
 }
 
-// Kv1FindKeyOrCreate
+// Kv1FindOrCreateKey
 //
 //	@brief Finds a key by name or creates it if it doesn't exist
 //
@@ -152,13 +156,13 @@ func Kv1FindKey(kv uintptr, keyName string) uintptr {
 //	@param keyName: The name of the key to find or create
 //
 //	@return Pointer to the found or newly created KeyValues subkey (never NULL)
-func Kv1FindKeyOrCreate(kv uintptr, keyName string) uintptr {
+func Kv1FindOrCreateKey(kv uintptr, keyName string) uintptr {
 	var __retVal uintptr
 	__kv := C.uintptr_t(kv)
 	__keyName := plugify.ConstructString(keyName)
 	plugify.Block{
 		Try: func() {
-			__retVal = uintptr(C.Kv1FindKeyOrCreate(__kv, (*C.String)(unsafe.Pointer(&__keyName))))
+			__retVal = uintptr(C.Kv1FindOrCreateKey(__kv, (*C.String)(unsafe.Pointer(&__keyName))))
 		},
 		Finally: func() {
 			// Perform cleanup.
@@ -255,14 +259,15 @@ func Kv1GetNextKey(kv uintptr) uintptr {
 //	@param defaultValue: The default color value to return if the key is not found
 //
 //	@return The color value as a 32-bit integer (RGBA)
-func Kv1GetColor(kv uintptr, keyName string, defaultValue int32) int32 {
-	var __retVal int32
+func Kv1GetColor(kv uintptr, keyName string, defaultValue plugify.Vector4) plugify.Vector4 {
+	var __retVal plugify.Vector4
 	__kv := C.uintptr_t(kv)
 	__keyName := plugify.ConstructString(keyName)
-	__defaultValue := C.int32_t(defaultValue)
+	__defaultValue := *(*C.Vector4)(unsafe.Pointer(&defaultValue))
 	plugify.Block{
 		Try: func() {
-			__retVal = int32(C.Kv1GetColor(__kv, (*C.String)(unsafe.Pointer(&__keyName)), __defaultValue))
+			__native := C.Kv1GetColor(__kv, (*C.String)(unsafe.Pointer(&__keyName)), &__defaultValue)
+			__retVal = *(*plugify.Vector4)(unsafe.Pointer(&__native))
 		},
 		Finally: func() {
 			// Perform cleanup.
@@ -279,13 +284,13 @@ func Kv1GetColor(kv uintptr, keyName string, defaultValue int32) int32 {
 //	@param kv: Pointer to the KeyValues object
 //	@param keyName: The name of the key to set the color for
 //	@param value: The color value as a 32-bit integer (RGBA)
-func Kv1SetColor(kv uintptr, keyName string, value int32) {
+func Kv1SetColor(kv uintptr, keyName string, value plugify.Vector4) {
 	__kv := C.uintptr_t(kv)
 	__keyName := plugify.ConstructString(keyName)
-	__value := C.int32_t(value)
+	__value := *(*C.Vector4)(unsafe.Pointer(&value))
 	plugify.Block{
 		Try: func() {
-			C.Kv1SetColor(__kv, (*C.String)(unsafe.Pointer(&__keyName)), __value)
+			C.Kv1SetColor(__kv, (*C.String)(unsafe.Pointer(&__keyName)), &__value)
 		},
 		Finally: func() {
 			// Perform cleanup.
@@ -587,4 +592,381 @@ func Kv1IsEmpty(kv uintptr, keyName string) bool {
 		},
 	}.Do()
 	return __retVal
+}
+
+var (
+	KeyValues1ErrEmptyHandle = errors.New("KeyValues1: empty handle")
+)
+
+// KeyValues1 - RAII wrapper for KeyValues pointer.
+type KeyValues1 struct {
+	handle    uintptr
+	cleanup   runtime.Cleanup
+	ownership ownership
+	noCopy    noCopy
+}
+
+// NewKeyValues1Kv1Create - Creates a new KeyValues instance
+//
+//	@param setName: The name to assign to this KeyValues instance
+func NewKeyValues1Kv1Create(setName string) *KeyValues1 {
+	return NewKeyValues1Owned(Kv1Create(setName))
+}
+
+// NewKeyValues1Kv1MakeCopy - Makes a deep copy of a KeyValues tree
+//
+//	@param kv: Pointer to the KeyValues object to copy
+func NewKeyValues1Kv1MakeCopy(kv uintptr) *KeyValues1 {
+	return NewKeyValues1Owned(Kv1MakeCopy(kv))
+}
+
+// NewKeyValues1Borrowed creates a KeyValues1 from a borrowed handle
+func NewKeyValues1Borrowed(handle uintptr) *KeyValues1 {
+	if handle == 0 {
+		return &KeyValues1{}
+	}
+	return &KeyValues1{
+		handle:    handle,
+		ownership: Borrowed,
+	}
+}
+
+// NewKeyValues1Owned creates a KeyValues1 from an owned handle
+func NewKeyValues1Owned(handle uintptr) *KeyValues1 {
+	if handle == 0 {
+		return &KeyValues1{}
+	}
+	w := &KeyValues1{
+		handle:    handle,
+		ownership: Owned,
+	}
+	w.cleanup = runtime.AddCleanup(w, w.finalize, struct{}{})
+	return w
+}
+
+// finalize is the finalizer function (like C++ destructor)
+func (w *KeyValues1) finalize(_ struct{}) {
+	if plugify.Plugin.Loaded {
+		w.destroy()
+	}
+}
+
+// destroy cleans up owned handles
+func (w *KeyValues1) destroy() {
+	if w.handle != 0 && w.ownership == Owned {
+		Kv1Destroy(w.handle)
+	}
+}
+
+// nullify resets the handle
+func (w *KeyValues1) nullify() {
+	w.handle = 0
+	w.ownership = Borrowed
+}
+
+// Close explicitly destroys the handle (like C++ destructor, but manual)
+func (w *KeyValues1) Close() {
+	w.Reset()
+}
+
+// Get returns the underlying handle
+func (w *KeyValues1) Get() uintptr {
+	return w.handle
+}
+
+// Release releases ownership and returns the handle
+func (w *KeyValues1) Release() uintptr {
+	if w.ownership == Owned {
+		w.cleanup.Stop()
+	}
+	handle := w.handle
+	w.nullify()
+	return handle
+}
+
+// Reset destroys and resets the handle
+func (w *KeyValues1) Reset() {
+	if w.ownership == Owned {
+		w.cleanup.Stop()
+	}
+	w.destroy()
+	w.nullify()
+}
+
+// IsValid returns true if handle is not nil
+func (w *KeyValues1) IsValid() bool {
+	return w.handle != 0
+}
+
+// GetName - Gets the section name of a KeyValues instance
+//
+//	@return The name of the KeyValues section
+func (w *KeyValues1) GetName() (string, error) {
+	if w.handle == 0 {
+		var zero string
+		return zero, KeyValues1ErrEmptyHandle
+	}
+	return Kv1GetName(w.handle), nil
+}
+
+// SetName - Sets the section name of a KeyValues instance
+//
+//	@param name: The new name to assign to this KeyValues section
+func (w *KeyValues1) SetName(name string) error {
+	if w.handle == 0 {
+		return KeyValues1ErrEmptyHandle
+	}
+	Kv1SetName(w.handle, name)
+	return nil
+}
+
+// FindKey - Finds a key by name
+//
+//	@param keyName: The name of the key to find
+//	@return Pointer to the found KeyValues subkey, or NULL if not found
+func (w *KeyValues1) FindKey(keyName string) (*KeyValues1, error) {
+	if w.handle == 0 {
+		var zero *KeyValues1
+		return zero, KeyValues1ErrEmptyHandle
+	}
+	return NewKeyValues1Borrowed(Kv1FindKey(w.handle, keyName)), nil
+}
+
+// FindOrCreateKey - Finds a key by name or creates it if it doesn't exist
+//
+//	@param keyName: The name of the key to find or create
+//	@return Pointer to the found or newly created KeyValues subkey (never NULL)
+func (w *KeyValues1) FindOrCreateKey(keyName string) (*KeyValues1, error) {
+	if w.handle == 0 {
+		var zero *KeyValues1
+		return zero, KeyValues1ErrEmptyHandle
+	}
+	return NewKeyValues1Borrowed(Kv1FindOrCreateKey(w.handle, keyName)), nil
+}
+
+// CreateKey - Creates a new subkey with the specified name
+//
+//	@param keyName: The name for the new key
+//	@return Pointer to the newly created KeyValues subkey
+func (w *KeyValues1) CreateKey(keyName string) (*KeyValues1, error) {
+	if w.handle == 0 {
+		var zero *KeyValues1
+		return zero, KeyValues1ErrEmptyHandle
+	}
+	return NewKeyValues1Borrowed(Kv1CreateKey(w.handle, keyName)), nil
+}
+
+// CreateNewKey - Creates a new subkey with an autogenerated name
+//
+//	@return Pointer to the newly created KeyValues subkey
+func (w *KeyValues1) CreateNewKey() (*KeyValues1, error) {
+	if w.handle == 0 {
+		var zero *KeyValues1
+		return zero, KeyValues1ErrEmptyHandle
+	}
+	return NewKeyValues1Borrowed(Kv1CreateNewKey(w.handle)), nil
+}
+
+// AddSubKey - Adds a subkey to this KeyValues instance
+//
+//	@param subKey: Pointer to the KeyValues object to add as a child
+func (w *KeyValues1) AddSubKey(subKey *KeyValues1) error {
+	if w.handle == 0 {
+		return KeyValues1ErrEmptyHandle
+	}
+	Kv1AddSubKey(w.handle, subKey.Get())
+	return nil
+}
+
+// GetFirstSubKey - Gets the first subkey in the list
+//
+//	@return Pointer to the first subkey, or NULL if there are no children
+func (w *KeyValues1) GetFirstSubKey() (*KeyValues1, error) {
+	if w.handle == 0 {
+		var zero *KeyValues1
+		return zero, KeyValues1ErrEmptyHandle
+	}
+	return NewKeyValues1Borrowed(Kv1GetFirstSubKey(w.handle)), nil
+}
+
+// GetNextKey - Gets the next sibling key in the list
+//
+//	@return Pointer to the next sibling key, or NULL if this is the last sibling
+func (w *KeyValues1) GetNextKey() (*KeyValues1, error) {
+	if w.handle == 0 {
+		var zero *KeyValues1
+		return zero, KeyValues1ErrEmptyHandle
+	}
+	return NewKeyValues1Borrowed(Kv1GetNextKey(w.handle)), nil
+}
+
+// GetColor - Gets a color value from a key
+//
+//	@param keyName: The name of the key to retrieve the color from
+//	@param defaultValue: The default color value to return if the key is not found
+//	@return The color value as a 32-bit integer (RGBA)
+func (w *KeyValues1) GetColor(keyName string, defaultValue plugify.Vector4) (plugify.Vector4, error) {
+	if w.handle == 0 {
+		var zero plugify.Vector4
+		return zero, KeyValues1ErrEmptyHandle
+	}
+	return Kv1GetColor(w.handle, keyName, defaultValue), nil
+}
+
+// SetColor - Sets a color value for a key
+//
+//	@param keyName: The name of the key to set the color for
+//	@param value: The color value as a 32-bit integer (RGBA)
+func (w *KeyValues1) SetColor(keyName string, value plugify.Vector4) error {
+	if w.handle == 0 {
+		return KeyValues1ErrEmptyHandle
+	}
+	Kv1SetColor(w.handle, keyName, value)
+	return nil
+}
+
+// GetInt - Gets an integer value from a key
+//
+//	@param keyName: The name of the key to retrieve the integer from
+//	@param defaultValue: The default value to return if the key is not found
+//	@return The integer value associated with the key, or defaultValue if not found
+func (w *KeyValues1) GetInt(keyName string, defaultValue int32) (int32, error) {
+	if w.handle == 0 {
+		var zero int32
+		return zero, KeyValues1ErrEmptyHandle
+	}
+	return Kv1GetInt(w.handle, keyName, defaultValue), nil
+}
+
+// SetInt - Sets an integer value for a key
+//
+//	@param keyName: The name of the key to set the integer for
+//	@param value: The integer value to set
+func (w *KeyValues1) SetInt(keyName string, value int32) error {
+	if w.handle == 0 {
+		return KeyValues1ErrEmptyHandle
+	}
+	Kv1SetInt(w.handle, keyName, value)
+	return nil
+}
+
+// GetFloat - Gets a float value from a key
+//
+//	@param keyName: The name of the key to retrieve the float from
+//	@param defaultValue: The default value to return if the key is not found
+//	@return The float value associated with the key, or defaultValue if not found
+func (w *KeyValues1) GetFloat(keyName string, defaultValue float32) (float32, error) {
+	if w.handle == 0 {
+		var zero float32
+		return zero, KeyValues1ErrEmptyHandle
+	}
+	return Kv1GetFloat(w.handle, keyName, defaultValue), nil
+}
+
+// SetFloat - Sets a float value for a key
+//
+//	@param keyName: The name of the key to set the float for
+//	@param value: The float value to set
+func (w *KeyValues1) SetFloat(keyName string, value float32) error {
+	if w.handle == 0 {
+		return KeyValues1ErrEmptyHandle
+	}
+	Kv1SetFloat(w.handle, keyName, value)
+	return nil
+}
+
+// GetString - Gets a string value from a key
+//
+//	@param keyName: The name of the key to retrieve the string from
+//	@param defaultValue: The default string to return if the key is not found
+//	@return The string value associated with the key, or defaultValue if not found
+func (w *KeyValues1) GetString(keyName string, defaultValue string) (string, error) {
+	if w.handle == 0 {
+		var zero string
+		return zero, KeyValues1ErrEmptyHandle
+	}
+	return Kv1GetString(w.handle, keyName, defaultValue), nil
+}
+
+// SetString - Sets a string value for a key
+//
+//	@param keyName: The name of the key to set the string for
+//	@param value: The string value to set
+func (w *KeyValues1) SetString(keyName string, value string) error {
+	if w.handle == 0 {
+		return KeyValues1ErrEmptyHandle
+	}
+	Kv1SetString(w.handle, keyName, value)
+	return nil
+}
+
+// GetPtr - Gets a pointer value from a key
+//
+//	@param keyName: The name of the key to retrieve the pointer from
+//	@param defaultValue: The default pointer to return if the key is not found
+//	@return The pointer value associated with the key, or defaultValue if not found
+func (w *KeyValues1) GetPtr(keyName string, defaultValue uintptr) (uintptr, error) {
+	if w.handle == 0 {
+		var zero uintptr
+		return zero, KeyValues1ErrEmptyHandle
+	}
+	return Kv1GetPtr(w.handle, keyName, defaultValue), nil
+}
+
+// SetPtr - Sets a pointer value for a key
+//
+//	@param keyName: The name of the key to set the pointer for
+//	@param value: The pointer value to set
+func (w *KeyValues1) SetPtr(keyName string, value uintptr) error {
+	if w.handle == 0 {
+		return KeyValues1ErrEmptyHandle
+	}
+	Kv1SetPtr(w.handle, keyName, value)
+	return nil
+}
+
+// GetBool - Gets a boolean value from a key
+//
+//	@param keyName: The name of the key to retrieve the boolean from
+//	@param defaultValue: The default value to return if the key is not found
+//	@return The boolean value associated with the key, or defaultValue if not found
+func (w *KeyValues1) GetBool(keyName string, defaultValue bool) (bool, error) {
+	if w.handle == 0 {
+		var zero bool
+		return zero, KeyValues1ErrEmptyHandle
+	}
+	return Kv1GetBool(w.handle, keyName, defaultValue), nil
+}
+
+// SetBool - Sets a boolean value for a key
+//
+//	@param keyName: The name of the key to set the boolean for
+//	@param value: The boolean value to set
+func (w *KeyValues1) SetBool(keyName string, value bool) error {
+	if w.handle == 0 {
+		return KeyValues1ErrEmptyHandle
+	}
+	Kv1SetBool(w.handle, keyName, value)
+	return nil
+}
+
+// Clear - Clears all subkeys and the current value
+func (w *KeyValues1) Clear() error {
+	if w.handle == 0 {
+		return KeyValues1ErrEmptyHandle
+	}
+	Kv1Clear(w.handle)
+	return nil
+}
+
+// IsEmpty - Checks if a key exists and has no value or subkeys
+//
+//	@param keyName: The name of the key to check
+//	@return true if the key exists and is empty, false otherwise
+func (w *KeyValues1) IsEmpty(keyName string) (bool, error) {
+	if w.handle == 0 {
+		var zero bool
+		return zero, KeyValues1ErrEmptyHandle
+	}
+	return Kv1IsEmpty(w.handle, keyName), nil
 }

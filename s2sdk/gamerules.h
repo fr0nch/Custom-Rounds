@@ -1,53 +1,46 @@
 #pragma once
 
-#include "s2sdk.h"
+#include "shared.h"
+
+extern uintptr_t (*__s2sdk_GetGameRulesProxy)();
 
 static uintptr_t GetGameRulesProxy() {
-	typedef uintptr_t (*GetGameRulesProxyFn)();
-	static GetGameRulesProxyFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.GetGameRulesProxy", (void**)&__func);
-	return __func();
+	return __s2sdk_GetGameRulesProxy();
 }
+
+extern uintptr_t (*__s2sdk_GetGameRules)();
 
 static uintptr_t GetGameRules() {
-	typedef uintptr_t (*GetGameRulesFn)();
-	static GetGameRulesFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.GetGameRules", (void**)&__func);
-	return __func();
+	return __s2sdk_GetGameRules();
 }
+
+extern uintptr_t (*__s2sdk_GetGameTeamManager)(int32_t);
 
 static uintptr_t GetGameTeamManager(int32_t team) {
-	typedef uintptr_t (*GetGameTeamManagerFn)(int32_t);
-	static GetGameTeamManagerFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.GetGameTeamManager", (void**)&__func);
-	return __func(team);
+	return __s2sdk_GetGameTeamManager(team);
 }
+
+extern int32_t (*__s2sdk_GetGameTeamScore)(int32_t);
 
 static int32_t GetGameTeamScore(int32_t team) {
-	typedef int32_t (*GetGameTeamScoreFn)(int32_t);
-	static GetGameTeamScoreFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.GetGameTeamScore", (void**)&__func);
-	return __func(team);
+	return __s2sdk_GetGameTeamScore(team);
 }
+
+extern int32_t (*__s2sdk_GetGamePlayerCount)(int32_t);
 
 static int32_t GetGamePlayerCount(int32_t team) {
-	typedef int32_t (*GetGamePlayerCountFn)(int32_t);
-	static GetGamePlayerCountFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.GetGamePlayerCount", (void**)&__func);
-	return __func(team);
+	return __s2sdk_GetGamePlayerCount(team);
 }
+
+extern int32_t (*__s2sdk_GetGameTotalRoundsPlayed)();
 
 static int32_t GetGameTotalRoundsPlayed() {
-	typedef int32_t (*GetGameTotalRoundsPlayedFn)();
-	static GetGameTotalRoundsPlayedFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.GetGameTotalRoundsPlayed", (void**)&__func);
-	return __func();
+	return __s2sdk_GetGameTotalRoundsPlayed();
 }
 
+extern void (*__s2sdk_TerminateRound)(float, int32_t);
+
 static void TerminateRound(float delay, int32_t reason) {
-	typedef void (*TerminateRoundFn)(float, int32_t);
-	static TerminateRoundFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.TerminateRound", (void**)&__func);
-	__func(delay, reason);
+	__s2sdk_TerminateRound(delay, reason);
 }
 

@@ -1,123 +1,106 @@
 #pragma once
 
-#include "s2sdk.h"
+#include "shared.h"
 
-static int32_t RegisterLoggingChannel(String* name, int32_t iFlags, int32_t verbosity, int32_t color) {
-	typedef int32_t (*RegisterLoggingChannelFn)(String*, int32_t, int32_t, int32_t);
-	static RegisterLoggingChannelFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.RegisterLoggingChannel", (void**)&__func);
-	return __func(name, iFlags, verbosity, color);
+extern int32_t (*__s2sdk_RegisterLoggingChannel)(String*, int32_t, int32_t, Vector4*);
+
+static int32_t RegisterLoggingChannel(String* name, int32_t flags, int32_t verbosity, Vector4* color) {
+	return __s2sdk_RegisterLoggingChannel(name, flags, verbosity, color);
 }
+
+extern void (*__s2sdk_AddLoggerTagToChannel)(int32_t, String*);
 
 static void AddLoggerTagToChannel(int32_t channelID, String* tagName) {
-	typedef void (*AddLoggerTagToChannelFn)(int32_t, String*);
-	static AddLoggerTagToChannelFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.AddLoggerTagToChannel", (void**)&__func);
-	__func(channelID, tagName);
+	__s2sdk_AddLoggerTagToChannel(channelID, tagName);
 }
+
+extern bool (*__s2sdk_HasLoggerTag)(int32_t, String*);
 
 static bool HasLoggerTag(int32_t channelID, String* tag) {
-	typedef bool (*HasLoggerTagFn)(int32_t, String*);
-	static HasLoggerTagFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.HasLoggerTag", (void**)&__func);
-	return __func(channelID, tag);
+	return __s2sdk_HasLoggerTag(channelID, tag);
 }
+
+extern bool (*__s2sdk_IsLoggerChannelEnabledBySeverity)(int32_t, int32_t);
 
 static bool IsLoggerChannelEnabledBySeverity(int32_t channelID, int32_t severity) {
-	typedef bool (*IsLoggerChannelEnabledBySeverityFn)(int32_t, int32_t);
-	static IsLoggerChannelEnabledBySeverityFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.IsLoggerChannelEnabledBySeverity", (void**)&__func);
-	return __func(channelID, severity);
+	return __s2sdk_IsLoggerChannelEnabledBySeverity(channelID, severity);
 }
+
+extern bool (*__s2sdk_IsLoggerChannelEnabledByVerbosity)(int32_t, int32_t);
 
 static bool IsLoggerChannelEnabledByVerbosity(int32_t channelID, int32_t verbosity) {
-	typedef bool (*IsLoggerChannelEnabledByVerbosityFn)(int32_t, int32_t);
-	static IsLoggerChannelEnabledByVerbosityFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.IsLoggerChannelEnabledByVerbosity", (void**)&__func);
-	return __func(channelID, verbosity);
+	return __s2sdk_IsLoggerChannelEnabledByVerbosity(channelID, verbosity);
 }
+
+extern int32_t (*__s2sdk_GetLoggerChannelVerbosity)(int32_t);
 
 static int32_t GetLoggerChannelVerbosity(int32_t channelID) {
-	typedef int32_t (*GetLoggerChannelVerbosityFn)(int32_t);
-	static GetLoggerChannelVerbosityFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.GetLoggerChannelVerbosity", (void**)&__func);
-	return __func(channelID);
+	return __s2sdk_GetLoggerChannelVerbosity(channelID);
 }
+
+extern void (*__s2sdk_SetLoggerChannelVerbosity)(int32_t, int32_t);
 
 static void SetLoggerChannelVerbosity(int32_t channelID, int32_t verbosity) {
-	typedef void (*SetLoggerChannelVerbosityFn)(int32_t, int32_t);
-	static SetLoggerChannelVerbosityFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.SetLoggerChannelVerbosity", (void**)&__func);
-	__func(channelID, verbosity);
+	__s2sdk_SetLoggerChannelVerbosity(channelID, verbosity);
 }
+
+extern void (*__s2sdk_SetLoggerChannelVerbosityByName)(int32_t, String*, int32_t);
 
 static void SetLoggerChannelVerbosityByName(int32_t channelID, String* name, int32_t verbosity) {
-	typedef void (*SetLoggerChannelVerbosityByNameFn)(int32_t, String*, int32_t);
-	static SetLoggerChannelVerbosityByNameFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.SetLoggerChannelVerbosityByName", (void**)&__func);
-	__func(channelID, name, verbosity);
+	__s2sdk_SetLoggerChannelVerbosityByName(channelID, name, verbosity);
 }
+
+extern void (*__s2sdk_SetLoggerChannelVerbosityByTag)(int32_t, String*, int32_t);
 
 static void SetLoggerChannelVerbosityByTag(int32_t channelID, String* tag, int32_t verbosity) {
-	typedef void (*SetLoggerChannelVerbosityByTagFn)(int32_t, String*, int32_t);
-	static SetLoggerChannelVerbosityByTagFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.SetLoggerChannelVerbosityByTag", (void**)&__func);
-	__func(channelID, tag, verbosity);
+	__s2sdk_SetLoggerChannelVerbosityByTag(channelID, tag, verbosity);
 }
 
-static int32_t GetLoggerChannelColor(int32_t channelID) {
-	typedef int32_t (*GetLoggerChannelColorFn)(int32_t);
-	static GetLoggerChannelColorFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.GetLoggerChannelColor", (void**)&__func);
-	return __func(channelID);
+extern Vector4 (*__s2sdk_GetLoggerChannelColor)(int32_t);
+
+static Vector4 GetLoggerChannelColor(int32_t channelID) {
+	return __s2sdk_GetLoggerChannelColor(channelID);
 }
 
-static void SetLoggerChannelColor(int32_t channelID, int32_t color) {
-	typedef void (*SetLoggerChannelColorFn)(int32_t, int32_t);
-	static SetLoggerChannelColorFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.SetLoggerChannelColor", (void**)&__func);
-	__func(channelID, color);
+extern void (*__s2sdk_SetLoggerChannelColor)(int32_t, Vector4*);
+
+static void SetLoggerChannelColor(int32_t channelID, Vector4* color) {
+	__s2sdk_SetLoggerChannelColor(channelID, color);
 }
+
+extern int32_t (*__s2sdk_GetLoggerChannelFlags)(int32_t);
 
 static int32_t GetLoggerChannelFlags(int32_t channelID) {
-	typedef int32_t (*GetLoggerChannelFlagsFn)(int32_t);
-	static GetLoggerChannelFlagsFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.GetLoggerChannelFlags", (void**)&__func);
-	return __func(channelID);
+	return __s2sdk_GetLoggerChannelFlags(channelID);
 }
+
+extern void (*__s2sdk_SetLoggerChannelFlags)(int32_t, int32_t);
 
 static void SetLoggerChannelFlags(int32_t channelID, int32_t eFlags) {
-	typedef void (*SetLoggerChannelFlagsFn)(int32_t, int32_t);
-	static SetLoggerChannelFlagsFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.SetLoggerChannelFlags", (void**)&__func);
-	__func(channelID, eFlags);
+	__s2sdk_SetLoggerChannelFlags(channelID, eFlags);
 }
+
+extern int32_t (*__s2sdk_Log)(int32_t, int32_t, String*);
 
 static int32_t Log(int32_t channelID, int32_t severity, String* message) {
-	typedef int32_t (*LogFn)(int32_t, int32_t, String*);
-	static LogFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.Log", (void**)&__func);
-	return __func(channelID, severity, message);
+	return __s2sdk_Log(channelID, severity, message);
 }
 
-static int32_t LogColored(int32_t channelID, int32_t severity, int32_t color, String* message) {
-	typedef int32_t (*LogColoredFn)(int32_t, int32_t, int32_t, String*);
-	static LogColoredFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.LogColored", (void**)&__func);
-	return __func(channelID, severity, color, message);
+extern int32_t (*__s2sdk_LogColored)(int32_t, int32_t, Vector4*, String*);
+
+static int32_t LogColored(int32_t channelID, int32_t severity, Vector4* color, String* message) {
+	return __s2sdk_LogColored(channelID, severity, color, message);
 }
+
+extern int32_t (*__s2sdk_LogFull)(int32_t, int32_t, String*, int32_t, String*, String*);
 
 static int32_t LogFull(int32_t channelID, int32_t severity, String* file, int32_t line, String* function, String* message) {
-	typedef int32_t (*LogFullFn)(int32_t, int32_t, String*, int32_t, String*, String*);
-	static LogFullFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.LogFull", (void**)&__func);
-	return __func(channelID, severity, file, line, function, message);
+	return __s2sdk_LogFull(channelID, severity, file, line, function, message);
 }
 
-static int32_t LogFullColored(int32_t channelID, int32_t severity, String* file, int32_t line, String* function, int32_t color, String* message) {
-	typedef int32_t (*LogFullColoredFn)(int32_t, int32_t, String*, int32_t, String*, int32_t, String*);
-	static LogFullColoredFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.LogFullColored", (void**)&__func);
-	return __func(channelID, severity, file, line, function, color, message);
+extern int32_t (*__s2sdk_LogFullColored)(int32_t, int32_t, String*, int32_t, String*, Vector4*, String*);
+
+static int32_t LogFullColored(int32_t channelID, int32_t severity, String* file, int32_t line, String* function, Vector4* color, String* message) {
+	return __s2sdk_LogFullColored(channelID, severity, file, line, function, color, message);
 }
 

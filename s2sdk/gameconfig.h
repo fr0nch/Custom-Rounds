@@ -1,53 +1,76 @@
 #pragma once
 
-#include "s2sdk.h"
+#include "shared.h"
+
+extern void (*__s2sdk_CloseGameConfigFile)(uint32_t);
 
 static void CloseGameConfigFile(uint32_t id) {
-	typedef void (*CloseGameConfigFileFn)(uint32_t);
-	static CloseGameConfigFileFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.CloseGameConfigFile", (void**)&__func);
-	__func(id);
+	__s2sdk_CloseGameConfigFile(id);
 }
+
+extern uint32_t (*__s2sdk_LoadGameConfigFile)(Vector*);
 
 static uint32_t LoadGameConfigFile(Vector* paths) {
-	typedef uint32_t (*LoadGameConfigFileFn)(Vector*);
-	static LoadGameConfigFileFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.LoadGameConfigFile", (void**)&__func);
-	return __func(paths);
+	return __s2sdk_LoadGameConfigFile(paths);
 }
+
+extern String (*__s2sdk_GetGameConfigPatch)(uint32_t, String*);
 
 static String GetGameConfigPatch(uint32_t id, String* name) {
-	typedef String (*GetGameConfigPatchFn)(uint32_t, String*);
-	static GetGameConfigPatchFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.GetGameConfigPatch", (void**)&__func);
-	return __func(id, name);
+	return __s2sdk_GetGameConfigPatch(id, name);
 }
+
+extern int32_t (*__s2sdk_GetGameConfigOffset)(uint32_t, String*);
 
 static int32_t GetGameConfigOffset(uint32_t id, String* name) {
-	typedef int32_t (*GetGameConfigOffsetFn)(uint32_t, String*);
-	static GetGameConfigOffsetFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.GetGameConfigOffset", (void**)&__func);
-	return __func(id, name);
+	return __s2sdk_GetGameConfigOffset(id, name);
 }
+
+extern uintptr_t (*__s2sdk_GetGameConfigAddress)(uint32_t, String*);
 
 static uintptr_t GetGameConfigAddress(uint32_t id, String* name) {
-	typedef uintptr_t (*GetGameConfigAddressFn)(uint32_t, String*);
-	static GetGameConfigAddressFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.GetGameConfigAddress", (void**)&__func);
-	return __func(id, name);
+	return __s2sdk_GetGameConfigAddress(id, name);
 }
+
+extern uintptr_t (*__s2sdk_GetGameConfigVTable)(uint32_t, String*);
 
 static uintptr_t GetGameConfigVTable(uint32_t id, String* name) {
-	typedef uintptr_t (*GetGameConfigVTableFn)(uint32_t, String*);
-	static GetGameConfigVTableFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.GetGameConfigVTable", (void**)&__func);
-	return __func(id, name);
+	return __s2sdk_GetGameConfigVTable(id, name);
 }
 
+extern uintptr_t (*__s2sdk_GetGameConfigSignature)(uint32_t, String*);
+
 static uintptr_t GetGameConfigSignature(uint32_t id, String* name) {
-	typedef uintptr_t (*GetGameConfigSignatureFn)(uint32_t, String*);
-	static GetGameConfigSignatureFn __func = NULL;
-	if (__func == NULL) Plugify_GetMethodPtr2("s2sdk.GetGameConfigSignature", (void**)&__func);
-	return __func(id, name);
+	return __s2sdk_GetGameConfigSignature(id, name);
+}
+
+extern String (*__s2sdk_GetGameConfigPatchAll)(String*);
+
+static String GetGameConfigPatchAll(String* name) {
+	return __s2sdk_GetGameConfigPatchAll(name);
+}
+
+extern int32_t (*__s2sdk_GetGameConfigOffsetAll)(String*);
+
+static int32_t GetGameConfigOffsetAll(String* name) {
+	return __s2sdk_GetGameConfigOffsetAll(name);
+}
+
+extern uintptr_t (*__s2sdk_GetGameConfigAddressAll)(String*);
+
+static uintptr_t GetGameConfigAddressAll(String* name) {
+	return __s2sdk_GetGameConfigAddressAll(name);
+}
+
+extern uintptr_t (*__s2sdk_GetGameConfigVTableAll)(String*);
+
+static uintptr_t GetGameConfigVTableAll(String* name) {
+	return __s2sdk_GetGameConfigVTableAll(name);
+}
+
+extern uintptr_t (*__s2sdk_GetGameConfigSignatureAll)(String*);
+
+static uintptr_t GetGameConfigSignatureAll(String* name) {
+	return __s2sdk_GetGameConfigSignatureAll(name);
 }
 

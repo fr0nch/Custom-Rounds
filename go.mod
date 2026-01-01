@@ -2,7 +2,7 @@ module customrounds
 
 go 1.25.0
 
-require github.com/untrustedmodders/go-plugify v1.3.3
+require github.com/untrustedmodders/go-plugify v1.4.7
 
 require (
 	golang.org/x/mod v0.30.0 // indirect

@@ -1,4 +1,4 @@
-//go:generate go run generator.go -package=main -output=.
+//go:generate go run generator.go -package=main
 //go:build ignore
 
 package main
@@ -11,13 +11,6 @@ import (
 
 	"github.com/untrustedmodders/go-plugify"
 )
-
-func splitOrNil(s string) []string {
-	if s == "" {
-		return nil
-	}
-	return strings.Split(s, ",")
-}
 
 func main() {
 	var (
@@ -38,12 +31,45 @@ func main() {
 
 	flag.Parse()
 
-	err := plugify.Generate(*patterns, *output, *name, *version, *description, *author, *website, *license, splitOrNil(*platforms), splitOrNil(*dependencies), splitOrNil(*conflicts), *entry, *target)
+	// Log what we're doing
+	fmt.Println("Starting plugin manifest generation...")
+	fmt.Printf("Package patterns: %s\n", *patterns)
+	if *output != "" {
+		fmt.Printf("Output file: %s\n", *output)
+	}
+	if *name != "" {
+		fmt.Printf("Plugin name: %s\n", *name)
+	}
+	fmt.Printf("Version: %s\n", *version)
 
+	// Parse comma-separated strings
+	platformList := parseCommaSeparated(*platforms)
+	dependencyList := parseCommaSeparated(*dependencies)
+	conflictList := parseCommaSeparated(*conflicts)
+
+	// Call the generator with error handling
+	err := plugify.Generate(*patterns, *output, *name, *version, *description, *author, *website, *license, platformList, dependencyList, conflictList, *entry, *target)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Ошибка генерации манифеста плагина: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error generating plugin manifest: %v\n", err)
 		os.Exit(1)
 	}
+}
 
-	fmt.Println("✓ Манифест плагина и экспорты успешно сгенерированы!")
+// parseCommaSeparated parses a comma-separated string into a slice of trimmed strings
+func parseCommaSeparated(input string) []string {
+	if input == "" {
+		return nil
+	}
+
+	parts := strings.Split(input, ",")
+	result := make([]string, 0, len(parts))
+
+	for _, part := range parts {
+		part = strings.TrimSpace(part)
+		if part != "" {
+			result = append(result, part)
+		}
+	}
+
+	return result
 }

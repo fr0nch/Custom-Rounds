@@ -22,36 +22,40 @@ package s2sdk
 */
 import "C"
 import (
+	"errors"
 	"github.com/untrustedmodders/go-plugify"
 	"reflect"
+	"runtime"
 	"unsafe"
 )
 
+var _ = errors.New("")
 var _ = reflect.TypeOf(0)
+var _ = runtime.GOOS
 var _ = unsafe.Sizeof(0)
 var _ = plugify.Plugin.Loaded
 
-// Generated with https://github.com/untrustedmodders/plugify-module-golang/blob/main/generator/generator.py from s2sdk (group: logger)
+// Generated from s2sdk (group: logger)
 
 // RegisterLoggingChannel
 //
 //	@brief Registers a new logging channel with specified properties.
 //
 //	@param name: The name of the logging channel.
-//	@param iFlags: Flags associated with the logging channel.
+//	@param flags: Flags associated with the logging channel.
 //	@param verbosity: The verbosity level for the logging channel.
 //	@param color: The color for messages logged to this channel.
 //
 //	@return The ID of the newly created logging channel.
-func RegisterLoggingChannel(name string, iFlags int32, verbosity LoggingVerbosity, color int32) int32 {
+func RegisterLoggingChannel(name string, flags int32, verbosity LoggingVerbosity, color plugify.Vector4) int32 {
 	var __retVal int32
 	__name := plugify.ConstructString(name)
-	__iFlags := C.int32_t(iFlags)
+	__flags := C.int32_t(flags)
 	__verbosity := C.int32_t(verbosity)
-	__color := C.int32_t(color)
+	__color := *(*C.Vector4)(unsafe.Pointer(&color))
 	plugify.Block{
 		Try: func() {
-			__retVal = int32(C.RegisterLoggingChannel((*C.String)(unsafe.Pointer(&__name)), __iFlags, __verbosity, __color))
+			__retVal = int32(C.RegisterLoggingChannel((*C.String)(unsafe.Pointer(&__name)), __flags, __verbosity, &__color))
 		},
 		Finally: func() {
 			// Perform cleanup.
@@ -214,10 +218,11 @@ func SetLoggerChannelVerbosityByTag(channelID int32, tag string, verbosity Loggi
 //	@param channelID: The ID of the logging channel.
 //
 //	@return The color value of the specified logging channel.
-func GetLoggerChannelColor(channelID int32) int32 {
-	var __retVal int32
+func GetLoggerChannelColor(channelID int32) plugify.Vector4 {
+	var __retVal plugify.Vector4
 	__channelID := C.int32_t(channelID)
-	__retVal = int32(C.GetLoggerChannelColor(__channelID))
+	__native := C.GetLoggerChannelColor(__channelID)
+	__retVal = *(*plugify.Vector4)(unsafe.Pointer(&__native))
 	return __retVal
 }
 
@@ -227,10 +232,10 @@ func GetLoggerChannelColor(channelID int32) int32 {
 //
 //	@param channelID: The ID of the logging channel.
 //	@param color: The new color value to set for the channel.
-func SetLoggerChannelColor(channelID int32, color int32) {
+func SetLoggerChannelColor(channelID int32, color plugify.Vector4) {
 	__channelID := C.int32_t(channelID)
-	__color := C.int32_t(color)
-	C.SetLoggerChannelColor(__channelID, __color)
+	__color := *(*C.Vector4)(unsafe.Pointer(&color))
+	C.SetLoggerChannelColor(__channelID, &__color)
 }
 
 // GetLoggerChannelFlags
@@ -295,15 +300,15 @@ func Log(channelID int32, severity LoggingSeverity, message string) int32 {
 //	@param message: The message to log.
 //
 //	@return An integer indicating the result of the logging operation.
-func LogColored(channelID int32, severity LoggingSeverity, color int32, message string) int32 {
+func LogColored(channelID int32, severity LoggingSeverity, color plugify.Vector4, message string) int32 {
 	var __retVal int32
 	__channelID := C.int32_t(channelID)
 	__severity := C.int32_t(severity)
-	__color := C.int32_t(color)
+	__color := *(*C.Vector4)(unsafe.Pointer(&color))
 	__message := plugify.ConstructString(message)
 	plugify.Block{
 		Try: func() {
-			__retVal = int32(C.LogColored(__channelID, __severity, __color, (*C.String)(unsafe.Pointer(&__message))))
+			__retVal = int32(C.LogColored(__channelID, __severity, &__color, (*C.String)(unsafe.Pointer(&__message))))
 		},
 		Finally: func() {
 			// Perform cleanup.
@@ -360,18 +365,18 @@ func LogFull(channelID int32, severity LoggingSeverity, file string, line int32,
 //	@param message: The message to log.
 //
 //	@return An integer indicating the result of the logging operation.
-func LogFullColored(channelID int32, severity LoggingSeverity, file string, line int32, function string, color int32, message string) int32 {
+func LogFullColored(channelID int32, severity LoggingSeverity, file string, line int32, function string, color plugify.Vector4, message string) int32 {
 	var __retVal int32
 	__channelID := C.int32_t(channelID)
 	__severity := C.int32_t(severity)
 	__file := plugify.ConstructString(file)
 	__line := C.int32_t(line)
 	__function := plugify.ConstructString(function)
-	__color := C.int32_t(color)
+	__color := *(*C.Vector4)(unsafe.Pointer(&color))
 	__message := plugify.ConstructString(message)
 	plugify.Block{
 		Try: func() {
-			__retVal = int32(C.LogFullColored(__channelID, __severity, (*C.String)(unsafe.Pointer(&__file)), __line, (*C.String)(unsafe.Pointer(&__function)), __color, (*C.String)(unsafe.Pointer(&__message))))
+			__retVal = int32(C.LogFullColored(__channelID, __severity, (*C.String)(unsafe.Pointer(&__file)), __line, (*C.String)(unsafe.Pointer(&__function)), &__color, (*C.String)(unsafe.Pointer(&__message))))
 		},
 		Finally: func() {
 			// Perform cleanup.

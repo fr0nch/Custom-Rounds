@@ -10,6 +10,8 @@ package s2sdk
 #cgo noescape SetEntData2
 #cgo noescape GetEntDataFloat2
 #cgo noescape SetEntDataFloat2
+#cgo noescape GetEntDataColor2
+#cgo noescape SetEntDataColor2
 #cgo noescape GetEntDataString2
 #cgo noescape SetEntDataString2
 #cgo noescape GetEntDataVector2
@@ -21,6 +23,8 @@ package s2sdk
 #cgo noescape SetEntData
 #cgo noescape GetEntDataFloat
 #cgo noescape SetEntDataFloat
+#cgo noescape GetEntDataColor
+#cgo noescape SetEntDataColor
 #cgo noescape GetEntDataString
 #cgo noescape SetEntDataString
 #cgo noescape GetEntDataVector
@@ -33,6 +37,8 @@ package s2sdk
 #cgo noescape SetEntSchema2
 #cgo noescape GetEntSchemaFloat2
 #cgo noescape SetEntSchemaFloat2
+#cgo noescape GetEntSchemaColor2
+#cgo noescape SetEntSchemaColor2
 #cgo noescape GetEntSchemaString2
 #cgo noescape SetEntSchemaString2
 #cgo noescape GetEntSchemaVector3D2
@@ -49,6 +55,8 @@ package s2sdk
 #cgo noescape SetEntSchema
 #cgo noescape GetEntSchemaFloat
 #cgo noescape SetEntSchemaFloat
+#cgo noescape GetEntSchemaColor
+#cgo noescape SetEntSchemaColor
 #cgo noescape GetEntSchemaString
 #cgo noescape SetEntSchemaString
 #cgo noescape GetEntSchemaVector3D
@@ -63,16 +71,20 @@ package s2sdk
 */
 import "C"
 import (
+	"errors"
 	"github.com/untrustedmodders/go-plugify"
 	"reflect"
+	"runtime"
 	"unsafe"
 )
 
+var _ = errors.New("")
 var _ = reflect.TypeOf(0)
+var _ = runtime.GOOS
 var _ = unsafe.Sizeof(0)
 var _ = plugify.Plugin.Loaded
 
-// Generated with https://github.com/untrustedmodders/plugify-module-golang/blob/main/generator/generator.py from s2sdk (group: schema)
+// Generated from s2sdk (group: schema)
 
 // GetSchemaOffset
 //
@@ -242,6 +254,41 @@ func SetEntDataFloat2(entity uintptr, offset int32, value float64, size int32, c
 	__changeState := C.bool(changeState)
 	__chainOffset := C.int32_t(chainOffset)
 	C.SetEntDataFloat2(__entity, __offset, __value, __size, __changeState, __chainOffset)
+}
+
+// GetEntDataColor2
+//
+//	@brief Peeks into an entity's object schema and retrieves the color value at the given offset.
+//
+//	@param entity: Pointer to the instance of the class where the value is to be set.
+//	@param offset: The offset of the schema to use.
+//
+//	@return The color value at the given memory location.
+func GetEntDataColor2(entity uintptr, offset int32) plugify.Vector4 {
+	var __retVal plugify.Vector4
+	__entity := C.uintptr_t(entity)
+	__offset := C.int32_t(offset)
+	__native := C.GetEntDataColor2(__entity, __offset)
+	__retVal = *(*plugify.Vector4)(unsafe.Pointer(&__native))
+	return __retVal
+}
+
+// SetEntDataColor2
+//
+//	@brief Peeks into an entity's object data and sets the color at the given offset.
+//
+//	@param entity: Pointer to the instance of the class where the value is to be set.
+//	@param offset: The offset of the schema to use.
+//	@param value: The color value to set.
+//	@param changeState: If true, change will be sent over the network.
+//	@param chainOffset: The offset of the chain entity in the class (-1 for non-entity classes).
+func SetEntDataColor2(entity uintptr, offset int32, value plugify.Vector4, changeState bool, chainOffset int32) {
+	__entity := C.uintptr_t(entity)
+	__offset := C.int32_t(offset)
+	__value := *(*C.Vector4)(unsafe.Pointer(&value))
+	__changeState := C.bool(changeState)
+	__chainOffset := C.int32_t(chainOffset)
+	C.SetEntDataColor2(__entity, __offset, &__value, __changeState, __chainOffset)
 }
 
 // GetEntDataString2
@@ -455,6 +502,41 @@ func SetEntDataFloat(entityHandle int32, offset int32, value float64, size int32
 	__changeState := C.bool(changeState)
 	__chainOffset := C.int32_t(chainOffset)
 	C.SetEntDataFloat(__entityHandle, __offset, __value, __size, __changeState, __chainOffset)
+}
+
+// GetEntDataColor
+//
+//	@brief Peeks into an entity's object schema and retrieves the color value at the given offset.
+//
+//	@param entityHandle: The handle of the entity from which the value is to be retrieved.
+//	@param offset: The offset of the schema to use.
+//
+//	@return The color value at the given memory location.
+func GetEntDataColor(entityHandle int32, offset int32) plugify.Vector4 {
+	var __retVal plugify.Vector4
+	__entityHandle := C.int32_t(entityHandle)
+	__offset := C.int32_t(offset)
+	__native := C.GetEntDataColor(__entityHandle, __offset)
+	__retVal = *(*plugify.Vector4)(unsafe.Pointer(&__native))
+	return __retVal
+}
+
+// SetEntDataColor
+//
+//	@brief Peeks into an entity's object data and sets the color at the given offset.
+//
+//	@param entityHandle: The handle of the entity from which the value is to be retrieved.
+//	@param offset: The offset of the schema to use.
+//	@param value: The color value to set.
+//	@param changeState: If true, change will be sent over the network.
+//	@param chainOffset: The offset of the chain entity in the class (-1 for non-entity classes).
+func SetEntDataColor(entityHandle int32, offset int32, value plugify.Vector4, changeState bool, chainOffset int32) {
+	__entityHandle := C.int32_t(entityHandle)
+	__offset := C.int32_t(offset)
+	__value := *(*C.Vector4)(unsafe.Pointer(&value))
+	__changeState := C.bool(changeState)
+	__chainOffset := C.int32_t(chainOffset)
+	C.SetEntDataColor(__entityHandle, __offset, &__value, __changeState, __chainOffset)
 }
 
 // GetEntDataString
@@ -728,6 +810,65 @@ func SetEntSchemaFloat2(entity uintptr, className string, memberName string, val
 	plugify.Block{
 		Try: func() {
 			C.SetEntSchemaFloat2(__entity, (*C.String)(unsafe.Pointer(&__className)), (*C.String)(unsafe.Pointer(&__memberName)), __value, __changeState, __element)
+		},
+		Finally: func() {
+			// Perform cleanup.
+			plugify.DestroyString(&__className)
+			plugify.DestroyString(&__memberName)
+		},
+	}.Do()
+}
+
+// GetEntSchemaColor2
+//
+//	@brief Retrieves a color value from an entity's schema.
+//
+//	@param entity: Pointer to the instance of the class where the value is to be set.
+//	@param className: The name of the class.
+//	@param memberName: The name of the schema member.
+//	@param element: Element # (starting from 0) if schema is an array.
+//
+//	@return A color value at the given schema offset.
+func GetEntSchemaColor2(entity uintptr, className string, memberName string, element int32) plugify.Vector4 {
+	var __retVal plugify.Vector4
+	__entity := C.uintptr_t(entity)
+	__className := plugify.ConstructString(className)
+	__memberName := plugify.ConstructString(memberName)
+	__element := C.int32_t(element)
+	plugify.Block{
+		Try: func() {
+			__native := C.GetEntSchemaColor2(__entity, (*C.String)(unsafe.Pointer(&__className)), (*C.String)(unsafe.Pointer(&__memberName)), __element)
+			__retVal = *(*plugify.Vector4)(unsafe.Pointer(&__native))
+		},
+		Finally: func() {
+			// Perform cleanup.
+			plugify.DestroyString(&__className)
+			plugify.DestroyString(&__memberName)
+		},
+	}.Do()
+	return __retVal
+}
+
+// SetEntSchemaColor2
+//
+//	@brief Sets a color value in an entity's schema.
+//
+//	@param entity: Pointer to the instance of the class where the value is to be set.
+//	@param className: The name of the class.
+//	@param memberName: The name of the schema member.
+//	@param value: The color value to set.
+//	@param changeState: If true, change will be sent over the network.
+//	@param element: Element # (starting from 0) if schema is an array.
+func SetEntSchemaColor2(entity uintptr, className string, memberName string, value plugify.Vector4, changeState bool, element int32) {
+	__entity := C.uintptr_t(entity)
+	__className := plugify.ConstructString(className)
+	__memberName := plugify.ConstructString(memberName)
+	__value := *(*C.Vector4)(unsafe.Pointer(&value))
+	__changeState := C.bool(changeState)
+	__element := C.int32_t(element)
+	plugify.Block{
+		Try: func() {
+			C.SetEntSchemaColor2(__entity, (*C.String)(unsafe.Pointer(&__className)), (*C.String)(unsafe.Pointer(&__memberName)), &__value, __changeState, __element)
 		},
 		Finally: func() {
 			// Perform cleanup.
@@ -1193,6 +1334,65 @@ func SetEntSchemaFloat(entityHandle int32, className string, memberName string, 
 	plugify.Block{
 		Try: func() {
 			C.SetEntSchemaFloat(__entityHandle, (*C.String)(unsafe.Pointer(&__className)), (*C.String)(unsafe.Pointer(&__memberName)), __value, __changeState, __element)
+		},
+		Finally: func() {
+			// Perform cleanup.
+			plugify.DestroyString(&__className)
+			plugify.DestroyString(&__memberName)
+		},
+	}.Do()
+}
+
+// GetEntSchemaColor
+//
+//	@brief Retrieves a color value from an entity's schema.
+//
+//	@param entityHandle: The handle of the entity from which the value is to be retrieved.
+//	@param className: The name of the class.
+//	@param memberName: The name of the schema member.
+//	@param element: Element # (starting from 0) if schema is an array.
+//
+//	@return A color value at the given schema offset.
+func GetEntSchemaColor(entityHandle int32, className string, memberName string, element int32) plugify.Vector4 {
+	var __retVal plugify.Vector4
+	__entityHandle := C.int32_t(entityHandle)
+	__className := plugify.ConstructString(className)
+	__memberName := plugify.ConstructString(memberName)
+	__element := C.int32_t(element)
+	plugify.Block{
+		Try: func() {
+			__native := C.GetEntSchemaColor(__entityHandle, (*C.String)(unsafe.Pointer(&__className)), (*C.String)(unsafe.Pointer(&__memberName)), __element)
+			__retVal = *(*plugify.Vector4)(unsafe.Pointer(&__native))
+		},
+		Finally: func() {
+			// Perform cleanup.
+			plugify.DestroyString(&__className)
+			plugify.DestroyString(&__memberName)
+		},
+	}.Do()
+	return __retVal
+}
+
+// SetEntSchemaColor
+//
+//	@brief Sets a color value in an entity's schema.
+//
+//	@param entityHandle: The handle of the entity from which the value is to be retrieved.
+//	@param className: The name of the class.
+//	@param memberName: The name of the schema member.
+//	@param value: The color value to set.
+//	@param changeState: If true, change will be sent over the network.
+//	@param element: Element # (starting from 0) if schema is an array.
+func SetEntSchemaColor(entityHandle int32, className string, memberName string, value plugify.Vector4, changeState bool, element int32) {
+	__entityHandle := C.int32_t(entityHandle)
+	__className := plugify.ConstructString(className)
+	__memberName := plugify.ConstructString(memberName)
+	__value := *(*C.Vector4)(unsafe.Pointer(&value))
+	__changeState := C.bool(changeState)
+	__element := C.int32_t(element)
+	plugify.Block{
+		Try: func() {
+			C.SetEntSchemaColor(__entityHandle, (*C.String)(unsafe.Pointer(&__className)), (*C.String)(unsafe.Pointer(&__memberName)), &__value, __changeState, __element)
 		},
 		Finally: func() {
 			// Perform cleanup.
