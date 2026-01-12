@@ -1,11 +1,12 @@
 package main
 
 import (
-	"customrounds/s2sdk"
 	"encoding/json"
 	"fmt"
 	"math/rand"
 	"slices"
+
+	"github.com/fr0nch/go-plugify-s2sdk/v2"
 )
 
 //plugify:export SetNextRound

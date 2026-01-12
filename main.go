@@ -1,8 +1,9 @@
 package main
 
 import (
-	"customrounds/s2sdk"
 	"runtime/debug"
+
+	"github.com/fr0nch/go-plugify-s2sdk/v2"
 
 	"github.com/untrustedmodders/go-plugify"
 )
