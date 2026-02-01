@@ -1,11 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/untrustedmodders/plugify/refs/heads/main/schemas/plugin.schema.json",
   "name": "customrounds",
-  "version": "1.0.1",
-  "description": "Provides feature for building custom rounds",
+  "version": "1.0.0",
   "author": "Fr4nch",
-  "website": "https://github.com/fr0nch",
-  "license": "GPLv3",
   "dependencies": [
     {
       "name": "s2sdk"
@@ -127,22 +124,22 @@
                 "description": "PluginResult Возможные результаты выполнения операции.",
                 "values": [
                   {
-                    "name": "Plugin_Continue",
+                    "name": "Continue",
                     "description": "Продолжить выполнение без изменений.",
                     "value": 0
                   },
                   {
-                    "name": "Plugin_Changed",
+                    "name": "Changed",
                     "description": "Состояние или поведение было изменено.",
                     "value": 1
                   },
                   {
-                    "name": "Plugin_Handled",
+                    "name": "Handled",
                     "description": "Событие обработано, дальнейшие действия не требуются.",
                     "value": 2
                   },
                   {
-                    "name": "Plugin_Stop",
+                    "name": "Stop",
                     "description": "Остановить обработку, дальнейшие шаги не выполняются.",
                     "value": 3
                   }
@@ -247,22 +244,22 @@
                 "description": "Результат выполнения callback'а.",
                 "values": [
                   {
-                    "name": "Plugin_Continue",
+                    "name": "Continue",
                     "description": "Продолжить выполнение без изменений.",
                     "value": 0
                   },
                   {
-                    "name": "Plugin_Changed",
+                    "name": "Changed",
                     "description": "Состояние или поведение было изменено.",
                     "value": 1
                   },
                   {
-                    "name": "Plugin_Handled",
+                    "name": "Handled",
                     "description": "Событие обработано, дальнейшие действия не требуются.",
                     "value": 2
                   },
                   {
-                    "name": "Plugin_Stop",
+                    "name": "Stop",
                     "description": "Остановить обработку, дальнейшие шаги не выполняются.",
                     "value": 3
                   }
@@ -366,22 +363,22 @@
                 "description": "Результат выполнения callback'а.",
                 "values": [
                   {
-                    "name": "Plugin_Continue",
+                    "name": "Continue",
                     "description": "Продолжить выполнение без изменений.",
                     "value": 0
                   },
                   {
-                    "name": "Plugin_Changed",
+                    "name": "Changed",
                     "description": "Состояние или поведение было изменено.",
                     "value": 1
                   },
                   {
-                    "name": "Plugin_Handled",
+                    "name": "Handled",
                     "description": "Событие обработано, дальнейшие действия не требуются.",
                     "value": 2
                   },
                   {
-                    "name": "Plugin_Stop",
+                    "name": "Stop",
                     "description": "Остановить обработку, дальнейшие шаги не выполняются.",
                     "value": 3
                   }
@@ -485,22 +482,22 @@
                 "description": "Результат выполнения callback'а.",
                 "values": [
                   {
-                    "name": "Plugin_Continue",
+                    "name": "Continue",
                     "description": "Продолжить выполнение без изменений.",
                     "value": 0
                   },
                   {
-                    "name": "Plugin_Changed",
+                    "name": "Changed",
                     "description": "Состояние или поведение было изменено.",
                     "value": 1
                   },
                   {
-                    "name": "Plugin_Handled",
+                    "name": "Handled",
                     "description": "Событие обработано, дальнейшие действия не требуются.",
                     "value": 2
                   },
                   {
-                    "name": "Plugin_Stop",
+                    "name": "Stop",
                     "description": "Остановить обработку, дальнейшие шаги не выполняются.",
                     "value": 3
                   }

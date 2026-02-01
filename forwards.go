@@ -2,123 +2,32 @@ package main
 
 import (
 	"encoding/json"
-	"sort"
-	"sync"
+
+	"github.com/fr0nch/listener-manager"
 )
 
 type PluginResult = int32 // Результат выполнения callback'а.
 
-const (
-	Plugin_Continue PluginResult = 0 // Продолжить выполнение без изменений.
-	Plugin_Changed  PluginResult = 1 // Состояние или поведение было изменено.
-	Plugin_Handled  PluginResult = 2 // Событие обработано, дальнейшие действия не требуются.
-	Plugin_Stop     PluginResult = 3 // Остановить обработку, дальнейшие шаги не выполняются.
-)
-
-type CallbackMode = int32
-
-const (
-	Pre  CallbackMode = 0
-	Post CallbackMode = 1
-)
-
-type callbackHolder[T any] struct {
-	callback T
-	mode     CallbackMode
-}
-
-type Callback[T any] struct {
-	forwards map[int32]callbackHolder[T]
-	index    int32
-	mu       sync.RWMutex
-}
-
-func NewCallback[T any]() *Callback[T] {
-	return &Callback[T]{
-		forwards: make(map[int32]callbackHolder[T]),
-	}
-}
-
-func (cm *Callback[T]) AddCallback(callback T, mode CallbackMode) int32 {
-	cm.mu.Lock()
-	defer cm.mu.Unlock()
-
-	index := cm.index
-	cm.forwards[index] = callbackHolder[T]{
-		callback,
-		mode,
-	}
-	cm.index++
-
-	return index
-}
-
-func (cm *Callback[T]) RemoveCallback(index int32) {
-	cm.mu.Lock()
-	defer cm.mu.Unlock()
-	delete(cm.forwards, index)
-}
-
-func (cm *Callback[T]) getSortedIndexes() []int32 {
-	indexes := make([]int32, 0, len(cm.forwards))
-	for idx := range cm.forwards {
-		indexes = append(indexes, idx)
-	}
-
-	sort.Slice(indexes, func(i, j int) bool {
-		return indexes[i] < indexes[j]
-	})
-
-	return indexes
-}
-
-func (cm *Callback[T]) InvokePre(invokeFunc func(T) PluginResult) PluginResult {
-	cm.mu.RLock()
-	defer cm.mu.RUnlock()
-
-	indexes := cm.getSortedIndexes()
-
-	finalResult := Plugin_Continue
-	for _, idx := range indexes {
-		holder := cm.forwards[idx]
-		if holder.mode == Pre {
-			result := invokeFunc(holder.callback)
-
-			if result > finalResult {
-				finalResult = result
-			}
-
-			if finalResult >= Plugin_Handled {
-				break
-			}
-		}
-
-	}
-
-	return finalResult
-}
-
-func (cm *Callback[T]) InvokePost(invokeFunc func(T)) {
-	cm.mu.RLock()
-	defer cm.mu.RUnlock()
-
-	indexes := cm.getSortedIndexes()
-
-	for _, idx := range indexes {
-		holder := cm.forwards[idx]
-		if holder.mode == Post {
-			invokeFunc(holder.callback)
-		}
-
-	}
-}
+//const (
+//	Continue PluginResult = 0 // Продолжить выполнение без изменений.
+//	Changed  PluginResult = 1 // Состояние или поведение было изменено.
+//	Handled  PluginResult = 2 // Событие обработано, дальнейшие действия не требуются.
+//	Stop     PluginResult = 3 // Остановить обработку, дальнейшие шаги не выполняются.
+//)
+//
+//type HookMode = int32
+//
+//const (
+//	Pre  HookMode = 0
+//	Post HookMode = 1
+//)
 
 // OnConfigLoadCallback
 //
 //	@brief Обрабатывает событие загрузки конфигурации.
 type OnConfigLoadCallback = func()
 
-var OnConfigLoad = NewCallback[OnConfigLoadCallback]()
+var OnConfigLoad = listeners.NewListener[OnConfigLoadCallback]()
 
 // OnConfigLoadRegister
 //
@@ -130,7 +39,7 @@ var OnConfigLoad = NewCallback[OnConfigLoadCallback]()
 //
 //plugify:export OnConfigLoadRegister
 func OnConfigLoadRegister(callback OnConfigLoadCallback) int32 {
-	index := OnConfigLoad.AddCallback(callback, Post)
+	index := OnConfigLoad.Add(callback, listeners.Post)
 	CRDebug("[Forwards] Forward 'OnConfigLoad' registered.")
 	return index
 }
@@ -142,7 +51,7 @@ func OnConfigLoadRegister(callback OnConfigLoadCallback) int32 {
 //
 //plugify:export OnConfigLoadUnregister
 func OnConfigLoadUnregister(index int32) {
-	OnConfigLoad.RemoveCallback(index)
+	OnConfigLoad.Remove(index)
 	CRDebug("[Forwards] Forward 'OnConfigLoad' unregistered.")
 }
 
@@ -159,7 +68,7 @@ func ForwardOnConfigLoad() bool {
 
 type OnConfigLoadedCallback = func(rounds string)
 
-var OnConfigLoaded = NewCallback[OnConfigLoadedCallback]()
+var OnConfigLoaded = listeners.NewListener[OnConfigLoadedCallback]()
 
 // OnConfigLoadedRegister
 //
@@ -171,7 +80,7 @@ var OnConfigLoaded = NewCallback[OnConfigLoadedCallback]()
 //
 //plugify:export OnConfigLoadedRegister
 func OnConfigLoadedRegister(callback OnConfigLoadedCallback) int32 {
-	index := OnConfigLoaded.AddCallback(callback, Post)
+	index := OnConfigLoaded.Add(callback, listeners.Post)
 	CRDebug("[Forwards] Forward 'OnConfigLoaded' registered.")
 	return index
 }
@@ -183,7 +92,7 @@ func OnConfigLoadedRegister(callback OnConfigLoadedCallback) int32 {
 //
 //plugify:export OnConfigLoadedUnregister
 func OnConfigLoadedUnregister(index int32) {
-	OnConfigLoaded.RemoveCallback(index)
+	OnConfigLoaded.Remove(index)
 	CRDebug("[Forwards] Forward 'OnConfigLoaded' unregistered.")
 }
 
@@ -216,8 +125,8 @@ func ForwardOnConfigLoaded() bool {
 type OnForceRoundStartPreCallback = func(name *string, client int32) PluginResult
 type OnForceRoundStartPostCallback = func(name string, client int32)
 
-var OnForceRoundStartPre = NewCallback[OnForceRoundStartPreCallback]()
-var OnForceRoundStartPost = NewCallback[OnForceRoundStartPostCallback]()
+var OnForceRoundStartPre = listeners.NewListener[OnForceRoundStartPreCallback]()
+var OnForceRoundStartPost = listeners.NewListener[OnForceRoundStartPostCallback]()
 
 // OnForceRoundStartPreRegister
 //
@@ -229,7 +138,7 @@ var OnForceRoundStartPost = NewCallback[OnForceRoundStartPostCallback]()
 //
 //plugify:export OnForceRoundStartPreRegister
 func OnForceRoundStartPreRegister(callback OnForceRoundStartPreCallback) int32 {
-	index := OnForceRoundStartPre.AddCallback(callback, Pre)
+	index := OnForceRoundStartPre.Add(callback, listeners.Pre)
 	CRDebug("[Forwards] Forward 'OnForceRoundStartPre' registered.")
 	return index
 }
@@ -241,7 +150,7 @@ func OnForceRoundStartPreRegister(callback OnForceRoundStartPreCallback) int32 {
 //
 //plugify:export OnForceRoundStartPreUnregister
 func OnForceRoundStartPreUnregister(index int32) {
-	OnForceRoundStartPre.RemoveCallback(index)
+	OnForceRoundStartPre.Remove(index)
 	CRDebug("[Forwards] Forward 'OnForceRoundStartPre' unregistered.")
 }
 
@@ -255,7 +164,7 @@ func OnForceRoundStartPreUnregister(index int32) {
 //
 //plugify:export OnForceRoundStartPostRegister
 func OnForceRoundStartPostRegister(callback OnForceRoundStartPostCallback) int32 {
-	index := OnForceRoundStartPost.AddCallback(callback, Post)
+	index := OnForceRoundStartPost.Add(callback, listeners.Post)
 	CRDebug("[Forwards] Forward 'OnForceRoundStartPost' registered.")
 	return index
 }
@@ -267,7 +176,7 @@ func OnForceRoundStartPostRegister(callback OnForceRoundStartPostCallback) int32
 //
 //plugify:export OnForceRoundStartPostUnregister
 func OnForceRoundStartPostUnregister(index int32) {
-	OnForceRoundStartPost.RemoveCallback(index)
+	OnForceRoundStartPost.Remove(index)
 	CRDebug("[Forwards] Forward 'OnForceRoundStartPost' unregistered.")
 }
 
@@ -288,9 +197,9 @@ func ForwardOnForceRoundStart(name *string, client int32) bool {
 	CRDebug("[Forwards] Forward 'OnForceRoundStartPre' called. Client: %d. Round: %s.", client, *name)
 
 	switch result {
-	case Plugin_Stop, Plugin_Handled:
+	case listeners.Stop, listeners.Handled:
 		return false
-	case Plugin_Changed:
+	case listeners.Changed:
 		*name = nameCopy
 	}
 
@@ -306,8 +215,8 @@ func ForwardOnForceRoundStart(name *string, client int32) bool {
 type OnSetNextRoundPreCallback = func(name *string, client int32) PluginResult
 type OnSetNextRoundPostCallback = func(name string, client int32)
 
-var OnSetNextRoundPre = NewCallback[OnSetNextRoundPreCallback]()
-var OnSetNextRoundPost = NewCallback[OnSetNextRoundPostCallback]()
+var OnSetNextRoundPre = listeners.NewListener[OnSetNextRoundPreCallback]()
+var OnSetNextRoundPost = listeners.NewListener[OnSetNextRoundPostCallback]()
 
 // OnSetNextRoundPreRegister
 //
@@ -318,7 +227,7 @@ var OnSetNextRoundPost = NewCallback[OnSetNextRoundPostCallback]()
 //
 //plugify:export OnSetNextRoundPreRegister
 func OnSetNextRoundPreRegister(callback OnSetNextRoundPreCallback) int32 {
-	index := OnSetNextRoundPre.AddCallback(callback, Pre)
+	index := OnSetNextRoundPre.Add(callback, listeners.Pre)
 	CRDebug("[Forwards] Forward 'OnSetNextRoundPre' registered.")
 	return index
 }
@@ -330,7 +239,7 @@ func OnSetNextRoundPreRegister(callback OnSetNextRoundPreCallback) int32 {
 //
 //plugify:export OnSetNextRoundPreUnregister
 func OnSetNextRoundPreUnregister(index int32) {
-	OnSetNextRoundPre.RemoveCallback(index)
+	OnSetNextRoundPre.Remove(index)
 	CRDebug("[Forwards] Forward 'OnSetNextRoundPre' unregistered.")
 }
 
@@ -343,7 +252,7 @@ func OnSetNextRoundPreUnregister(index int32) {
 //
 //plugify:export OnSetNextRoundPostRegister
 func OnSetNextRoundPostRegister(callback OnSetNextRoundPostCallback) int32 {
-	index := OnSetNextRoundPost.AddCallback(callback, Post)
+	index := OnSetNextRoundPost.Add(callback, listeners.Post)
 	CRDebug("[Forwards] Forward 'OnSetNextRoundPost' registered.")
 	return index
 }
@@ -355,7 +264,7 @@ func OnSetNextRoundPostRegister(callback OnSetNextRoundPostCallback) int32 {
 //
 //plugify:export OnSetNextRoundPostUnregister
 func OnSetNextRoundPostUnregister(index int32) {
-	OnSetNextRoundPost.RemoveCallback(index)
+	OnSetNextRoundPost.Remove(index)
 	CRDebug("[Forwards] Forward 'OnSetNextRoundPost' unregistered.")
 }
 
@@ -376,9 +285,9 @@ func ForwardOnSetNextRound(name *string, client int32) bool {
 	CRDebug("[Forwards] Forward 'OnSetNextRoundPre' called. Client: %d. Round: %s.", client, *name)
 
 	switch result {
-	case Plugin_Stop, Plugin_Handled:
+	case listeners.Stop, listeners.Handled:
 		return false
-	case Plugin_Changed:
+	case listeners.Changed:
 		*name = nameCopy
 	}
 
@@ -394,8 +303,8 @@ func ForwardOnSetNextRound(name *string, client int32) bool {
 type OnCancelCurrentRoundPreCallback = func(name string, client int32) PluginResult
 type OnCancelCurrentRoundPostCallback = func(name string, client int32)
 
-var OnCancelCurrentRoundPre = NewCallback[OnCancelCurrentRoundPreCallback]()
-var OnCancelCurrentRoundPost = NewCallback[OnCancelCurrentRoundPostCallback]()
+var OnCancelCurrentRoundPre = listeners.NewListener[OnCancelCurrentRoundPreCallback]()
+var OnCancelCurrentRoundPost = listeners.NewListener[OnCancelCurrentRoundPostCallback]()
 
 // OnCancelCurrentRoundPreRegister
 //
@@ -406,7 +315,7 @@ var OnCancelCurrentRoundPost = NewCallback[OnCancelCurrentRoundPostCallback]()
 //
 //plugify:export OnCancelCurrentRoundPreRegister
 func OnCancelCurrentRoundPreRegister(callback OnCancelCurrentRoundPreCallback) int32 {
-	index := OnCancelCurrentRoundPre.AddCallback(callback, Pre)
+	index := OnCancelCurrentRoundPre.Add(callback, listeners.Pre)
 	CRDebug("[Forwards] Forward 'OnCancelCurrentRoundPre' registered.")
 	return index
 }
@@ -418,7 +327,7 @@ func OnCancelCurrentRoundPreRegister(callback OnCancelCurrentRoundPreCallback) i
 //
 //plugify:export OnCancelCurrentRoundPreUnregister
 func OnCancelCurrentRoundPreUnregister(index int32) {
-	OnCancelCurrentRoundPre.RemoveCallback(index)
+	OnCancelCurrentRoundPre.Remove(index)
 	CRDebug("[Forwards] Forward 'OnCancelCurrentRoundPre' unregistered.")
 }
 
@@ -431,7 +340,7 @@ func OnCancelCurrentRoundPreUnregister(index int32) {
 //
 //plugify:export OnCancelCurrentRoundPostRegister
 func OnCancelCurrentRoundPostRegister(callback OnCancelCurrentRoundPostCallback) int32 {
-	index := OnCancelCurrentRoundPost.AddCallback(callback, Post)
+	index := OnCancelCurrentRoundPost.Add(callback, listeners.Post)
 	CRDebug("[Forwards] Forward 'OnCancelCurrentRoundPost' registered.")
 	return index
 }
@@ -443,33 +352,11 @@ func OnCancelCurrentRoundPostRegister(callback OnCancelCurrentRoundPostCallback)
 //
 //plugify:export OnCancelCurrentRoundPostUnregister
 func OnCancelCurrentRoundPostUnregister(index int32) {
-	OnCancelCurrentRoundPost.RemoveCallback(index)
+	OnCancelCurrentRoundPost.Remove(index)
 	CRDebug("[Forwards] Forward 'OnCancelCurrentRoundPost' unregistered.")
 }
 
 func ForwardOnCancelCurrentRound(client int32) bool {
-	//roundName := GetNextRoundName()
-	//
-	//result := OnCancelNextRoundPre.InvokePre(func(callback OnCancelNextRoundPreCallback) PluginResult {
-	//	return callback(roundName, client)
-	//})
-	//
-	//CRDebug("[Forwards] Forward 'OnCancelNextRoundPre' called. Client: %d. Round: %s.", client, roundName)
-	//
-	//if result > Plugin_Continue {
-	//	return false
-	//}
-	//
-	//CRDebug("roundName: '%s'", roundName)
-	//
-	//OnCancelNextRoundPost.InvokePost(func(callback OnCancelNextRoundPostCallback) {
-	//	callback(roundName, client)
-	//})
-	//
-	//CRDebug("[Forwards] Forward 'OnCancelNextRoundPost' called. Client: %d. Round: %s.", client, roundName)
-	//
-	//return true
-
 	roundName := GetCurrentRoundName()
 
 	result := OnCancelCurrentRoundPre.InvokePre(func(callback OnCancelCurrentRoundPreCallback) PluginResult {
@@ -480,7 +367,7 @@ func ForwardOnCancelCurrentRound(client int32) bool {
 
 	CRDebug("result: '%v'", result)
 
-	if result > Plugin_Continue {
+	if result > listeners.Continue {
 		return false
 	}
 
@@ -496,8 +383,8 @@ func ForwardOnCancelCurrentRound(client int32) bool {
 type OnCancelNextRoundPreCallback = func(name string, client int32) PluginResult
 type OnCancelNextRoundPostCallback = func(name string, client int32)
 
-var OnCancelNextRoundPre = NewCallback[OnCancelNextRoundPreCallback]()
-var OnCancelNextRoundPost = NewCallback[OnCancelNextRoundPostCallback]()
+var OnCancelNextRoundPre = listeners.NewListener[OnCancelNextRoundPreCallback]()
+var OnCancelNextRoundPost = listeners.NewListener[OnCancelNextRoundPostCallback]()
 
 // OnCancelNextRoundPreRegister
 //
@@ -508,7 +395,7 @@ var OnCancelNextRoundPost = NewCallback[OnCancelNextRoundPostCallback]()
 //
 //plugify:export OnCancelNextRoundPreRegister
 func OnCancelNextRoundPreRegister(callback OnCancelNextRoundPreCallback) int32 {
-	index := OnCancelNextRoundPre.AddCallback(callback, Pre)
+	index := OnCancelNextRoundPre.Add(callback, listeners.Pre)
 	CRDebug("[Forwards] Forward 'OnCancelNextRoundPre' registered.")
 	return index
 }
@@ -520,7 +407,7 @@ func OnCancelNextRoundPreRegister(callback OnCancelNextRoundPreCallback) int32 {
 //
 //plugify:export OnCancelNextRoundPreUnregister
 func OnCancelNextRoundPreUnregister(index int32) {
-	OnCancelNextRoundPre.RemoveCallback(index)
+	OnCancelNextRoundPre.Remove(index)
 	CRDebug("[Forwards] Forward 'OnCancelNextRoundPre' unregistered.")
 }
 
@@ -533,7 +420,7 @@ func OnCancelNextRoundPreUnregister(index int32) {
 //
 //plugify:export OnCancelNextRoundPostRegister
 func OnCancelNextRoundPostRegister(callback OnCancelNextRoundPostCallback) int32 {
-	index := OnCancelNextRoundPost.AddCallback(callback, Post)
+	index := OnCancelNextRoundPost.Add(callback, listeners.Post)
 	CRDebug("[Forwards] Forward 'OnCancelNextRoundPost' registered.")
 	return index
 }
@@ -545,7 +432,7 @@ func OnCancelNextRoundPostRegister(callback OnCancelNextRoundPostCallback) int32
 //
 //plugify:export OnCancelNextRoundPostUnregister
 func OnCancelNextRoundPostUnregister(index int32) {
-	OnCancelNextRoundPost.RemoveCallback(index)
+	OnCancelNextRoundPost.Remove(index)
 	CRDebug("[Forwards] Forward 'OnCancelNextRoundPost' unregistered.")
 }
 
@@ -558,7 +445,7 @@ func ForwardOnCancelNextRound(client int32) bool {
 
 	CRDebug("[Forwards] Forward 'OnCancelNextRoundPre' called. Client: %d. Round: %s.", client, roundName)
 
-	if result > Plugin_Continue {
+	if result > listeners.Continue {
 		return false
 	}
 
@@ -575,7 +462,7 @@ func ForwardOnCancelNextRound(client int32) bool {
 
 type OnPlayerSpawnCallback = func(client int32)
 
-var OnPlayerSpawn = NewCallback[OnPlayerSpawnCallback]()
+var OnPlayerSpawn = listeners.NewListener[OnPlayerSpawnCallback]()
 
 // OnPlayerSpawnRegister
 //
@@ -586,7 +473,7 @@ var OnPlayerSpawn = NewCallback[OnPlayerSpawnCallback]()
 //
 //plugify:export OnPlayerSpawnRegister
 func OnPlayerSpawnRegister(callback OnPlayerSpawnCallback) int32 {
-	index := OnPlayerSpawn.AddCallback(callback, Post)
+	index := OnPlayerSpawn.Add(callback, listeners.Post)
 	CRDebug("[Forwards] Forward 'OnPlayerSpawn' registered.")
 	return index
 }
@@ -598,7 +485,7 @@ func OnPlayerSpawnRegister(callback OnPlayerSpawnCallback) int32 {
 //
 //plugify:export OnPlayerSpawnUnregister
 func OnPlayerSpawnUnregister(index int32) {
-	OnPlayerSpawn.RemoveCallback(index)
+	OnPlayerSpawn.Remove(index)
 	CRDebug("[Forwards] Forward 'OnPlayerSpawn' unregistered.")
 }
 
@@ -615,7 +502,7 @@ func ForwardOnPlayerSpawn(client int32) bool {
 
 type OnRoundStartCallback = func(presetRound string)
 
-var OnRoundStart = NewCallback[OnRoundStartCallback]()
+var OnRoundStart = listeners.NewListener[OnRoundStartCallback]()
 
 // OnRoundStartRegister
 //
@@ -626,7 +513,7 @@ var OnRoundStart = NewCallback[OnRoundStartCallback]()
 //
 //plugify:export OnRoundStartRegister
 func OnRoundStartRegister(callback OnRoundStartCallback) int32 {
-	index := OnRoundStart.AddCallback(callback, Post)
+	index := OnRoundStart.Add(callback, listeners.Post)
 	CRDebug("[Forwards] Forward 'OnRoundStart' registered.")
 	return index
 }
@@ -638,7 +525,7 @@ func OnRoundStartRegister(callback OnRoundStartCallback) int32 {
 //
 //plugify:export OnRoundStartUnregister
 func OnRoundStartUnregister(index int32) {
-	OnRoundStart.RemoveCallback(index)
+	OnRoundStart.Remove(index)
 	CRDebug("[Forwards] Forward 'OnRoundStart' unregistered.")
 }
 
@@ -664,7 +551,7 @@ func ForwardOnRoundStart() bool {
 
 type OnRoundEndCallback = func(presetRound string)
 
-var OnRoundEnd = NewCallback[OnRoundEndCallback]()
+var OnRoundEnd = listeners.NewListener[OnRoundEndCallback]()
 
 // OnRoundEndRegister
 //
@@ -675,7 +562,7 @@ var OnRoundEnd = NewCallback[OnRoundEndCallback]()
 //
 //plugify:export OnRoundEndRegister
 func OnRoundEndRegister(callback OnRoundEndCallback) int32 {
-	index := OnRoundEnd.AddCallback(callback, Post)
+	index := OnRoundEnd.Add(callback, listeners.Post)
 	CRDebug("[Forwards] Forward 'OnRoundEnd' registered.")
 	return index
 }
@@ -687,7 +574,7 @@ func OnRoundEndRegister(callback OnRoundEndCallback) int32 {
 //
 //plugify:export OnRoundEndUnregister
 func OnRoundEndUnregister(index int32) {
-	OnRoundEnd.RemoveCallback(index)
+	OnRoundEnd.Remove(index)
 	CRDebug("[Forwards] Forward 'OnRoundEnd' unregistered.")
 }
 

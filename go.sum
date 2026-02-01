@@ -6,6 +6,8 @@ github.com/fr0nch/go-plugify-s2sdk/v2 v2.3.22 h1:tGGvQFpoV1YGXRAXqC8E5rS5qbjFetF
 github.com/fr0nch/go-plugify-s2sdk/v2 v2.3.22/go.mod h1:E+VUBxFGIKojwULqS/swf6G3gY9sWYWIdXDIkAWJf/U=
 github.com/fr0nch/go-plugify-s2sdk/v2 v2.3.23 h1:0gUqCgse2xx/qi5oZsRGdqcBR+RTS1nTLMK26Ifnp/I=
 github.com/fr0nch/go-plugify-s2sdk/v2 v2.3.23/go.mod h1:wVBN72ztHL2VIixPQo074VGivoLUfhQ7HsRGcS5Rb74=
+github.com/fr0nch/listener-manager v0.1.2 h1:WPiCdD5o11wPZzYmwTR7T9NYzhAb1EKHtK4Ykd9JCEA=
+github.com/fr0nch/listener-manager v0.1.2/go.mod h1:RxZpUaaPZ+zS38pSAwbPxhvXNAl3NBzfLGiGBdRJh18=
 github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
 github.com/google/go-cmp v0.6.0/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
 github.com/untrustedmodders/go-plugify v1.5.0 h1:KCZ62n+5uYibMpJKFR57rMuUa2qHqhOYbKAHUIbJzDg=

@@ -81,17 +81,17 @@ jobs:
           go-version: ${{ env.GO_VERSION }}
           cache: true
 
-      - name: Run generator
-        id: generator
-        run: go run generator.go -version="${{ needs.setup.outputs.version }}"
-
-      - name: Commit generated files
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add cs2-${{ env.PROJECT_NAME }}.pplugin
-          git diff --staged --quiet || git commit -m "chore: generate files [skip ci]" || true
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git main || true
+#      - name: Run generator
+#        id: generator
+#        run: go run generator.go -version="${{ needs.setup.outputs.version }}"
+#
+#      - name: Commit generated files
+#        run: |
+#          git config user.name "github-actions[bot]"
+#          git config user.email "github-actions[bot]@users.noreply.github.com"
+#          git add cs2-${{ env.PROJECT_NAME }}.pplugin
+#          git diff --staged --quiet || git commit -m "chore: generate files [skip ci]" || true
+#          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git main || true
 
       - name: Get dependencies
         run: go mod download
