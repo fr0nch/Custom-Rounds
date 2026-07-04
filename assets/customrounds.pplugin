@@ -1,0 +1,1004 @@
+{
+  "$schema": "https://raw.githubusercontent.com/untrustedmodders/plugify/refs/heads/main/schemas/plugin.schema.json",
+  "name": "customrounds",
+  "version": "1.0.0",
+  "author": "Fr4nch",
+  "dependencies": [
+    {
+      "name": "s2sdk"
+    }
+  ],
+  "entry": "bin/libcs2-customrounds",
+  "language": "golang",
+  "methods": [
+    {
+      "name": "OnConfigLoadRegister",
+      "funcName": "__OnConfigLoadRegister",
+      "description": "Регистрирует callback для события OnConfigLoad.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Функция обратного вызова.",
+          "prototype": {
+            "name": "OnConfigLoadCallback",
+            "funcName": "_",
+            "description": "Обрабатывает событие загрузки конфигурации.",
+            "paramTypes": [],
+            "retType": {
+              "type": "void"
+            }
+          }
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Регистрирует callback для события OnConfigLoad.",
+        "enum": {
+          "name": "ListenerID",
+          "description": "Индекс зарегистрированного callback",
+          "values": []
+        }
+      }
+    },
+    {
+      "name": "OnConfigLoadUnregister",
+      "funcName": "__OnConfigLoadUnregister",
+      "description": "Удаляет ранее зарегистрированный callback для события OnConfigLoad.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Индекс callback, который нужно удалить",
+          "enum": {
+            "name": "ListenerID",
+            "values": []
+          }
+        }
+      ],
+      "retType": {
+        "type": "void",
+        "description": "Удаляет ранее зарегистрированный callback для события OnConfigLoad."
+      }
+    },
+    {
+      "name": "OnConfigLoadedRegister",
+      "funcName": "__OnConfigLoadedRegister",
+      "description": "Регистрирует callback для события OnConfigLoaded.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Функция обратного вызов.",
+          "prototype": {
+            "name": "OnConfigLoadedCallback",
+            "funcName": "_",
+            "description": "Прототип функции",
+            "paramTypes": [
+              {
+                "type": "string",
+                "name": "rounds",
+                "description": "Настройка раудов в json формате"
+              }
+            ],
+            "retType": {
+              "type": "void"
+            }
+          }
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Регистрирует callback для события OnConfigLoaded.",
+        "enum": {
+          "name": "ListenerID",
+          "description": "Индекс зарегистрированного callback",
+          "values": []
+        }
+      }
+    },
+    {
+      "name": "OnConfigLoadedUnregister",
+      "funcName": "__OnConfigLoadedUnregister",
+      "description": "Удаляет ранее зарегистрированный callback для события OnConfigLoaded.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Индекс callback, который нужно удалить.",
+          "enum": {
+            "name": "ListenerID",
+            "values": []
+          }
+        }
+      ],
+      "retType": {
+        "type": "void",
+        "description": "Удаляет ранее зарегистрированный callback для события OnConfigLoaded."
+      }
+    },
+    {
+      "name": "OnForceRoundStartPreRegister",
+      "funcName": "__OnForceRoundStartPreRegister",
+      "description": "Регистрирует callback для события OnForceRoundStartPre.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Функция обратного вызова.",
+          "prototype": {
+            "name": "OnForceRoundStartPreCallback",
+            "funcName": "_",
+            "description": "Обрабатывает событие установки следующего раунда. Позволяет реагировать на событие, используя данные о его названии и клиенте.",
+            "paramTypes": [
+              {
+                "type": "string",
+                "name": "name",
+                "description": "Указатель на строку с именем следующего раунда.",
+                "ref": true
+              },
+              {
+                "type": "int32",
+                "name": "client",
+                "description": "ID клиента, инициировавшего событие."
+              }
+            ],
+            "retType": {
+              "type": "int32",
+              "description": "PluginResult Возможные результаты выполнения операции.",
+              "enum": {
+                "name": "PluginResult",
+                "description": "PluginResult Возможные результаты выполнения операции.",
+                "values": [
+                  {
+                    "name": "Continue",
+                    "value": 0
+                  },
+                  {
+                    "name": "Changed",
+                    "value": 1
+                  },
+                  {
+                    "name": "Handled",
+                    "value": 2
+                  },
+                  {
+                    "name": "Stop",
+                    "value": 3
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Регистрирует callback для события OnForceRoundStartPre.",
+        "enum": {
+          "name": "ListenerID",
+          "description": "Индекс зарегистрированного callback.",
+          "values": []
+        }
+      }
+    },
+    {
+      "name": "OnForceRoundStartPreUnregister",
+      "funcName": "__OnForceRoundStartPreUnregister",
+      "description": "Удаляет ранее зарегистрированный callback для события OnForceRoundStartPre.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Индекс callback, который нужно удалить.",
+          "enum": {
+            "name": "ListenerID",
+            "values": []
+          }
+        }
+      ],
+      "retType": {
+        "type": "void",
+        "description": "Удаляет ранее зарегистрированный callback для события OnForceRoundStartPre."
+      }
+    },
+    {
+      "name": "OnForceRoundStartPostRegister",
+      "funcName": "__OnForceRoundStartPostRegister",
+      "description": "Регистрирует callback для события OnForceRoundStartPost.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Функция обратного вызова.",
+          "prototype": {
+            "name": "OnForceRoundStartPostCallback",
+            "funcName": "_",
+            "paramTypes": [
+              {
+                "type": "string",
+                "name": "name"
+              },
+              {
+                "type": "int32",
+                "name": "client"
+              }
+            ],
+            "retType": {
+              "type": "void"
+            }
+          }
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Регистрирует callback для события OnForceRoundStartPost.",
+        "enum": {
+          "name": "ListenerID",
+          "description": "Индекс зарегистрированного callback.",
+          "values": []
+        }
+      }
+    },
+    {
+      "name": "OnForceRoundStartPostUnregister",
+      "funcName": "__OnForceRoundStartPostUnregister",
+      "description": "Удаляет ранее зарегистрированный callback для события OnForceRoundStartPost.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Индекс callback, который нужно удалить.",
+          "enum": {
+            "name": "ListenerID",
+            "values": []
+          }
+        }
+      ],
+      "retType": {
+        "type": "void",
+        "description": "Удаляет ранее зарегистрированный callback для события OnForceRoundStartPost."
+      }
+    },
+    {
+      "name": "OnSetNextRoundPreRegister",
+      "funcName": "__OnSetNextRoundPreRegister",
+      "description": "Регистрирует callback для события OnSetNextRoundPre.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Функция обратного вызова.",
+          "prototype": {
+            "name": "OnSetNextRoundPreCallback",
+            "funcName": "_",
+            "paramTypes": [
+              {
+                "type": "string",
+                "name": "name",
+                "ref": true
+              },
+              {
+                "type": "int32",
+                "name": "client"
+              }
+            ],
+            "retType": {
+              "type": "int32",
+              "enum": {
+                "name": "PluginResult",
+                "values": [
+                  {
+                    "name": "Continue",
+                    "value": 0
+                  },
+                  {
+                    "name": "Changed",
+                    "value": 1
+                  },
+                  {
+                    "name": "Handled",
+                    "value": 2
+                  },
+                  {
+                    "name": "Stop",
+                    "value": 3
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Регистрирует callback для события OnSetNextRoundPre.",
+        "enum": {
+          "name": "ListenerID",
+          "description": "Индекс зарегистрированного callback.",
+          "values": []
+        }
+      }
+    },
+    {
+      "name": "OnSetNextRoundPreUnregister",
+      "funcName": "__OnSetNextRoundPreUnregister",
+      "description": "Удаляет ранее зарегистрированный callback для события OnSetNextRoundPre.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Индекс callback, который нужно удалить.",
+          "enum": {
+            "name": "ListenerID",
+            "values": []
+          }
+        }
+      ],
+      "retType": {
+        "type": "void",
+        "description": "Удаляет ранее зарегистрированный callback для события OnSetNextRoundPre."
+      }
+    },
+    {
+      "name": "OnSetNextRoundPostRegister",
+      "funcName": "__OnSetNextRoundPostRegister",
+      "description": "Регистрирует callback для события OnSetNextRoundPost.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Функция обратного вызова.",
+          "prototype": {
+            "name": "OnSetNextRoundPostCallback",
+            "funcName": "_",
+            "paramTypes": [
+              {
+                "type": "string",
+                "name": "name"
+              },
+              {
+                "type": "int32",
+                "name": "client"
+              }
+            ],
+            "retType": {
+              "type": "void"
+            }
+          }
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Регистрирует callback для события OnSetNextRoundPost.",
+        "enum": {
+          "name": "ListenerID",
+          "description": "Индекс зарегистрированного callback.",
+          "values": []
+        }
+      }
+    },
+    {
+      "name": "OnSetNextRoundPostUnregister",
+      "funcName": "__OnSetNextRoundPostUnregister",
+      "description": "Удаляет ранее зарегистрированный callback для события OnSetNextRoundPost.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Индекс callback, который нужно удалить.",
+          "enum": {
+            "name": "ListenerID",
+            "values": []
+          }
+        }
+      ],
+      "retType": {
+        "type": "void",
+        "description": "Удаляет ранее зарегистрированный callback для события OnSetNextRoundPost."
+      }
+    },
+    {
+      "name": "OnCancelCurrentRoundPreRegister",
+      "funcName": "__OnCancelCurrentRoundPreRegister",
+      "description": "Регистрирует callback для события OnCancelCurrentRoundPre.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Функция обратного вызова.",
+          "prototype": {
+            "name": "OnCancelCurrentRoundPreCallback",
+            "funcName": "_",
+            "paramTypes": [
+              {
+                "type": "string",
+                "name": "name"
+              },
+              {
+                "type": "int32",
+                "name": "client"
+              }
+            ],
+            "retType": {
+              "type": "int32",
+              "enum": {
+                "name": "PluginResult",
+                "values": [
+                  {
+                    "name": "Continue",
+                    "value": 0
+                  },
+                  {
+                    "name": "Changed",
+                    "value": 1
+                  },
+                  {
+                    "name": "Handled",
+                    "value": 2
+                  },
+                  {
+                    "name": "Stop",
+                    "value": 3
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Регистрирует callback для события OnCancelCurrentRoundPre.",
+        "enum": {
+          "name": "ListenerID",
+          "description": "Индекс зарегистрированного callback.",
+          "values": []
+        }
+      }
+    },
+    {
+      "name": "OnCancelCurrentRoundPreUnregister",
+      "funcName": "__OnCancelCurrentRoundPreUnregister",
+      "description": "Удаляет ранее зарегистрированный callback для события OnCancelCurrentRoundPre.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Индекс callback, который нужно удалить.",
+          "enum": {
+            "name": "ListenerID",
+            "values": []
+          }
+        }
+      ],
+      "retType": {
+        "type": "void",
+        "description": "Удаляет ранее зарегистрированный callback для события OnCancelCurrentRoundPre."
+      }
+    },
+    {
+      "name": "OnCancelCurrentRoundPostRegister",
+      "funcName": "__OnCancelCurrentRoundPostRegister",
+      "description": "Регистрирует callback для события OnCancelCurrentRoundPost.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Функция обратного вызова.",
+          "prototype": {
+            "name": "OnCancelCurrentRoundPostCallback",
+            "funcName": "_",
+            "paramTypes": [
+              {
+                "type": "string",
+                "name": "name"
+              },
+              {
+                "type": "int32",
+                "name": "client"
+              }
+            ],
+            "retType": {
+              "type": "void"
+            }
+          }
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Регистрирует callback для события OnCancelCurrentRoundPost.",
+        "enum": {
+          "name": "ListenerID",
+          "description": "Индекс зарегистрированного callback.",
+          "values": []
+        }
+      }
+    },
+    {
+      "name": "OnCancelCurrentRoundPostUnregister",
+      "funcName": "__OnCancelCurrentRoundPostUnregister",
+      "description": "Удаляет ранее зарегистрированный callback для события OnCancelCurrentRoundPost.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Индекс callback, который нужно удалить.",
+          "enum": {
+            "name": "ListenerID",
+            "values": []
+          }
+        }
+      ],
+      "retType": {
+        "type": "void",
+        "description": "Удаляет ранее зарегистрированный callback для события OnCancelCurrentRoundPost."
+      }
+    },
+    {
+      "name": "OnCancelNextRoundPreRegister",
+      "funcName": "__OnCancelNextRoundPreRegister",
+      "description": "Регистрирует callback для события OnCancelNextRoundPre.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Функция обратного вызова.",
+          "prototype": {
+            "name": "OnCancelNextRoundPreCallback",
+            "funcName": "_",
+            "paramTypes": [
+              {
+                "type": "string",
+                "name": "name"
+              },
+              {
+                "type": "int32",
+                "name": "client"
+              }
+            ],
+            "retType": {
+              "type": "int32",
+              "enum": {
+                "name": "PluginResult",
+                "values": [
+                  {
+                    "name": "Continue",
+                    "value": 0
+                  },
+                  {
+                    "name": "Changed",
+                    "value": 1
+                  },
+                  {
+                    "name": "Handled",
+                    "value": 2
+                  },
+                  {
+                    "name": "Stop",
+                    "value": 3
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Регистрирует callback для события OnCancelNextRoundPre.",
+        "enum": {
+          "name": "ListenerID",
+          "description": "Индекс зарегистрированного callback.",
+          "values": []
+        }
+      }
+    },
+    {
+      "name": "OnCancelNextRoundPreUnregister",
+      "funcName": "__OnCancelNextRoundPreUnregister",
+      "description": "Удаляет ранее зарегистрированный callback для события OnCancelNextRoundPre.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Индекс callback, который нужно удалить.",
+          "enum": {
+            "name": "ListenerID",
+            "values": []
+          }
+        }
+      ],
+      "retType": {
+        "type": "void",
+        "description": "Удаляет ранее зарегистрированный callback для события OnCancelNextRoundPre."
+      }
+    },
+    {
+      "name": "OnCancelNextRoundPostRegister",
+      "funcName": "__OnCancelNextRoundPostRegister",
+      "description": "Регистрирует callback для события OnCancelNextRoundPost.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Функция обратного вызова.",
+          "prototype": {
+            "name": "OnCancelNextRoundPostCallback",
+            "funcName": "_",
+            "paramTypes": [
+              {
+                "type": "string",
+                "name": "name"
+              },
+              {
+                "type": "int32",
+                "name": "client"
+              }
+            ],
+            "retType": {
+              "type": "void"
+            }
+          }
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Регистрирует callback для события OnCancelNextRoundPost.",
+        "enum": {
+          "name": "ListenerID",
+          "description": "Индекс зарегистрированного callback.",
+          "values": []
+        }
+      }
+    },
+    {
+      "name": "OnCancelNextRoundPostUnregister",
+      "funcName": "__OnCancelNextRoundPostUnregister",
+      "description": "Удаляет ранее зарегистрированный callback для события OnCancelNextRoundPost.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Индекс callback, который нужно удалить.",
+          "enum": {
+            "name": "ListenerID",
+            "values": []
+          }
+        }
+      ],
+      "retType": {
+        "type": "void",
+        "description": "Удаляет ранее зарегистрированный callback для события OnCancelNextRoundPost."
+      }
+    },
+    {
+      "name": "OnPlayerSpawnRegister",
+      "funcName": "__OnPlayerSpawnRegister",
+      "description": "Регистрирует callback для события OnPlayerSpawn.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Функция обратного вызова.",
+          "prototype": {
+            "name": "OnPlayerSpawnCallback",
+            "funcName": "_",
+            "paramTypes": [
+              {
+                "type": "int32",
+                "name": "client"
+              }
+            ],
+            "retType": {
+              "type": "void"
+            }
+          }
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Регистрирует callback для события OnPlayerSpawn.",
+        "enum": {
+          "name": "ListenerID",
+          "description": "Индекс зарегистрированного callback.",
+          "values": []
+        }
+      }
+    },
+    {
+      "name": "OnPlayerSpawnUnregister",
+      "funcName": "__OnPlayerSpawnUnregister",
+      "description": "Удаляет ранее зарегистрированный callback для события OnPlayerSpawn.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Индекс callback, который нужно удалить.",
+          "enum": {
+            "name": "ListenerID",
+            "values": []
+          }
+        }
+      ],
+      "retType": {
+        "type": "void",
+        "description": "Удаляет ранее зарегистрированный callback для события OnPlayerSpawn."
+      }
+    },
+    {
+      "name": "OnRoundStartRegister",
+      "funcName": "__OnRoundStartRegister",
+      "description": "Регистрирует callback для события OnRoundStart.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Функция обратного вызова.",
+          "prototype": {
+            "name": "OnRoundStartCallback",
+            "funcName": "_",
+            "paramTypes": [
+              {
+                "type": "string",
+                "name": "presetRound"
+              }
+            ],
+            "retType": {
+              "type": "void"
+            }
+          }
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Регистрирует callback для события OnRoundStart.",
+        "enum": {
+          "name": "ListenerID",
+          "description": "Индекс зарегистрированного callback.",
+          "values": []
+        }
+      }
+    },
+    {
+      "name": "OnRoundStartUnregister",
+      "funcName": "__OnRoundStartUnregister",
+      "description": "Удаляет ранее зарегистрированный callback для события OnRoundStart.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Индекс callback, который нужно удалить.",
+          "enum": {
+            "name": "ListenerID",
+            "values": []
+          }
+        }
+      ],
+      "retType": {
+        "type": "void",
+        "description": "Удаляет ранее зарегистрированный callback для события OnRoundStart."
+      }
+    },
+    {
+      "name": "OnRoundEndRegister",
+      "funcName": "__OnRoundEndRegister",
+      "description": "Регистрирует callback для события OnRoundEnd.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Функция обратного вызова.",
+          "prototype": {
+            "name": "OnRoundEndCallback",
+            "funcName": "_",
+            "paramTypes": [
+              {
+                "type": "string",
+                "name": "presetRound"
+              }
+            ],
+            "retType": {
+              "type": "void"
+            }
+          }
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Регистрирует callback для события OnRoundEnd.",
+        "enum": {
+          "name": "ListenerID",
+          "description": "Индекс зарегистрированного callback.",
+          "values": []
+        }
+      }
+    },
+    {
+      "name": "OnRoundEndUnregister",
+      "funcName": "__OnRoundEndUnregister",
+      "description": "Удаляет ранее зарегистрированный callback для события OnRoundEnd.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Индекс callback, который нужно удалить.",
+          "enum": {
+            "name": "ListenerID",
+            "values": []
+          }
+        }
+      ],
+      "retType": {
+        "type": "void",
+        "description": "Удаляет ранее зарегистрированный callback для события OnRoundEnd."
+      }
+    },
+    {
+      "name": "SetNextRound",
+      "funcName": "__SetNextRound",
+      "description": "Устанавливает следующий кастомный раунд по имени.",
+      "paramTypes": [
+        {
+          "type": "string",
+          "name": "name",
+          "description": "Имя раунда."
+        },
+        {
+          "type": "int32",
+          "name": "client",
+          "description": "PlayerSlot игрока."
+        }
+      ],
+      "retType": {
+        "type": "bool",
+        "description": "Устанавливает следующий кастомный раунд по имени."
+      }
+    },
+    {
+      "name": "SetNextRoundFromJson",
+      "funcName": "__SetNextRoundFromJson",
+      "paramTypes": [
+        {
+          "type": "string",
+          "name": "presetRound"
+        },
+        {
+          "type": "int32",
+          "name": "client"
+        }
+      ],
+      "retType": {
+        "type": "bool"
+      }
+    },
+    {
+      "name": "CancelNextRound",
+      "funcName": "__CancelNextRound",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "client"
+        }
+      ],
+      "retType": {
+        "type": "bool"
+      }
+    },
+    {
+      "name": "StartRound",
+      "funcName": "__StartRound",
+      "paramTypes": [
+        {
+          "type": "string",
+          "name": "name"
+        },
+        {
+          "type": "int32",
+          "name": "client"
+        }
+      ],
+      "retType": {
+        "type": "bool"
+      }
+    },
+    {
+      "name": "StopRound",
+      "funcName": "__StopRound",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "client"
+        }
+      ],
+      "retType": {
+        "type": "bool"
+      }
+    },
+    {
+      "name": "IsCustomRound",
+      "funcName": "__IsCustomRound",
+      "paramTypes": [],
+      "retType": {
+        "type": "bool"
+      }
+    },
+    {
+      "name": "IsNextRoundCustom",
+      "funcName": "__IsNextRoundCustom",
+      "paramTypes": [],
+      "retType": {
+        "type": "bool"
+      }
+    },
+    {
+      "name": "IsRoundEnd",
+      "funcName": "__IsRoundEnd",
+      "paramTypes": [],
+      "retType": {
+        "type": "bool"
+      }
+    },
+    {
+      "name": "IsRoundExists",
+      "funcName": "__IsRoundExists",
+      "paramTypes": [
+        {
+          "type": "string",
+          "name": "name"
+        }
+      ],
+      "retType": {
+        "type": "bool"
+      }
+    },
+    {
+      "name": "GetNextRoundName",
+      "funcName": "__GetNextRoundName",
+      "paramTypes": [],
+      "retType": {
+        "type": "string"
+      }
+    },
+    {
+      "name": "GetCurrentRoundName",
+      "funcName": "__GetCurrentRoundName",
+      "paramTypes": [],
+      "retType": {
+        "type": "string"
+      }
+    },
+    {
+      "name": "GetJsonString",
+      "funcName": "__GetJsonString",
+      "paramTypes": [],
+      "retType": {
+        "type": "string"
+      }
+    },
+    {
+      "name": "GetCurrentRoundJsonString",
+      "funcName": "__GetCurrentRoundJsonString",
+      "paramTypes": [],
+      "retType": {
+        "type": "string"
+      }
+    },
+    {
+      "name": "GetNextRoundKeyValueJsonString",
+      "funcName": "__GetNextRoundKeyValueJsonString",
+      "paramTypes": [],
+      "retType": {
+        "type": "string"
+      }
+    },
+    {
+      "name": "ReloadConfig",
+      "funcName": "__ReloadConfig",
+      "paramTypes": [],
+      "retType": {
+        "type": "void"
+      }
+    }
+  ]
+}
