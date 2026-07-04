@@ -15,13 +15,19 @@ func main() {
 }
 
 func CreateManifest(name, version, author string, dependencies []string, entry string) {
-	err := plugify.Generate("./...", "cs2-customrounds.pplugin", name, version, "", author, "", "", make([]string, 0), dependencies, make([]string, 0), entry, "main")
+	params := plugify.GenerateParams{
+		Version:      version,
+		Author:       author,
+		Dependencies: dependencies,
+	}
+
+	err := plugify.Generate("assets/customrounds.pplugin", name, entry, false, params, nil)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error generating plugin manifest: %v\n", err)
 		os.Exit(1)
 	}
 
-	fmt.Println("✓ Manifest and autoexports successfully generated!")
+	fmt.Println("Manifest and autoexports successfully generated!")
 
 	os.Exit(0)
 }

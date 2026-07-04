@@ -6,101 +6,83 @@ import (
 	"github.com/fr0nch/listener-manager"
 )
 
-type PluginResult = int32 // Результат выполнения callback'а.
-
-//const (
-//	Continue PluginResult = 0 // Продолжить выполнение без изменений.
-//	Changed  PluginResult = 1 // Состояние или поведение было изменено.
-//	Handled  PluginResult = 2 // Событие обработано, дальнейшие действия не требуются.
-//	Stop     PluginResult = 3 // Остановить обработку, дальнейшие шаги не выполняются.
-//)
-//
-//type HookMode = int32
-//
-//const (
-//	Pre  HookMode = 0
-//	Post HookMode = 1
-//)
-
 // OnConfigLoadCallback
 //
-//	@brief Обрабатывает событие загрузки конфигурации.
-type OnConfigLoadCallback = func()
+// @brief Обрабатывает событие загрузки конфигурации.
+type OnConfigLoadCallback func()
 
 var OnConfigLoad = listeners.NewListener[OnConfigLoadCallback]()
 
 // OnConfigLoadRegister
 //
 //	@brief Регистрирует callback для события OnConfigLoad.
-//	@param callback: функция обратного вызова (type: OnConfigLoadCallback)
-//	@prototype OnConfigLoadCallback
+//	@param callback Функция обратного вызова.
 //
-//	@return Индекс зарегистрированного callback (type: int32)
+//	@return Индекс зарегистрированного callback
 //
 //plugify:export OnConfigLoadRegister
-func OnConfigLoadRegister(callback OnConfigLoadCallback) int32 {
-	index := OnConfigLoad.Add(callback, listeners.Post)
-	CRDebug("[Forwards] Forward 'OnConfigLoad' registered.")
-	return index
+func OnConfigLoadRegister(callback OnConfigLoadCallback) listeners.ListenerID {
+	plugin.log.Debugf("[Forwards] Forward 'OnConfigLoad' registered.")
+	return OnConfigLoad.Add(callback, listeners.Post)
 }
 
 // OnConfigLoadUnregister
 //
 //	@brief Удаляет ранее зарегистрированный callback для события OnConfigLoad.
-//	@param index: индекс callback, который нужно удалить (type: int32)
+//	@param index Индекс callback, который нужно удалить
 //
 //plugify:export OnConfigLoadUnregister
-func OnConfigLoadUnregister(index int32) {
+func OnConfigLoadUnregister(index listeners.ListenerID) {
 	OnConfigLoad.Remove(index)
-	CRDebug("[Forwards] Forward 'OnConfigLoad' unregistered.")
+	plugin.log.Debugf("[Forwards] Forward 'OnConfigLoad' unregistered.")
 }
 
 func ForwardOnConfigLoad() bool {
-
 	OnConfigLoad.InvokePost(func(callback OnConfigLoadCallback) {
 		callback()
 	})
-
-	CRDebug("[Forwards] Forward 'OnConfigLoad' called.")
-
+	plugin.log.Debugf("[Forwards] Forward 'OnConfigLoad' called.")
 	return true
 }
 
-type OnConfigLoadedCallback = func(rounds string)
+// OnConfigLoadedCallback
+//
+//	@brief Прототип функции
+//	@param rounds Настройка раудов в json формате
+type OnConfigLoadedCallback func(rounds string)
 
 var OnConfigLoaded = listeners.NewListener[OnConfigLoadedCallback]()
 
 // OnConfigLoadedRegister
 //
 //	@brief Регистрирует callback для события OnConfigLoaded.
-//	@param callback: функция обратного вызова (type: OnConfigLoadedCallback)
-//	@prototype OnConfigLoadedCallback
+//	@param callback Функция обратного вызов.
 //
-//	@return Индекс зарегистрированного callback (type: int32)
+//	@return Индекс зарегистрированного callback
 //
 //plugify:export OnConfigLoadedRegister
-func OnConfigLoadedRegister(callback OnConfigLoadedCallback) int32 {
+func OnConfigLoadedRegister(callback OnConfigLoadedCallback) listeners.ListenerID {
 	index := OnConfigLoaded.Add(callback, listeners.Post)
-	CRDebug("[Forwards] Forward 'OnConfigLoaded' registered.")
+	plugin.log.Debugf("[Forwards] Forward 'OnConfigLoaded' registered.")
 	return index
 }
 
 // OnConfigLoadedUnregister
 //
 //	@brief Удаляет ранее зарегистрированный callback для события OnConfigLoaded.
-//	@param index: индекс callback, который нужно удалить (type: int32)
+//	@param index Индекс callback, который нужно удалить.
 //
 //plugify:export OnConfigLoadedUnregister
-func OnConfigLoadedUnregister(index int32) {
+func OnConfigLoadedUnregister(index listeners.ListenerID) {
 	OnConfigLoaded.Remove(index)
-	CRDebug("[Forwards] Forward 'OnConfigLoaded' unregistered.")
+	plugin.log.Debugf("[Forwards] Forward 'OnConfigLoaded' unregistered.")
 }
 
 func ForwardOnConfigLoaded() bool {
 
-	jsonData, err := json.Marshal(Plugin.Config.Rounds)
+	jsonData, err := json.Marshal(plugin.Config.Rounds)
 	if err != nil {
-		CRDebug("[Forwards] Forward 'OnConfigLoaded'. Error marshaling to JSON: %v", err)
+		plugin.log.Debugf("[Forwards] Forward 'OnConfigLoaded'. Error marshaling to JSON: %v", err)
 		return false
 	}
 
@@ -110,7 +92,7 @@ func ForwardOnConfigLoaded() bool {
 		callback(jsonString)
 	})
 
-	CRDebug("[Forwards] Forward 'OnConfigLoaded' called.")
+	plugin.log.Debugf("[Forwards] Forward 'OnConfigLoaded' called.")
 
 	return true
 }
@@ -122,8 +104,8 @@ func ForwardOnConfigLoaded() bool {
 //	@param client ID клиента, инициировавшего событие.
 //
 //	@return PluginResult Возможные результаты выполнения операции.
-type OnForceRoundStartPreCallback = func(name *string, client int32) PluginResult
-type OnForceRoundStartPostCallback = func(name string, client int32)
+type OnForceRoundStartPreCallback func(name *string, client int32) listeners.PluginResult
+type OnForceRoundStartPostCallback func(name string, client int32)
 
 var OnForceRoundStartPre = listeners.NewListener[OnForceRoundStartPreCallback]()
 var OnForceRoundStartPost = listeners.NewListener[OnForceRoundStartPostCallback]()
@@ -131,70 +113,68 @@ var OnForceRoundStartPost = listeners.NewListener[OnForceRoundStartPostCallback]
 // OnForceRoundStartPreRegister
 //
 //	@brief Регистрирует callback для события OnForceRoundStartPre.
-//	@param callback: функция обратного вызова (type: OnForceRoundStartPreCallback)
-//	@prototype OnForceRoundStartPreCallback
+//	@param callback Функция обратного вызова.
 //
-//	@return Индекс зарегистрированного callback (type: int32)
+//	@return Индекс зарегистрированного callback.
 //
 //plugify:export OnForceRoundStartPreRegister
-func OnForceRoundStartPreRegister(callback OnForceRoundStartPreCallback) int32 {
+func OnForceRoundStartPreRegister(callback OnForceRoundStartPreCallback) listeners.ListenerID {
 	index := OnForceRoundStartPre.Add(callback, listeners.Pre)
-	CRDebug("[Forwards] Forward 'OnForceRoundStartPre' registered.")
+	plugin.log.Debugf("[Forwards] Forward 'OnForceRoundStartPre' registered.")
 	return index
 }
 
 // OnForceRoundStartPreUnregister
 //
 //	@brief Удаляет ранее зарегистрированный callback для события OnForceRoundStartPre.
-//	@param index: индекс callback, который нужно удалить (type: int32)
+//	@param index Индекс callback, который нужно удалить.
 //
 //plugify:export OnForceRoundStartPreUnregister
-func OnForceRoundStartPreUnregister(index int32) {
+func OnForceRoundStartPreUnregister(index listeners.ListenerID) {
 	OnForceRoundStartPre.Remove(index)
-	CRDebug("[Forwards] Forward 'OnForceRoundStartPre' unregistered.")
+	plugin.log.Debugf("[Forwards] Forward 'OnForceRoundStartPre' unregistered.")
 }
 
 // OnForceRoundStartPostRegister
 //
 //	@brief Регистрирует callback для события OnForceRoundStartPost.
-//	@param callback: функция обратного вызова (type: OnForceRoundStartPostCallback)
-//	@prototype OnForceRoundStartPostCallback
+//	@param callback Функция обратного вызова.
 //
-//	@return Индекс зарегистрированного callback (type: int32)
+//	@return Индекс зарегистрированного callback.
 //
 //plugify:export OnForceRoundStartPostRegister
-func OnForceRoundStartPostRegister(callback OnForceRoundStartPostCallback) int32 {
+func OnForceRoundStartPostRegister(callback OnForceRoundStartPostCallback) listeners.ListenerID {
 	index := OnForceRoundStartPost.Add(callback, listeners.Post)
-	CRDebug("[Forwards] Forward 'OnForceRoundStartPost' registered.")
+	plugin.log.Debugf("[Forwards] Forward 'OnForceRoundStartPost' registered.")
 	return index
 }
 
 // OnForceRoundStartPostUnregister
 //
 //	@brief Удаляет ранее зарегистрированный callback для события OnForceRoundStartPost.
-//	@param index: индекс callback, который нужно удалить (type: int32)
+//	@param index Индекс callback, который нужно удалить.
 //
 //plugify:export OnForceRoundStartPostUnregister
-func OnForceRoundStartPostUnregister(index int32) {
+func OnForceRoundStartPostUnregister(index listeners.ListenerID) {
 	OnForceRoundStartPost.Remove(index)
-	CRDebug("[Forwards] Forward 'OnForceRoundStartPost' unregistered.")
+	plugin.log.Debugf("[Forwards] Forward 'OnForceRoundStartPost' unregistered.")
 }
 
 func ForwardOnForceRoundStart(name *string, client int32) bool {
 	if name == nil {
-		CRDebug("[Forwards] name *string: is nil")
+		plugin.log.Debugf("[Forwards] name *string: is nil")
 		return false
 	}
 
-	CRDebug("[Forwards] name *string: %s.", *name)
+	plugin.log.Debugf("[Forwards] name *string: %s.", *name)
 	nameCopy := *name
-	CRDebug("[Forwards] nameCopy: %s.", nameCopy)
+	plugin.log.Debugf("[Forwards] nameCopy: %s.", nameCopy)
 
-	result := OnForceRoundStartPre.InvokePre(func(callback OnForceRoundStartPreCallback) PluginResult {
+	result := OnForceRoundStartPre.InvokePre(func(callback OnForceRoundStartPreCallback) listeners.PluginResult {
 		return callback(&nameCopy, client)
 	})
 
-	CRDebug("[Forwards] Forward 'OnForceRoundStartPre' called. Client: %d. Round: %s.", client, *name)
+	plugin.log.Debugf("[Forwards] Forward 'OnForceRoundStartPre' called. Client: %d. Round: %s.", client, *name)
 
 	switch result {
 	case listeners.Stop, listeners.Handled:
@@ -207,13 +187,13 @@ func ForwardOnForceRoundStart(name *string, client int32) bool {
 		callback(nameCopy, client)
 	})
 
-	CRDebug("[Forwards] Forward 'OnSetNextRoundPost' called. Client: %d. Round: %s.", client, *name)
+	plugin.log.Debugf("[Forwards] Forward 'OnSetNextRoundPost' called. Client: %d. Round: %s.", client, *name)
 
 	return true
 }
 
-type OnSetNextRoundPreCallback = func(name *string, client int32) PluginResult
-type OnSetNextRoundPostCallback = func(name string, client int32)
+type OnSetNextRoundPreCallback func(name *string, client int32) listeners.PluginResult
+type OnSetNextRoundPostCallback func(name string, client int32)
 
 var OnSetNextRoundPre = listeners.NewListener[OnSetNextRoundPreCallback]()
 var OnSetNextRoundPost = listeners.NewListener[OnSetNextRoundPostCallback]()
@@ -221,68 +201,68 @@ var OnSetNextRoundPost = listeners.NewListener[OnSetNextRoundPostCallback]()
 // OnSetNextRoundPreRegister
 //
 //	@brief Регистрирует callback для события OnSetNextRoundPre.
-//	@param callback: функция обратного вызова (type: OnSetNextRoundPreCallback)
-//	@prototype OnSetNextRoundPreCallback
-//	@return Индекс зарегистрированного callback (type: int32)
+//	@param callback Функция обратного вызова.
+//
+//	@return Индекс зарегистрированного callback.
 //
 //plugify:export OnSetNextRoundPreRegister
-func OnSetNextRoundPreRegister(callback OnSetNextRoundPreCallback) int32 {
+func OnSetNextRoundPreRegister(callback OnSetNextRoundPreCallback) listeners.ListenerID {
 	index := OnSetNextRoundPre.Add(callback, listeners.Pre)
-	CRDebug("[Forwards] Forward 'OnSetNextRoundPre' registered.")
+	plugin.log.Debugf("[Forwards] Forward 'OnSetNextRoundPre' registered.")
 	return index
 }
 
 // OnSetNextRoundPreUnregister
 //
 //	@brief Удаляет ранее зарегистрированный callback для события OnSetNextRoundPre.
-//	@param index: индекс callback, который нужно удалить (type: int32)
+//	@param index Индекс callback, который нужно удалить.
 //
 //plugify:export OnSetNextRoundPreUnregister
-func OnSetNextRoundPreUnregister(index int32) {
+func OnSetNextRoundPreUnregister(index listeners.ListenerID) {
 	OnSetNextRoundPre.Remove(index)
-	CRDebug("[Forwards] Forward 'OnSetNextRoundPre' unregistered.")
+	plugin.log.Debugf("[Forwards] Forward 'OnSetNextRoundPre' unregistered.")
 }
 
 // OnSetNextRoundPostRegister
 //
 //	@brief Регистрирует callback для события OnSetNextRoundPost.
-//	@param callback: функция обратного вызова (type: OnSetNextRoundPostCallback)
-//	@prototype OnSetNextRoundPostCallback
-//	@return Индекс зарегистрированного callback (type: int32)
+//	@param callback Функция обратного вызова.
+//
+//	@return Индекс зарегистрированного callback.
 //
 //plugify:export OnSetNextRoundPostRegister
-func OnSetNextRoundPostRegister(callback OnSetNextRoundPostCallback) int32 {
+func OnSetNextRoundPostRegister(callback OnSetNextRoundPostCallback) listeners.ListenerID {
 	index := OnSetNextRoundPost.Add(callback, listeners.Post)
-	CRDebug("[Forwards] Forward 'OnSetNextRoundPost' registered.")
+	plugin.log.Debugf("[Forwards] Forward 'OnSetNextRoundPost' registered.")
 	return index
 }
 
 // OnSetNextRoundPostUnregister
 //
 //	@brief Удаляет ранее зарегистрированный callback для события OnSetNextRoundPost.
-//	@param index: индекс callback, который нужно удалить (type: int32)
+//	@param index Индекс callback, который нужно удалить.
 //
 //plugify:export OnSetNextRoundPostUnregister
-func OnSetNextRoundPostUnregister(index int32) {
+func OnSetNextRoundPostUnregister(index listeners.ListenerID) {
 	OnSetNextRoundPost.Remove(index)
-	CRDebug("[Forwards] Forward 'OnSetNextRoundPost' unregistered.")
+	plugin.log.Debugf("[Forwards] Forward 'OnSetNextRoundPost' unregistered.")
 }
 
 func ForwardOnSetNextRound(name *string, client int32) bool {
 	if name == nil {
-		CRDebug("[Forwards] name *string: is nil")
+		plugin.log.Debugf("[Forwards] name *string: is nil")
 		return false
 	}
 
-	CRDebug("[Forwards] name *string: %s.", *name)
+	plugin.log.Debugf("[Forwards] name *string: %s.", *name)
 	nameCopy := *name
-	CRDebug("[Forwards] nameCopy: %s.", nameCopy)
+	plugin.log.Debugf("[Forwards] nameCopy: %s.", nameCopy)
 
-	result := OnSetNextRoundPre.InvokePre(func(callback OnSetNextRoundPreCallback) PluginResult {
+	result := OnSetNextRoundPre.InvokePre(func(callback OnSetNextRoundPreCallback) listeners.PluginResult {
 		return callback(&nameCopy, client)
 	})
 
-	CRDebug("[Forwards] Forward 'OnSetNextRoundPre' called. Client: %d. Round: %s.", client, *name)
+	plugin.log.Debugf("[Forwards] Forward 'OnSetNextRoundPre' called. Client: %d. Round: %s.", client, *name)
 
 	switch result {
 	case listeners.Stop, listeners.Handled:
@@ -295,13 +275,13 @@ func ForwardOnSetNextRound(name *string, client int32) bool {
 		callback(nameCopy, client)
 	})
 
-	CRDebug("[Forwards] Forward 'OnSetNextRoundPost' called. Client: %d. Round: %s.", client, *name)
+	plugin.log.Debugf("[Forwards] Forward 'OnSetNextRoundPost' called. Client: %d. Round: %s.", client, *name)
 
 	return true
 }
 
-type OnCancelCurrentRoundPreCallback = func(name string, client int32) PluginResult
-type OnCancelCurrentRoundPostCallback = func(name string, client int32)
+type OnCancelCurrentRoundPreCallback func(name string, client int32) listeners.PluginResult
+type OnCancelCurrentRoundPostCallback func(name string, client int32)
 
 var OnCancelCurrentRoundPre = listeners.NewListener[OnCancelCurrentRoundPreCallback]()
 var OnCancelCurrentRoundPost = listeners.NewListener[OnCancelCurrentRoundPostCallback]()
@@ -309,63 +289,63 @@ var OnCancelCurrentRoundPost = listeners.NewListener[OnCancelCurrentRoundPostCal
 // OnCancelCurrentRoundPreRegister
 //
 //	@brief Регистрирует callback для события OnCancelCurrentRoundPre.
-//	@param callback: функция обратного вызова (type: OnCancelCurrentRoundPreCallback)
-//	@prototype OnCancelCurrentRoundPreCallback
-//	@return Индекс зарегистрированного callback (type: int32)
+//	@param callback Функция обратного вызова.
+//
+//	@return Индекс зарегистрированного callback.
 //
 //plugify:export OnCancelCurrentRoundPreRegister
-func OnCancelCurrentRoundPreRegister(callback OnCancelCurrentRoundPreCallback) int32 {
+func OnCancelCurrentRoundPreRegister(callback OnCancelCurrentRoundPreCallback) listeners.ListenerID {
 	index := OnCancelCurrentRoundPre.Add(callback, listeners.Pre)
-	CRDebug("[Forwards] Forward 'OnCancelCurrentRoundPre' registered.")
+	plugin.log.Debugf("[Forwards] Forward 'OnCancelCurrentRoundPre' registered.")
 	return index
 }
 
 // OnCancelCurrentRoundPreUnregister
 //
 //	@brief Удаляет ранее зарегистрированный callback для события OnCancelCurrentRoundPre.
-//	@param index: индекс callback, который нужно удалить (type: int32)
+//	@param index Индекс callback, который нужно удалить.
 //
 //plugify:export OnCancelCurrentRoundPreUnregister
-func OnCancelCurrentRoundPreUnregister(index int32) {
+func OnCancelCurrentRoundPreUnregister(index listeners.ListenerID) {
 	OnCancelCurrentRoundPre.Remove(index)
-	CRDebug("[Forwards] Forward 'OnCancelCurrentRoundPre' unregistered.")
+	plugin.log.Debugf("[Forwards] Forward 'OnCancelCurrentRoundPre' unregistered.")
 }
 
 // OnCancelCurrentRoundPostRegister
 //
 //	@brief Регистрирует callback для события OnCancelCurrentRoundPost.
-//	@param callback: функция обратного вызова (type: OnCancelCurrentRoundPostCallback)
-//	@prototype OnCancelCurrentRoundPostCallback
-//	@return Индекс зарегистрированного callback (type: int32)
+//	@param callback Функция обратного вызова.
+//
+//	@return Индекс зарегистрированного callback.
 //
 //plugify:export OnCancelCurrentRoundPostRegister
-func OnCancelCurrentRoundPostRegister(callback OnCancelCurrentRoundPostCallback) int32 {
+func OnCancelCurrentRoundPostRegister(callback OnCancelCurrentRoundPostCallback) listeners.ListenerID {
 	index := OnCancelCurrentRoundPost.Add(callback, listeners.Post)
-	CRDebug("[Forwards] Forward 'OnCancelCurrentRoundPost' registered.")
+	plugin.log.Debugf("[Forwards] Forward 'OnCancelCurrentRoundPost' registered.")
 	return index
 }
 
 // OnCancelCurrentRoundPostUnregister
 //
 //	@brief Удаляет ранее зарегистрированный callback для события OnCancelCurrentRoundPost.
-//	@param index: индекс callback, который нужно удалить (type: int32)
+//	@param index Индекс callback, который нужно удалить.
 //
 //plugify:export OnCancelCurrentRoundPostUnregister
-func OnCancelCurrentRoundPostUnregister(index int32) {
+func OnCancelCurrentRoundPostUnregister(index listeners.ListenerID) {
 	OnCancelCurrentRoundPost.Remove(index)
-	CRDebug("[Forwards] Forward 'OnCancelCurrentRoundPost' unregistered.")
+	plugin.log.Debugf("[Forwards] Forward 'OnCancelCurrentRoundPost' unregistered.")
 }
 
 func ForwardOnCancelCurrentRound(client int32) bool {
 	roundName := GetCurrentRoundName()
 
-	result := OnCancelCurrentRoundPre.InvokePre(func(callback OnCancelCurrentRoundPreCallback) PluginResult {
+	result := OnCancelCurrentRoundPre.InvokePre(func(callback OnCancelCurrentRoundPreCallback) listeners.PluginResult {
 		return callback(roundName, client)
 	})
 
-	CRDebug("[Forwards] Forward 'OnCancelCurrentRoundPre' called. Client: %d. Round: '%s'.", client, roundName)
+	plugin.log.Debugf("[Forwards] Forward 'OnCancelCurrentRoundPre' called. Client: %d. Round: '%s'.", client, roundName)
 
-	CRDebug("result: '%v'", result)
+	plugin.log.Debugf("result: '%v'", result)
 
 	if result > listeners.Continue {
 		return false
@@ -375,13 +355,13 @@ func ForwardOnCancelCurrentRound(client int32) bool {
 		callback(roundName, client)
 	})
 
-	CRDebug("[Forwards] Forward 'OnCancelCurrentRoundPost' called. Client: %d. Round: '%s'.", client, roundName)
+	plugin.log.Debugf("[Forwards] Forward 'OnCancelCurrentRoundPost' called. Client: %d. Round: '%s'.", client, roundName)
 
 	return true
 }
 
-type OnCancelNextRoundPreCallback = func(name string, client int32) PluginResult
-type OnCancelNextRoundPostCallback = func(name string, client int32)
+type OnCancelNextRoundPreCallback func(name string, client int32) listeners.PluginResult
+type OnCancelNextRoundPostCallback func(name string, client int32)
 
 var OnCancelNextRoundPre = listeners.NewListener[OnCancelNextRoundPreCallback]()
 var OnCancelNextRoundPost = listeners.NewListener[OnCancelNextRoundPostCallback]()
@@ -389,104 +369,104 @@ var OnCancelNextRoundPost = listeners.NewListener[OnCancelNextRoundPostCallback]
 // OnCancelNextRoundPreRegister
 //
 //	@brief Регистрирует callback для события OnCancelNextRoundPre.
-//	@param callback: функция обратного вызова (type: OnCancelNextRoundPreCallback)
-//	@prototype OnCancelNextRoundPreCallback
-//	@return Индекс зарегистрированного callback (type: int32)
+//	@param callback Функция обратного вызова.
+//
+//	@return Индекс зарегистрированного callback.
 //
 //plugify:export OnCancelNextRoundPreRegister
-func OnCancelNextRoundPreRegister(callback OnCancelNextRoundPreCallback) int32 {
+func OnCancelNextRoundPreRegister(callback OnCancelNextRoundPreCallback) listeners.ListenerID {
 	index := OnCancelNextRoundPre.Add(callback, listeners.Pre)
-	CRDebug("[Forwards] Forward 'OnCancelNextRoundPre' registered.")
+	plugin.log.Debugf("[Forwards] Forward 'OnCancelNextRoundPre' registered.")
 	return index
 }
 
 // OnCancelNextRoundPreUnregister
 //
 //	@brief Удаляет ранее зарегистрированный callback для события OnCancelNextRoundPre.
-//	@param index: индекс callback, который нужно удалить (type: int32)
+//	@param index Индекс callback, который нужно удалить.
 //
 //plugify:export OnCancelNextRoundPreUnregister
-func OnCancelNextRoundPreUnregister(index int32) {
+func OnCancelNextRoundPreUnregister(index listeners.ListenerID) {
 	OnCancelNextRoundPre.Remove(index)
-	CRDebug("[Forwards] Forward 'OnCancelNextRoundPre' unregistered.")
+	plugin.log.Debugf("[Forwards] Forward 'OnCancelNextRoundPre' unregistered.")
 }
 
 // OnCancelNextRoundPostRegister
 //
 //	@brief Регистрирует callback для события OnCancelNextRoundPost.
-//	@param callback: функция обратного вызова (type: OnCancelNextRoundPostCallback)
-//	@prototype OnCancelNextRoundPostCallback
-//	@return Индекс зарегистрированного callback (type: int32)
+//	@param callback Функция обратного вызова.
+//
+//	@return Индекс зарегистрированного callback.
 //
 //plugify:export OnCancelNextRoundPostRegister
-func OnCancelNextRoundPostRegister(callback OnCancelNextRoundPostCallback) int32 {
+func OnCancelNextRoundPostRegister(callback OnCancelNextRoundPostCallback) listeners.ListenerID {
 	index := OnCancelNextRoundPost.Add(callback, listeners.Post)
-	CRDebug("[Forwards] Forward 'OnCancelNextRoundPost' registered.")
+	plugin.log.Debugf("[Forwards] Forward 'OnCancelNextRoundPost' registered.")
 	return index
 }
 
 // OnCancelNextRoundPostUnregister
 //
 //	@brief Удаляет ранее зарегистрированный callback для события OnCancelNextRoundPost.
-//	@param index: индекс callback, который нужно удалить (type: int32)
+//	@param index Индекс callback, который нужно удалить.
 //
 //plugify:export OnCancelNextRoundPostUnregister
-func OnCancelNextRoundPostUnregister(index int32) {
+func OnCancelNextRoundPostUnregister(index listeners.ListenerID) {
 	OnCancelNextRoundPost.Remove(index)
-	CRDebug("[Forwards] Forward 'OnCancelNextRoundPost' unregistered.")
+	plugin.log.Debugf("[Forwards] Forward 'OnCancelNextRoundPost' unregistered.")
 }
 
 func ForwardOnCancelNextRound(client int32) bool {
 	roundName := GetNextRoundName()
 
-	result := OnCancelNextRoundPre.InvokePre(func(callback OnCancelNextRoundPreCallback) PluginResult {
+	result := OnCancelNextRoundPre.InvokePre(func(callback OnCancelNextRoundPreCallback) listeners.PluginResult {
 		return callback(roundName, client)
 	})
 
-	CRDebug("[Forwards] Forward 'OnCancelNextRoundPre' called. Client: %d. Round: %s.", client, roundName)
+	plugin.log.Debugf("[Forwards] Forward 'OnCancelNextRoundPre' called. Client: %d. Round: %s.", client, roundName)
 
 	if result > listeners.Continue {
 		return false
 	}
 
-	CRDebug("roundName: '%s'", roundName)
+	plugin.log.Debugf("roundName: '%s'", roundName)
 
 	OnCancelNextRoundPost.InvokePost(func(callback OnCancelNextRoundPostCallback) {
 		callback(roundName, client)
 	})
 
-	CRDebug("[Forwards] Forward 'OnCancelNextRoundPost' called. Client: %d. Round: %s.", client, roundName)
+	plugin.log.Debugf("[Forwards] Forward 'OnCancelNextRoundPost' called. Client: %d. Round: %s.", client, roundName)
 
 	return true
 }
 
-type OnPlayerSpawnCallback = func(client int32)
+type OnPlayerSpawnCallback func(client int32)
 
 var OnPlayerSpawn = listeners.NewListener[OnPlayerSpawnCallback]()
 
 // OnPlayerSpawnRegister
 //
 //	@brief Регистрирует callback для события OnPlayerSpawn.
-//	@param callback: функция обратного вызова (type: OnPlayerSpawnCallback)
-//	@prototype OnPlayerSpawnCallback
-//	@return Индекс зарегистрированного callback (type: int32)
+//	@param callback Функция обратного вызова.
+//
+//	@return Индекс зарегистрированного callback.
 //
 //plugify:export OnPlayerSpawnRegister
-func OnPlayerSpawnRegister(callback OnPlayerSpawnCallback) int32 {
+func OnPlayerSpawnRegister(callback OnPlayerSpawnCallback) listeners.ListenerID {
 	index := OnPlayerSpawn.Add(callback, listeners.Post)
-	CRDebug("[Forwards] Forward 'OnPlayerSpawn' registered.")
+	plugin.log.Debugf("[Forwards] Forward 'OnPlayerSpawn' registered.")
 	return index
 }
 
 // OnPlayerSpawnUnregister
 //
 //	@brief Удаляет ранее зарегистрированный callback для события OnPlayerSpawn.
-//	@param index: индекс callback, который нужно удалить (type: int32)
+//	@param index Индекс callback, который нужно удалить.
 //
 //plugify:export OnPlayerSpawnUnregister
-func OnPlayerSpawnUnregister(index int32) {
+func OnPlayerSpawnUnregister(index listeners.ListenerID) {
 	OnPlayerSpawn.Remove(index)
-	CRDebug("[Forwards] Forward 'OnPlayerSpawn' unregistered.")
+	plugin.log.Debugf("[Forwards] Forward 'OnPlayerSpawn' unregistered.")
 }
 
 func ForwardOnPlayerSpawn(client int32) bool {
@@ -495,46 +475,46 @@ func ForwardOnPlayerSpawn(client int32) bool {
 		callback(client)
 	})
 
-	CRDebug("[Forwards] Forward 'OnPlayerSpawn' called.")
+	plugin.log.Debugf("[Forwards] Forward 'OnPlayerSpawn' called.")
 
 	return true
 }
 
-type OnRoundStartCallback = func(presetRound string)
+type OnRoundStartCallback func(presetRound string)
 
 var OnRoundStart = listeners.NewListener[OnRoundStartCallback]()
 
 // OnRoundStartRegister
 //
 //	@brief Регистрирует callback для события OnRoundStart.
-//	@param callback: функция обратного вызова (type: OnRoundStartCallback)
-//	@prototype OnRoundStartCallback
-//	@return Индекс зарегистрированного callback (type: int32)
+//	@param callback Функция обратного вызова.
+//
+//	@return Индекс зарегистрированного callback.
 //
 //plugify:export OnRoundStartRegister
-func OnRoundStartRegister(callback OnRoundStartCallback) int32 {
+func OnRoundStartRegister(callback OnRoundStartCallback) listeners.ListenerID {
 	index := OnRoundStart.Add(callback, listeners.Post)
-	CRDebug("[Forwards] Forward 'OnRoundStart' registered.")
+	plugin.log.Debugf("[Forwards] Forward 'OnRoundStart' registered.")
 	return index
 }
 
 // OnRoundStartUnregister
 //
 //	@brief Удаляет ранее зарегистрированный callback для события OnRoundStart.
-//	@param index: индекс callback, который нужно удалить (type: int32)
+//	@param index Индекс callback, который нужно удалить.
 //
 //plugify:export OnRoundStartUnregister
-func OnRoundStartUnregister(index int32) {
+func OnRoundStartUnregister(index listeners.ListenerID) {
 	OnRoundStart.Remove(index)
-	CRDebug("[Forwards] Forward 'OnRoundStart' unregistered.")
+	plugin.log.Debugf("[Forwards] Forward 'OnRoundStart' unregistered.")
 }
 
 func ForwardOnRoundStart() bool {
-	CRDebug("[Forwards] Forward 'OnRoundStart' called.")
+	plugin.log.Debugf("[Forwards] Forward 'OnRoundStart' called.")
 
-	jsonData, err := json.Marshal(Plugin.CurrentRound)
+	jsonData, err := json.Marshal(plugin.CurrentRound)
 	if err != nil {
-		CRDebug("[Forwards] Forward 'OnRoundStart'. Error marshaling to JSON: %v", err)
+		plugin.log.Debugf("[Forwards] Forward 'OnRoundStart'. Error marshaling to JSON: %v", err)
 		return false
 	}
 
@@ -544,46 +524,46 @@ func ForwardOnRoundStart() bool {
 		callback(jsonString)
 	})
 
-	CRDebug("[Forwards] Forward 'OnRoundStart' called.")
+	plugin.log.Debugf("[Forwards] Forward 'OnRoundStart' called.")
 
 	return true
 }
 
-type OnRoundEndCallback = func(presetRound string)
+type OnRoundEndCallback func(presetRound string)
 
 var OnRoundEnd = listeners.NewListener[OnRoundEndCallback]()
 
 // OnRoundEndRegister
 //
 //	@brief Регистрирует callback для события OnRoundEnd.
-//	@param callback: функция обратного вызова (type: OnRoundEndCallback)
-//	@prototype OnRoundEndCallback
-//	@return Индекс зарегистрированного callback (type: int32)
+//	@param callback Функция обратного вызова.
+//
+//	@return Индекс зарегистрированного callback.
 //
 //plugify:export OnRoundEndRegister
-func OnRoundEndRegister(callback OnRoundEndCallback) int32 {
+func OnRoundEndRegister(callback OnRoundEndCallback) listeners.ListenerID {
 	index := OnRoundEnd.Add(callback, listeners.Post)
-	CRDebug("[Forwards] Forward 'OnRoundEnd' registered.")
+	plugin.log.Debugf("[Forwards] Forward 'OnRoundEnd' registered.")
 	return index
 }
 
 // OnRoundEndUnregister
 //
 //	@brief Удаляет ранее зарегистрированный callback для события OnRoundEnd.
-//	@param index: индекс callback, который нужно удалить (type: int32)
+//	@param index Индекс callback, который нужно удалить.
 //
 //plugify:export OnRoundEndUnregister
-func OnRoundEndUnregister(index int32) {
+func OnRoundEndUnregister(index listeners.ListenerID) {
 	OnRoundEnd.Remove(index)
-	CRDebug("[Forwards] Forward 'OnRoundEnd' unregistered.")
+	plugin.log.Debugf("[Forwards] Forward 'OnRoundEnd' unregistered.")
 }
 
 func ForwardOnRoundEnd() bool {
-	CRDebug("[Forwards] Forward 'OnRoundEnd' called.")
+	plugin.log.Debugf("[Forwards] Forward 'OnRoundEnd' called.")
 
-	jsonData, err := json.Marshal(Plugin.CurrentRound)
+	jsonData, err := json.Marshal(plugin.CurrentRound)
 	if err != nil {
-		CRDebug("[Forwards] Forward 'OnRoundEnd'. Error marshaling to JSON: %v", err)
+		plugin.log.Debugf("[Forwards] Forward 'OnRoundEnd'. Error marshaling to JSON: %v", err)
 		return false
 	}
 
@@ -593,9 +573,9 @@ func ForwardOnRoundEnd() bool {
 		callback(jsonString)
 	})
 
-	Plugin.CurrentRound = nil
+	plugin.CurrentRound = nil
 
-	CRDebug("[Forwards] Forward 'OnRoundEnd' called.")
+	plugin.log.Debugf("[Forwards] Forward 'OnRoundEnd' called.")
 
 	return true
 }

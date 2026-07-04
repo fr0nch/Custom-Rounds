@@ -9,23 +9,31 @@ import (
 	"github.com/fr0nch/go-plugify-s2sdk/v2"
 )
 
+// SetNextRound
+//
+//	@brief Устанавливает следующий кастомный раунд по имени.
+//	@param name Имя раунда.
+//	@param client PlayerSlot игрока.
+//
+//	@return bool Если true то раунд поставился удачно, false не удачно.
+//
 //plugify:export SetNextRound
 func SetNextRound(name string, client int32) bool {
-	CRDebug("[Natives] Native 'SetNextRound' start call.")
+	plugin.log.Debugf("[Natives] Native 'SetNextRound' start call.")
 
-	if !Plugin.CheckConfig() {
+	if !plugin.CheckConfig() {
 		return false
 	}
 
-	if Plugin.GetRoundSettingsByName(name) != nil {
+	if plugin.GetRoundSettingsByName(name) != nil {
 		if ForwardOnSetNextRound(&name, client) {
-			Plugin.CreateRound(name, false, nil)
-			CRDebug("[Natives] Native 'SetNextRound' end call. Name: %s. State: true.", name)
+			plugin.CreateRound(name, false, nil)
+			plugin.log.Debugf("[Natives] Native 'SetNextRound' end call. Name: %s. State: true.", name)
 			return true
 		}
-		CRDebug("[Natives] Native 'SetNextRound' end call. Name: %s. State: false.", name)
+		plugin.log.Debugf("[Natives] Native 'SetNextRound' end call. Name: %s. State: false.", name)
 	} else {
-		CRDebug("[SetNextRound] Round name '%s' is invalid.", name)
+		plugin.log.Debugf("[SetNextRound] Round name '%s' is invalid.", name)
 	}
 
 	return false
@@ -33,40 +41,40 @@ func SetNextRound(name string, client int32) bool {
 
 //plugify:export SetNextRoundFromJson
 func SetNextRoundFromJson(presetRound string, client int32) bool {
-	CRDebug("[Natives] Native 'SetNextRoundFromJson' start call.")
+	plugin.log.Debugf("[Natives] Native 'SetNextRoundFromJson' start call.")
 
 	var round map[string]any
 
 	if err := json.Unmarshal([]byte(presetRound), &round); err != nil {
-		CRDebug("[SetNextRoundFromJson] Invalid JSON round setting. Error marshaling to JSON: %v", err)
+		plugin.log.Debugf("[SetNextRoundFromJson] Invalid JSON round setting. Error marshaling to JSON: %v", err)
 		return false
 	}
 
-	CRDebug("[SetNextRoundFromJson] JSON setting:\n \n%s", round)
+	plugin.log.Debugf("[SetNextRoundFromJson] JSON setting:\n \n%s", round)
 
 	if round["name"] == nil {
 		round["name"] = fmt.Sprintf("CRound_FromJson_%d", rand.Intn(100))
-		CRDebug("[SetNextRoundFromJson] The round does not have a name set in the settings. It will be assigned the name '%s'", round["name"])
+		plugin.log.Debugf("[SetNextRoundFromJson] The round does not have a name set in the settings. It will be assigned the name '%s'", round["name"])
 	}
 
 	roundName := round["name"].(string)
 
 	if ForwardOnSetNextRound(&roundName, client) {
-		Plugin.CreateRound("", false, round)
-		CRDebug("[Natives] Native 'SetNextRoundFromJson' end call. Name: %s. State: true.", roundName)
+		plugin.CreateRound("", false, round)
+		plugin.log.Debugf("[Natives] Native 'SetNextRoundFromJson' end call. Name: %s. State: true.", roundName)
 		return true
 	}
 
-	CRDebug("[Natives] Native 'SetNextRoundFromJson' end call. Name: %s. State: false.", roundName)
+	plugin.log.Debugf("[Natives] Native 'SetNextRoundFromJson' end call. Name: %s. State: false.", roundName)
 	return false
 }
 
 //plugify:export CancelNextRound
 func CancelNextRound(client int32) bool {
-	CRDebug("[Natives] Native 'CancelNextRound' start call.")
+	plugin.log.Debugf("[Natives] Native 'CancelNextRound' start call.")
 
-	if Plugin.NextRound == nil {
-		CRDebug("[CancelNextRound] Next round is not a set.")
+	if plugin.NextRound == nil {
+		plugin.log.Debugf("[CancelNextRound] Next round is not a set.")
 		return false
 	}
 
@@ -74,56 +82,56 @@ func CancelNextRound(client int32) bool {
 		return false
 	}
 
-	Plugin.NextRound = nil
+	plugin.NextRound = nil
 
-	CRDebug("[Natives] Native 'CancelNextRound' end call.")
+	plugin.log.Debugf("[Natives] Native 'CancelNextRound' end call.")
 
 	return true
 }
 
 //plugify:export StartRound
 func StartRound(name string, client int32) bool {
-	CRDebug("[Natives] Native 'StartRound' start call.")
+	plugin.log.Debugf("[Natives] Native 'StartRound' start call.")
 
-	warmupPeriod := s2sdk.GetEntSchema2(Plugin.GameRules, "CCSGameRules", "m_bWarmupPeriod", 0) > 0
+	warmupPeriod := s2sdk.GetEntSchema2(plugin.GameRules, "CCSGameRules", "m_bWarmupPeriod", 0) > 0
 
 	if warmupPeriod {
-		CRDebug("[StartRound] Cannot start round '%s' during the warmup period.", name)
+		plugin.log.Debugf("[StartRound] Cannot start round '%s' during the warmup period.", name)
 		return false
 	}
 
-	if !Plugin.CheckConfig() {
+	if !plugin.CheckConfig() {
 		return false
 	}
 
-	roundSettings := Plugin.GetRoundSettingsByName(name)
+	roundSettings := plugin.GetRoundSettingsByName(name)
 	if roundSettings == nil {
-		CRDebug("[Natives] Native 'StartRound' \"%s\" is invalid.", name)
+		plugin.log.Debugf("[Natives] Native 'StartRound' \"%s\" is invalid.", name)
 		return false
 	}
 
 	if ForwardOnForceRoundStart(&name, client) {
-		s2sdk.TerminateRound(Plugin.RestartDelay, s2sdk.CSRoundEndReason_Draw)
-		Plugin.CreateRound("", false, roundSettings)
+		s2sdk.TerminateRound(plugin.RestartDelay, s2sdk.CSRoundEndReason_Draw)
+		plugin.CreateRound("", false, roundSettings)
 
-		CRDebug("[StartRound] Round name: '%s'.", name)
-		CRDebug("[StartRound] Settings: %s", name)
+		plugin.log.Debugf("[StartRound] Round name: '%s'.", name)
+		plugin.log.Debugf("[StartRound] Settings: %s", name)
 
-		CRDebug("[Natives] Native 'StartRound' end call. Name: %s. State: true.")
+		plugin.log.Debugf("[Natives] Native 'StartRound' end call. Name: %s. State: true.")
 		return true
 	}
 
-	CRDebug("[Natives] Native 'StartRound' end call. Name: %s. State: false.")
+	plugin.log.Debugf("[Natives] Native 'StartRound' end call. Name: %s. State: false.")
 
 	return false
 }
 
 //plugify:export StopRound
 func StopRound(client int32) bool {
-	CRDebug("[Natives] Native 'StopRound' start call.")
+	plugin.log.Debugf("[Natives] Native 'StopRound' start call.")
 
-	if Plugin.CurrentRound == nil {
-		CRDebug("[StopRound] Current round is not a set.")
+	if plugin.CurrentRound == nil {
+		plugin.log.Debugf("[StopRound] Current round is not a set.")
 		return false
 	}
 
@@ -131,41 +139,41 @@ func StopRound(client int32) bool {
 		return false
 	}
 
-	s2sdk.TerminateRound(Plugin.RestartDelay, s2sdk.CSRoundEndReason_Draw)
+	s2sdk.TerminateRound(plugin.RestartDelay, s2sdk.CSRoundEndReason_Draw)
 
-	CRDebug("[Natives] Native 'StopRound' end call.")
+	plugin.log.Debugf("[Natives] Native 'StopRound' end call.")
 
 	return true
 }
 
 //plugify:export IsCustomRound
 func IsCustomRound() bool {
-	result := Plugin.CurrentRound != nil && len(Plugin.CurrentRound) > 0
-	CRDebug("[Natives] Native 'IsCustomRound' called. Result: %v.", result)
+	result := plugin.CurrentRound != nil && len(plugin.CurrentRound) > 0
+	plugin.log.Debugf("[Natives] Native 'IsCustomRound' called. Result: %v.", result)
 	return result
 }
 
 //plugify:export IsNextRoundCustom
 func IsNextRoundCustom() bool {
-	result := Plugin.NextRound != nil && len(Plugin.NextRound) > 0
-	CRDebug("[Natives] Native 'IsNextRoundCustom' called. Result: %v.", result)
+	result := plugin.NextRound != nil && len(plugin.NextRound) > 0
+	plugin.log.Debugf("[Natives] Native 'IsNextRoundCustom' called. Result: %v.", result)
 	return result
 }
 
 //plugify:export IsRoundEnd
 func IsRoundEnd() bool {
-	CRDebug("[Natives] Native 'IsRoundEnd' called. Result: %v.", Plugin.RoundEnded)
-	return Plugin.RoundEnded
+	plugin.log.Debugf("[Natives] Native 'IsRoundEnd' called. Result: %v.", plugin.RoundEnded)
+	return plugin.RoundEnded
 }
 
 //plugify:export IsRoundExists
 func IsRoundExists(name string) bool {
-	if !Plugin.CheckConfig() {
-		CRDebug("[Natives] Native 'IsRoundExists' called. Result: %v.", false)
+	if !plugin.CheckConfig() {
+		plugin.log.Debugf("[Natives] Native 'IsRoundExists' called. Result: %v.", false)
 		return false
 	}
 
-	result := slices.IndexFunc(Plugin.Config.Rounds, func(round map[string]any) bool {
+	result := slices.IndexFunc(plugin.Config.Rounds, func(round map[string]any) bool {
 		return round["name"] == name
 	})
 
@@ -174,11 +182,11 @@ func IsRoundExists(name string) bool {
 
 //plugify:export GetNextRoundName
 func GetNextRoundName() string {
-	CRDebug("[Natives] Native 'GetNextRoundName' start call.")
+	plugin.log.Debugf("[Natives] Native 'GetNextRoundName' start call.")
 
-	if Plugin.NextRound != nil {
-		if name, ok := Plugin.NextRound["name"].(string); ok {
-			CRDebug("[Natives] Native 'GetNextRoundName' end call. Name: %s. Len: %i.", name, len(name))
+	if plugin.NextRound != nil {
+		if name, ok := plugin.NextRound["name"].(string); ok {
+			plugin.log.Debugf("[Natives] Native 'GetNextRoundName' end call. Name: %s. Len: %i.", name, len(name))
 			return name
 		}
 	}
@@ -188,14 +196,14 @@ func GetNextRoundName() string {
 
 //plugify:export GetCurrentRoundName
 func GetCurrentRoundName() string {
-	CRDebug("[Natives] Native 'GetCurrentRoundName' start call.")
+	plugin.log.Debugf("[Natives] Native 'GetCurrentRoundName' start call.")
 
-	if Plugin.CurrentRound == nil {
+	if plugin.CurrentRound == nil {
 		return ""
 	}
 
-	if name, ok := Plugin.CurrentRound["name"].(string); ok {
-		CRDebug("[Natives] Native 'GetCurrentRoundName' end call. Name: %s. Len: %i", name, len(name))
+	if name, ok := plugin.CurrentRound["name"].(string); ok {
+		plugin.log.Debugf("[Natives] Native 'GetCurrentRoundName' end call. Name: %s. Len: %i", name, len(name))
 		return name
 	}
 
@@ -204,11 +212,11 @@ func GetCurrentRoundName() string {
 
 //plugify:export GetJsonString
 func GetJsonString() string {
-	CRDebug("[Natives] Native 'GetJsonString' called.")
+	//plugin.Log.Debugf("[Natives] Native 'GetJsonString' called.")
 
-	jsonData, err := json.Marshal(Plugin.Config.Rounds)
+	jsonData, err := json.Marshal(plugin.Config.Rounds)
 	if err != nil {
-		CRDebug("[Natives] Native 'GetJsonString' error marshaling to JSON: %v", err)
+		//plugin.Log.Debugf("[Natives] Native 'GetJsonString' error marshaling to JSON: %v", err)
 		return ""
 	}
 
@@ -217,11 +225,11 @@ func GetJsonString() string {
 
 //plugify:export GetCurrentRoundJsonString
 func GetCurrentRoundJsonString() string {
-	CRDebug("[Natives] Native 'GetCurrentRoundJsonString' called.")
+	plugin.log.Debugf("[Natives] Native 'GetCurrentRoundJsonString' called.")
 
-	jsonData, err := json.Marshal(Plugin.CurrentRound)
+	jsonData, err := json.Marshal(plugin.CurrentRound)
 	if err != nil {
-		CRDebug("[Natives] Native 'GetCurrentRoundJsonString' error marshaling to JSON: %v", err)
+		plugin.log.Debugf("[Natives] Native 'GetCurrentRoundJsonString' error marshaling to JSON: %v", err)
 		return ""
 	}
 
@@ -230,11 +238,11 @@ func GetCurrentRoundJsonString() string {
 
 //plugify:export GetNextRoundKeyValueJsonString
 func GetNextRoundKeyValueJsonString() string {
-	CRDebug("[Natives] Native 'GetNextRoundKeyValue' called.")
+	plugin.log.Debugf("[Natives] Native 'GetNextRoundKeyValue' called.")
 
-	jsonData, err := json.Marshal(Plugin.NextRound)
+	jsonData, err := json.Marshal(plugin.NextRound)
 	if err != nil {
-		CRDebug("[Natives] Native 'GetNextRoundKeyValue' error marshaling to JSON: %v", err)
+		plugin.log.Debugf("[Natives] Native 'GetNextRoundKeyValue' error marshaling to JSON: %v", err)
 		return ""
 	}
 
@@ -243,6 +251,6 @@ func GetNextRoundKeyValueJsonString() string {
 
 //plugify:export ReloadConfig
 func ReloadConfig() {
-	CRDebug("[Natives] Native 'ReloadConfig' called.")
-	Plugin.LoadConfig()
+	plugin.log.Debugf("[Natives] Native 'ReloadConfig' called.")
+	plugin.LoadConfig()
 }

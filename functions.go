@@ -10,15 +10,15 @@ import (
 )
 
 func (cr *CustomRoundsPlugin) LoadConfig() {
-	CRDebug("[Config] Function 'LoadConfig' start call.")
+	cr.log.Debug("[Config] Function 'LoadConfig' start call.")
 
-	configDir := filepath.Join(plugify.ConfigsDir, "customrounds")
-	CRDebug("[Config] Path: '%s'", configDir)
+	configDir := filepath.Join(plugify.ConfigsDir(), cr.Plugin.Name())
+	cr.log.Debugf("[Config] Path: '%s'", configDir)
 
 	ForwardOnConfigLoad()
 
 	if err := os.MkdirAll(configDir, 0755); err != nil {
-		CRDebug("[ERROR] Failed to create configs directory (%s)", err)
+		cr.log.Debugf("[ERROR] Failed to create configs directory (%s)", err)
 		return
 	}
 
@@ -26,15 +26,15 @@ func (cr *CustomRoundsPlugin) LoadConfig() {
 
 	file, err := os.Open(configPath)
 	if err != nil {
-		CRDebug("[WARNING] Missing rounds config file. Creating default config...")
+		cr.log.Debug("[WARNING] Missing rounds config file. Creating default config...")
 		if err := cr.CreateDefaultConfig(configPath); err != nil {
-			CRDebug("[ERROR] Failed to create default config file (%s)", err)
+			cr.log.Debugf("[ERROR] Failed to create default config file (%s)", err)
 			return
 		}
-		// После создания дефолтного конфига, открываем его заново
+
 		file, err = os.Open(configPath)
 		if err != nil {
-			CRDebug("[ERROR] Failed to open newly created config file (%s)", err)
+			cr.log.Debugf("[ERROR] Failed to open newly created config file (%s)", err)
 			return
 		}
 	}
@@ -42,7 +42,7 @@ func (cr *CustomRoundsPlugin) LoadConfig() {
 
 	err = json.NewDecoder(file).Decode(&cr.Config)
 	if err != nil {
-		CRDebug("[ERROR] Failed to parse JSON config file (%s)", err)
+		cr.log.Debugf("[ERROR] Failed to parse JSON config file (%s)", err)
 		return
 	}
 
@@ -50,19 +50,19 @@ func (cr *CustomRoundsPlugin) LoadConfig() {
 	cr.RespawnType = cr.Config.Settings.RespawnType
 
 	if cr.Config.Rounds == nil {
-		CRDebug("[Config] Rounds list is nil. Check config file.")
+		cr.log.Debug("[Config] Rounds list is nil. Check config file.")
 		return
 	}
 
 	for i, round := range cr.Config.Rounds {
 		if round["name"] == nil {
 			round["name"] = fmt.Sprintf("CRound_%d", i+1)
-			CRDebug("[Config] The round at index %d does not have a name set in the settings. It will be assigned the name '%s'", i, round["name"])
+			cr.log.Debugf("[Config] The round at index %d does not have a name set in the settings. It will be assigned the name '%s'", i, round["name"])
 		}
 	}
 
-	CRDebug("[Config] RestartDelay: %f | RespawnType: %f", cr.RestartDelay, cr.RespawnType)
-	CRDebug("[Config]\n\t%+v", cr.Config.Rounds)
+	cr.log.Debugf("[Config] RestartDelay: %f | RespawnType: %f", cr.RestartDelay, cr.RespawnType)
+	cr.log.Debugf("[Config]\n\t%+v", cr.Config.Rounds)
 
 	ForwardOnConfigLoaded()
 }
@@ -91,18 +91,18 @@ func (cr *CustomRoundsPlugin) CheckConfig() bool {
 	if cr.Config.Rounds == nil {
 		cr.LoadConfig()
 
-		CRDebug("[Config] Function 'CheckConfig' called. Attempt to load config.")
-		CRDebug("[WARNING] Main config not loaded. Attempting to load main config file...")
+		cr.log.Debug("[Config] Function 'CheckConfig' called. Attempt to load config.")
+		cr.log.Debug("[WARNING] Main config not loaded. Attempting to load main config file...")
 
 		if cr.Config.Rounds == nil {
-			CRDebug("[ERROR] Main config not loaded!")
-			CRDebug("[Config] Function 'CheckConfig' called. Attempt to load config failed.")
+			cr.log.Debug("[ERROR] Main config not loaded!")
+			cr.log.Debug("[Config] Function 'CheckConfig' called. Attempt to load config failed.")
 
 			return false
 		}
 	}
 
-	CRDebug("[Config] Function 'CheckConfig' called.")
+	cr.log.Debug("[Config] Function 'CheckConfig' called.")
 
 	return true
 }
@@ -110,7 +110,7 @@ func (cr *CustomRoundsPlugin) CheckConfig() bool {
 func (cr *CustomRoundsPlugin) GetRoundSettingsByName(name string) map[string]any {
 	for _, round := range cr.Config.Rounds {
 		if round["name"] == name {
-			CRDebug("Round settings found for '%s': %+v", name, round)
+			cr.log.Debugf("Round settings found for '%s': %+v", name, round)
 			return round
 		}
 	}

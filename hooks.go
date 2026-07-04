@@ -27,8 +27,7 @@ func (cr *CustomRoundsPlugin) OnServerActivate() {
 }
 
 func (cr *CustomRoundsPlugin) OnMapStart() {
-	CRDebug("[CustomRounds] Map started!")
-
+	cr.log.Debug("[CustomRounds] Map started!")
 	cr.LoadConfig()
 
 	cr.RoundEnded = false
@@ -39,7 +38,7 @@ func (cr *CustomRoundsPlugin) OnMapStart() {
 func (cr *CustomRoundsPlugin) EventsCallback(name string, event uintptr, dontBroadcast bool) s2sdk.ResultType {
 	switch name {
 	case "round_start":
-		CRDebug("[Hooks] Event 'round_start' called.")
+		cr.log.Debug("[Hooks] Event 'round_start' called.")
 		cr.RoundEnded = false
 		if cr.NextRound != nil && cr.CurrentRound == nil {
 			cr.CurrentRound = cr.NextRound
@@ -47,35 +46,35 @@ func (cr *CustomRoundsPlugin) EventsCallback(name string, event uintptr, dontBro
 		}
 		ForwardOnRoundStart()
 	case "round_end":
-		CRDebug("[Hooks] Event 'round_end' called.")
+		cr.log.Debug("[Hooks] Event 'round_end' called.")
 		cr.RoundEnded = true
 		ForwardOnRoundEnd()
 	case "player_spawn":
-		client := s2sdk.GetEventPlayerIndex(event, "userid")
-		CRDebug("[Hooks] Event 'player_spawn' called. Client: %s[%d].", s2sdk.GetClientName(client), client)
+		client := s2sdk.GetEventPlayerSlot(event, "userid")
+		cr.log.Debugf("[Hooks] Event 'player_spawn' called. Client: %s[%d].", s2sdk.GetClientName(client), client)
 		if cr.RespawnType > 0.0 {
-			s2sdk.CreateTimer(float64(cr.RespawnType), TimerSpawn, s2sdk.TimerFlag_NoMapChange, []any{client})
+			s2sdk.CreateTimer(float64(cr.RespawnType), cr.timerSpawn, s2sdk.TimerFlag_NoMapChange, []any{client})
 		} else {
-			s2sdk.QueueTaskForNextFrame(NextFrameSpawn, []any{client})
+			s2sdk.QueueTaskForNextFrame(cr.nextFrameSpawn, []any{client})
 		}
 	}
 
 	return s2sdk.ResultType_Continue
 }
 
-func TimerSpawn(timer uint32, userData []any) {
+func (cr *CustomRoundsPlugin) timerSpawn(timer uint32, userData []any) {
 	client := userData[0].(int32)
-	if s2sdk.IsClientInGame(client) && s2sdk.IsClientAlive(client) /*&& !IsFakeClient(client)*/ {
-		CRDebug("[Hooks] Function 'TimerSpawn' called. Client: %s[%d].", s2sdk.GetClientName(client), client)
+	if s2sdk.IsClientInGame(client) && s2sdk.IsClientAlive(client) {
+		cr.log.Debugf("[Hooks] Function 'TimerSpawn' called. Client: %s[%d].", s2sdk.GetClientName(client), client)
 		ForwardOnPlayerSpawn(client)
 	}
 }
 
-func NextFrameSpawn(userData []any) {
+func (cr *CustomRoundsPlugin) nextFrameSpawn(userData []any) {
 	client := userData[0].(int32)
 
-	if s2sdk.IsClientInGame(client) && s2sdk.IsClientAlive(client) /*&& !IsFakeClient(client)*/ {
-		CRDebug("[Hooks] Function 'frame_spawn' called. Client: %s[%d].", s2sdk.GetClientName(client), client)
+	if s2sdk.IsClientInGame(client) && s2sdk.IsClientAlive(client) {
+		cr.log.Debugf("[Hooks] Function 'frame_spawn' called. Client: %s[%d].", s2sdk.GetClientName(client), client)
 		ForwardOnPlayerSpawn(client)
 	}
 }
