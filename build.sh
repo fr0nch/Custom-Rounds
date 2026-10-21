@@ -27,6 +27,8 @@ if [ "$USE_DOCKER" = "1" ]; then
   docker run --rm \
     --platform linux/amd64 \
     --user "$(id -u):$(id -g)" \
+    -e GOCACHE=/app/.go/cache \
+    -e GOMODCACHE=/app/.go/mod \
     -v "$(pwd):/app" \
     -w /app \
     "$IMAGE" "$MODE"
