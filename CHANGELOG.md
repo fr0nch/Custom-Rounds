@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.1.0](https://github.com/fr0nch/Custom-Rounds/compare/v2.0.0...v2.1.0) (2026-10-21)
+
+
+### Features
+
+* rename listener exports to On…_Register and group API methods ([4ba0c1d](https://github.com/fr0nch/Custom-Rounds/commit/4ba0c1dfb482c67efaf9f8c3000ed986078574da))
+
+
+### Bug Fixes
+
+* manifest ([974b931](https://github.com/fr0nch/Custom-Rounds/commit/974b931db2ac7763ecbe27d46d89716a3da32459))
+
 ## [2.0.0](https://github.com/fr0nch/Custom-Rounds/compare/v1.2.11...v2.0.0) (2026-10-21)
 
 
