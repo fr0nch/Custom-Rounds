@@ -15,169 +15,169 @@ var _ = reflect.TypeOf(0)
 var _ = unsafe.Sizeof(0)
 var _ = plugify.ApiVersion
 
-//export __OnConfigLoadRegister
-func __OnConfigLoadRegister(callback unsafe.Pointer) int32 {
-	__result := internal.OnConfigLoadRegister(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnConfigLoadCallback(nil))).(internal.OnConfigLoadCallback))
+//export __OnConfigLoad_Register
+func __OnConfigLoad_Register(callback unsafe.Pointer) int32 {
+	__result := internal.OnConfigLoad_Register(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnConfigLoadCallback(nil))).(internal.OnConfigLoadCallback))
 	return int32(__result)
 }
 
-//export __OnConfigLoadUnregister
-func __OnConfigLoadUnregister(index int32) {
-	internal.OnConfigLoadUnregister(listeners.ListenerID(index))
+//export __OnConfigLoad_Unregister
+func __OnConfigLoad_Unregister(index int32) {
+	internal.OnConfigLoad_Unregister(listeners.ListenerID(index))
 }
 
-//export __OnConfigSectionLoadRegister
-func __OnConfigSectionLoadRegister(callback unsafe.Pointer) int32 {
-	__result := internal.OnConfigSectionLoadRegister(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnConfigSectionLoadCallback(nil))).(internal.OnConfigSectionLoadCallback))
+//export __OnConfigSectionLoad_Register
+func __OnConfigSectionLoad_Register(callback unsafe.Pointer) int32 {
+	__result := internal.OnConfigSectionLoad_Register(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnConfigSectionLoadCallback(nil))).(internal.OnConfigSectionLoadCallback))
 	return int32(__result)
 }
 
-//export __OnConfigSectionLoadUnregister
-func __OnConfigSectionLoadUnregister(index int32) {
-	internal.OnConfigSectionLoadUnregister(listeners.ListenerID(index))
+//export __OnConfigSectionLoad_Unregister
+func __OnConfigSectionLoad_Unregister(index int32) {
+	internal.OnConfigSectionLoad_Unregister(listeners.ListenerID(index))
 }
 
-//export __OnConfigSectionLoadPostRegister
-func __OnConfigSectionLoadPostRegister(callback unsafe.Pointer) int32 {
-	__result := internal.OnConfigSectionLoadPostRegister(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnConfigSectionLoadPostCallback(nil))).(internal.OnConfigSectionLoadPostCallback))
+//export __OnConfigSectionLoadPost_Register
+func __OnConfigSectionLoadPost_Register(callback unsafe.Pointer) int32 {
+	__result := internal.OnConfigSectionLoadPost_Register(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnConfigSectionLoadPostCallback(nil))).(internal.OnConfigSectionLoadPostCallback))
 	return int32(__result)
 }
 
-//export __OnConfigSectionLoadPostUnregister
-func __OnConfigSectionLoadPostUnregister(index int32) {
-	internal.OnConfigSectionLoadPostUnregister(listeners.ListenerID(index))
+//export __OnConfigSectionLoadPost_Unregister
+func __OnConfigSectionLoadPost_Unregister(index int32) {
+	internal.OnConfigSectionLoadPost_Unregister(listeners.ListenerID(index))
 }
 
-//export __OnConfigLoadedRegister
-func __OnConfigLoadedRegister(callback unsafe.Pointer) int32 {
-	__result := internal.OnConfigLoadedRegister(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnConfigLoadedCallback(nil))).(internal.OnConfigLoadedCallback))
+//export __OnConfigLoaded_Register
+func __OnConfigLoaded_Register(callback unsafe.Pointer) int32 {
+	__result := internal.OnConfigLoaded_Register(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnConfigLoadedCallback(nil))).(internal.OnConfigLoadedCallback))
 	return int32(__result)
 }
 
-//export __OnConfigLoadedUnregister
-func __OnConfigLoadedUnregister(index int32) {
-	internal.OnConfigLoadedUnregister(listeners.ListenerID(index))
+//export __OnConfigLoaded_Unregister
+func __OnConfigLoaded_Unregister(index int32) {
+	internal.OnConfigLoaded_Unregister(listeners.ListenerID(index))
 }
 
-//export __OnForceRoundStartPreRegister
-func __OnForceRoundStartPreRegister(callback unsafe.Pointer) int32 {
-	__result := internal.OnForceRoundStartPreRegister(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnForceRoundStartPreCallback(nil))).(internal.OnForceRoundStartPreCallback))
+//export __OnForceRoundStartPre_Register
+func __OnForceRoundStartPre_Register(callback unsafe.Pointer) int32 {
+	__result := internal.OnForceRoundStartPre_Register(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnForceRoundStartPreCallback(nil))).(internal.OnForceRoundStartPreCallback))
 	return int32(__result)
 }
 
-//export __OnForceRoundStartPreUnregister
-func __OnForceRoundStartPreUnregister(index int32) {
-	internal.OnForceRoundStartPreUnregister(listeners.ListenerID(index))
+//export __OnForceRoundStartPre_Unregister
+func __OnForceRoundStartPre_Unregister(index int32) {
+	internal.OnForceRoundStartPre_Unregister(listeners.ListenerID(index))
 }
 
-//export __OnForceRoundStartPostRegister
-func __OnForceRoundStartPostRegister(callback unsafe.Pointer) int32 {
-	__result := internal.OnForceRoundStartPostRegister(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnForceRoundStartPostCallback(nil))).(internal.OnForceRoundStartPostCallback))
+//export __OnForceRoundStartPost_Register
+func __OnForceRoundStartPost_Register(callback unsafe.Pointer) int32 {
+	__result := internal.OnForceRoundStartPost_Register(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnForceRoundStartPostCallback(nil))).(internal.OnForceRoundStartPostCallback))
 	return int32(__result)
 }
 
-//export __OnForceRoundStartPostUnregister
-func __OnForceRoundStartPostUnregister(index int32) {
-	internal.OnForceRoundStartPostUnregister(listeners.ListenerID(index))
+//export __OnForceRoundStartPost_Unregister
+func __OnForceRoundStartPost_Unregister(index int32) {
+	internal.OnForceRoundStartPost_Unregister(listeners.ListenerID(index))
 }
 
-//export __OnSetNextRoundPreRegister
-func __OnSetNextRoundPreRegister(callback unsafe.Pointer) int32 {
-	__result := internal.OnSetNextRoundPreRegister(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnSetNextRoundPreCallback(nil))).(internal.OnSetNextRoundPreCallback))
+//export __OnSetNextRoundPre_Register
+func __OnSetNextRoundPre_Register(callback unsafe.Pointer) int32 {
+	__result := internal.OnSetNextRoundPre_Register(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnSetNextRoundPreCallback(nil))).(internal.OnSetNextRoundPreCallback))
 	return int32(__result)
 }
 
-//export __OnSetNextRoundPreUnregister
-func __OnSetNextRoundPreUnregister(index int32) {
-	internal.OnSetNextRoundPreUnregister(listeners.ListenerID(index))
+//export __OnSetNextRoundPre_Unregister
+func __OnSetNextRoundPre_Unregister(index int32) {
+	internal.OnSetNextRoundPre_Unregister(listeners.ListenerID(index))
 }
 
-//export __OnSetNextRoundPostRegister
-func __OnSetNextRoundPostRegister(callback unsafe.Pointer) int32 {
-	__result := internal.OnSetNextRoundPostRegister(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnSetNextRoundPostCallback(nil))).(internal.OnSetNextRoundPostCallback))
+//export __OnSetNextRoundPost_Register
+func __OnSetNextRoundPost_Register(callback unsafe.Pointer) int32 {
+	__result := internal.OnSetNextRoundPost_Register(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnSetNextRoundPostCallback(nil))).(internal.OnSetNextRoundPostCallback))
 	return int32(__result)
 }
 
-//export __OnSetNextRoundPostUnregister
-func __OnSetNextRoundPostUnregister(index int32) {
-	internal.OnSetNextRoundPostUnregister(listeners.ListenerID(index))
+//export __OnSetNextRoundPost_Unregister
+func __OnSetNextRoundPost_Unregister(index int32) {
+	internal.OnSetNextRoundPost_Unregister(listeners.ListenerID(index))
 }
 
-//export __OnCancelCurrentRoundPreRegister
-func __OnCancelCurrentRoundPreRegister(callback unsafe.Pointer) int32 {
-	__result := internal.OnCancelCurrentRoundPreRegister(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnCancelCurrentRoundPreCallback(nil))).(internal.OnCancelCurrentRoundPreCallback))
+//export __OnCancelCurrentRoundPre_Register
+func __OnCancelCurrentRoundPre_Register(callback unsafe.Pointer) int32 {
+	__result := internal.OnCancelCurrentRoundPre_Register(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnCancelCurrentRoundPreCallback(nil))).(internal.OnCancelCurrentRoundPreCallback))
 	return int32(__result)
 }
 
-//export __OnCancelCurrentRoundPreUnregister
-func __OnCancelCurrentRoundPreUnregister(index int32) {
-	internal.OnCancelCurrentRoundPreUnregister(listeners.ListenerID(index))
+//export __OnCancelCurrentRoundPre_Unregister
+func __OnCancelCurrentRoundPre_Unregister(index int32) {
+	internal.OnCancelCurrentRoundPre_Unregister(listeners.ListenerID(index))
 }
 
-//export __OnCancelCurrentRoundPostRegister
-func __OnCancelCurrentRoundPostRegister(callback unsafe.Pointer) int32 {
-	__result := internal.OnCancelCurrentRoundPostRegister(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnCancelCurrentRoundPostCallback(nil))).(internal.OnCancelCurrentRoundPostCallback))
+//export __OnCancelCurrentRoundPost_Register
+func __OnCancelCurrentRoundPost_Register(callback unsafe.Pointer) int32 {
+	__result := internal.OnCancelCurrentRoundPost_Register(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnCancelCurrentRoundPostCallback(nil))).(internal.OnCancelCurrentRoundPostCallback))
 	return int32(__result)
 }
 
-//export __OnCancelCurrentRoundPostUnregister
-func __OnCancelCurrentRoundPostUnregister(index int32) {
-	internal.OnCancelCurrentRoundPostUnregister(listeners.ListenerID(index))
+//export __OnCancelCurrentRoundPost_Unregister
+func __OnCancelCurrentRoundPost_Unregister(index int32) {
+	internal.OnCancelCurrentRoundPost_Unregister(listeners.ListenerID(index))
 }
 
-//export __OnCancelNextRoundPreRegister
-func __OnCancelNextRoundPreRegister(callback unsafe.Pointer) int32 {
-	__result := internal.OnCancelNextRoundPreRegister(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnCancelNextRoundPreCallback(nil))).(internal.OnCancelNextRoundPreCallback))
+//export __OnCancelNextRoundPre_Register
+func __OnCancelNextRoundPre_Register(callback unsafe.Pointer) int32 {
+	__result := internal.OnCancelNextRoundPre_Register(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnCancelNextRoundPreCallback(nil))).(internal.OnCancelNextRoundPreCallback))
 	return int32(__result)
 }
 
-//export __OnCancelNextRoundPreUnregister
-func __OnCancelNextRoundPreUnregister(index int32) {
-	internal.OnCancelNextRoundPreUnregister(listeners.ListenerID(index))
+//export __OnCancelNextRoundPre_Unregister
+func __OnCancelNextRoundPre_Unregister(index int32) {
+	internal.OnCancelNextRoundPre_Unregister(listeners.ListenerID(index))
 }
 
-//export __OnCancelNextRoundPostRegister
-func __OnCancelNextRoundPostRegister(callback unsafe.Pointer) int32 {
-	__result := internal.OnCancelNextRoundPostRegister(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnCancelNextRoundPostCallback(nil))).(internal.OnCancelNextRoundPostCallback))
+//export __OnCancelNextRoundPost_Register
+func __OnCancelNextRoundPost_Register(callback unsafe.Pointer) int32 {
+	__result := internal.OnCancelNextRoundPost_Register(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnCancelNextRoundPostCallback(nil))).(internal.OnCancelNextRoundPostCallback))
 	return int32(__result)
 }
 
-//export __OnCancelNextRoundPostUnregister
-func __OnCancelNextRoundPostUnregister(index int32) {
-	internal.OnCancelNextRoundPostUnregister(listeners.ListenerID(index))
+//export __OnCancelNextRoundPost_Unregister
+func __OnCancelNextRoundPost_Unregister(index int32) {
+	internal.OnCancelNextRoundPost_Unregister(listeners.ListenerID(index))
 }
 
-//export __OnPlayerSpawnRegister
-func __OnPlayerSpawnRegister(callback unsafe.Pointer) int32 {
-	__result := internal.OnPlayerSpawnRegister(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnPlayerSpawnCallback(nil))).(internal.OnPlayerSpawnCallback))
+//export __OnPlayerSpawn_Register
+func __OnPlayerSpawn_Register(callback unsafe.Pointer) int32 {
+	__result := internal.OnPlayerSpawn_Register(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnPlayerSpawnCallback(nil))).(internal.OnPlayerSpawnCallback))
 	return int32(__result)
 }
 
-//export __OnPlayerSpawnUnregister
-func __OnPlayerSpawnUnregister(index int32) {
-	internal.OnPlayerSpawnUnregister(listeners.ListenerID(index))
+//export __OnPlayerSpawn_Unregister
+func __OnPlayerSpawn_Unregister(index int32) {
+	internal.OnPlayerSpawn_Unregister(listeners.ListenerID(index))
 }
 
-//export __OnRoundStartRegister
-func __OnRoundStartRegister(callback unsafe.Pointer) int32 {
-	__result := internal.OnRoundStartRegister(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnRoundStartCallback(nil))).(internal.OnRoundStartCallback))
+//export __OnRoundStart_Register
+func __OnRoundStart_Register(callback unsafe.Pointer) int32 {
+	__result := internal.OnRoundStart_Register(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnRoundStartCallback(nil))).(internal.OnRoundStartCallback))
 	return int32(__result)
 }
 
-//export __OnRoundStartUnregister
-func __OnRoundStartUnregister(index int32) {
-	internal.OnRoundStartUnregister(listeners.ListenerID(index))
+//export __OnRoundStart_Unregister
+func __OnRoundStart_Unregister(index int32) {
+	internal.OnRoundStart_Unregister(listeners.ListenerID(index))
 }
 
-//export __OnRoundEndRegister
-func __OnRoundEndRegister(callback unsafe.Pointer) int32 {
-	__result := internal.OnRoundEndRegister(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnRoundEndCallback(nil))).(internal.OnRoundEndCallback))
+//export __OnRoundEnd_Register
+func __OnRoundEnd_Register(callback unsafe.Pointer) int32 {
+	__result := internal.OnRoundEnd_Register(plugify.GetDelegateForFunctionPointer(callback, reflect.TypeOf(internal.OnRoundEndCallback(nil))).(internal.OnRoundEndCallback))
 	return int32(__result)
 }
 
-//export __OnRoundEndUnregister
-func __OnRoundEndUnregister(index int32) {
-	internal.OnRoundEndUnregister(listeners.ListenerID(index))
+//export __OnRoundEnd_Unregister
+func __OnRoundEnd_Unregister(index int32) {
+	internal.OnRoundEnd_Unregister(listeners.ListenerID(index))
 }
 
 //export __SetNextRound

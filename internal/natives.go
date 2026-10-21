@@ -94,7 +94,7 @@ func setNextRound(round *s2sdk.KeyValues3, client int32) bool {
 //	@brief Cancels the next round.
 //	@param client Player slot of the initiator.
 //
-//	@return True if the round was cancelled.
+//	@return True if the round was canceled.
 //
 //plugify:export CancelNextRound
 func CancelNextRound(client int32) bool {
@@ -349,7 +349,7 @@ func GetJsonString() string {
 //
 //	@brief Returns the current round in JSON.
 //
-//	@return Round in JSON, or "null" if the round is not custom.
+//	@return Round in JSON, or 'null' if the round is not custom.
 //
 //plugify:export GetCurrentRoundJsonString
 func GetCurrentRoundJsonString() string {
@@ -361,7 +361,7 @@ func GetCurrentRoundJsonString() string {
 //
 //	@brief Returns the next round in JSON.
 //
-//	@return Round in JSON, or "null" if not set.
+//	@return Round in JSON, or 'null' if not set.
 //
 //plugify:export GetNextRoundKeyValueJsonString
 func GetNextRoundKeyValueJsonString() string {

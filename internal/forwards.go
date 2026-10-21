@@ -14,25 +14,25 @@ type OnConfigLoadCallback func()
 
 var OnConfigLoad = listeners.NewListener[OnConfigLoadCallback]()
 
-// OnConfigLoadRegister
+// OnConfigLoad_Register
 //
 //	@brief Registers a OnConfigLoad callback.
 //	@param callback Callback function.
 //
 //	@return Listener ID.
 //
-//plugify:export OnConfigLoadRegister
-func OnConfigLoadRegister(callback OnConfigLoadCallback) listeners.ListenerID {
+//plugify:export OnConfigLoad_Register
+func OnConfigLoad_Register(callback OnConfigLoadCallback) listeners.ListenerID {
 	return OnConfigLoad.Add(callback, listeners.Post)
 }
 
-// OnConfigLoadUnregister
+// OnConfigLoad_Unregister
 //
 //	@brief Unregisters a OnConfigLoad callback.
 //	@param index Listener ID.
 //
-//plugify:export OnConfigLoadUnregister
-func OnConfigLoadUnregister(index listeners.ListenerID) {
+//plugify:export OnConfigLoad_Unregister
+func OnConfigLoad_Unregister(index listeners.ListenerID) {
 	OnConfigLoad.Remove(index)
 }
 
@@ -52,25 +52,25 @@ type OnConfigSectionLoadCallback func(round uintptr) listeners.PluginResult
 
 var OnConfigSectionLoad = listeners.NewListener[OnConfigSectionLoadCallback]()
 
-// OnConfigSectionLoadRegister
+// OnConfigSectionLoad_Register
 //
 //	@brief Registers a OnConfigSectionLoad callback.
 //	@param callback Callback function.
 //
 //	@return Listener ID.
 //
-//plugify:export OnConfigSectionLoadRegister
-func OnConfigSectionLoadRegister(callback OnConfigSectionLoadCallback) listeners.ListenerID {
+//plugify:export OnConfigSectionLoad_Register
+func OnConfigSectionLoad_Register(callback OnConfigSectionLoadCallback) listeners.ListenerID {
 	return OnConfigSectionLoad.Add(callback, listeners.Pre)
 }
 
-// OnConfigSectionLoadUnregister
+// OnConfigSectionLoad_Unregister
 //
 //	@brief Unregisters a OnConfigSectionLoad callback.
 //	@param index Listener ID.
 //
-//plugify:export OnConfigSectionLoadUnregister
-func OnConfigSectionLoadUnregister(index listeners.ListenerID) {
+//plugify:export OnConfigSectionLoad_Unregister
+func OnConfigSectionLoad_Unregister(index listeners.ListenerID) {
 	OnConfigSectionLoad.Remove(index)
 }
 
@@ -82,25 +82,25 @@ type OnConfigSectionLoadPostCallback func(round uintptr)
 
 var OnConfigSectionLoadPost = listeners.NewListener[OnConfigSectionLoadPostCallback]()
 
-// OnConfigSectionLoadPostRegister
+// OnConfigSectionLoadPost_Register
 //
 //	@brief Registers a OnConfigSectionLoadPost callback.
 //	@param callback Callback function.
 //
 //	@return Listener ID.
 //
-//plugify:export OnConfigSectionLoadPostRegister
-func OnConfigSectionLoadPostRegister(callback OnConfigSectionLoadPostCallback) listeners.ListenerID {
+//plugify:export OnConfigSectionLoadPost_Register
+func OnConfigSectionLoadPost_Register(callback OnConfigSectionLoadPostCallback) listeners.ListenerID {
 	return OnConfigSectionLoadPost.Add(callback, listeners.Post)
 }
 
-// OnConfigSectionLoadPostUnregister
+// OnConfigSectionLoadPost_Unregister
 //
 //	@brief Unregisters a OnConfigSectionLoadPost callback.
 //	@param index Listener ID.
 //
-//plugify:export OnConfigSectionLoadPostUnregister
-func OnConfigSectionLoadPostUnregister(index listeners.ListenerID) {
+//plugify:export OnConfigSectionLoadPost_Unregister
+func OnConfigSectionLoadPost_Unregister(index listeners.ListenerID) {
 	OnConfigSectionLoadPost.Remove(index)
 }
 
@@ -126,25 +126,25 @@ type OnConfigLoadedCallback func(rounds []uintptr)
 
 var OnConfigLoaded = listeners.NewListener[OnConfigLoadedCallback]()
 
-// OnConfigLoadedRegister
+// OnConfigLoaded_Register
 //
 //	@brief Registers a OnConfigLoaded callback.
 //	@param callback Callback function.
 //
 //	@return Listener ID.
 //
-//plugify:export OnConfigLoadedRegister
-func OnConfigLoadedRegister(callback OnConfigLoadedCallback) listeners.ListenerID {
+//plugify:export OnConfigLoaded_Register
+func OnConfigLoaded_Register(callback OnConfigLoadedCallback) listeners.ListenerID {
 	return OnConfigLoaded.Add(callback, listeners.Post)
 }
 
-// OnConfigLoadedUnregister
+// OnConfigLoaded_Unregister
 //
 //	@brief Unregisters a OnConfigLoaded callback.
 //	@param index Listener ID.
 //
-//plugify:export OnConfigLoadedUnregister
-func OnConfigLoadedUnregister(index listeners.ListenerID) {
+//plugify:export OnConfigLoaded_Unregister
+func OnConfigLoaded_Unregister(index listeners.ListenerID) {
 	OnConfigLoaded.Remove(index)
 }
 
@@ -167,25 +167,25 @@ type OnForceRoundStartPreCallback func(round uintptr, client int32) listeners.Pl
 
 var OnForceRoundStartPre = listeners.NewListener[OnForceRoundStartPreCallback]()
 
-// OnForceRoundStartPreRegister
+// OnForceRoundStartPre_Register
 //
 //	@brief Registers a OnForceRoundStartPre callback.
 //	@param callback Callback function.
 //
 //	@return Listener ID.
 //
-//plugify:export OnForceRoundStartPreRegister
-func OnForceRoundStartPreRegister(callback OnForceRoundStartPreCallback) listeners.ListenerID {
+//plugify:export OnForceRoundStartPre_Register
+func OnForceRoundStartPre_Register(callback OnForceRoundStartPreCallback) listeners.ListenerID {
 	return OnForceRoundStartPre.Add(callback, listeners.Pre)
 }
 
-// OnForceRoundStartPreUnregister
+// OnForceRoundStartPre_Unregister
 //
 //	@brief Unregisters a OnForceRoundStartPre callback.
 //	@param index Listener ID.
 //
-//plugify:export OnForceRoundStartPreUnregister
-func OnForceRoundStartPreUnregister(index listeners.ListenerID) {
+//plugify:export OnForceRoundStartPre_Unregister
+func OnForceRoundStartPre_Unregister(index listeners.ListenerID) {
 	OnForceRoundStartPre.Remove(index)
 }
 
@@ -198,25 +198,25 @@ type OnForceRoundStartPostCallback func(round uintptr, client int32)
 
 var OnForceRoundStartPost = listeners.NewListener[OnForceRoundStartPostCallback]()
 
-// OnForceRoundStartPostRegister
+// OnForceRoundStartPost_Register
 //
 //	@brief Registers a OnForceRoundStartPost callback.
 //	@param callback Callback function.
 //
 //	@return Listener ID.
 //
-//plugify:export OnForceRoundStartPostRegister
-func OnForceRoundStartPostRegister(callback OnForceRoundStartPostCallback) listeners.ListenerID {
+//plugify:export OnForceRoundStartPost_Register
+func OnForceRoundStartPost_Register(callback OnForceRoundStartPostCallback) listeners.ListenerID {
 	return OnForceRoundStartPost.Add(callback, listeners.Post)
 }
 
-// OnForceRoundStartPostUnregister
+// OnForceRoundStartPost_Unregister
 //
 //	@brief Unregisters a OnForceRoundStartPost callback.
 //	@param index Listener ID.
 //
-//plugify:export OnForceRoundStartPostUnregister
-func OnForceRoundStartPostUnregister(index listeners.ListenerID) {
+//plugify:export OnForceRoundStartPost_Unregister
+func OnForceRoundStartPost_Unregister(index listeners.ListenerID) {
 	OnForceRoundStartPost.Remove(index)
 }
 
@@ -249,25 +249,25 @@ type OnSetNextRoundPreCallback func(round uintptr, client int32) listeners.Plugi
 
 var OnSetNextRoundPre = listeners.NewListener[OnSetNextRoundPreCallback]()
 
-// OnSetNextRoundPreRegister
+// OnSetNextRoundPre_Register
 //
 //	@brief Registers a OnSetNextRoundPre callback.
 //	@param callback Callback function.
 //
 //	@return Listener ID.
 //
-//plugify:export OnSetNextRoundPreRegister
-func OnSetNextRoundPreRegister(callback OnSetNextRoundPreCallback) listeners.ListenerID {
+//plugify:export OnSetNextRoundPre_Register
+func OnSetNextRoundPre_Register(callback OnSetNextRoundPreCallback) listeners.ListenerID {
 	return OnSetNextRoundPre.Add(callback, listeners.Pre)
 }
 
-// OnSetNextRoundPreUnregister
+// OnSetNextRoundPre_Unregister
 //
 //	@brief Unregisters a OnSetNextRoundPre callback.
 //	@param index Listener ID.
 //
-//plugify:export OnSetNextRoundPreUnregister
-func OnSetNextRoundPreUnregister(index listeners.ListenerID) {
+//plugify:export OnSetNextRoundPre_Unregister
+func OnSetNextRoundPre_Unregister(index listeners.ListenerID) {
 	OnSetNextRoundPre.Remove(index)
 }
 
@@ -280,25 +280,25 @@ type OnSetNextRoundPostCallback func(round uintptr, client int32)
 
 var OnSetNextRoundPost = listeners.NewListener[OnSetNextRoundPostCallback]()
 
-// OnSetNextRoundPostRegister
+// OnSetNextRoundPost_Register
 //
 //	@brief Registers a OnSetNextRoundPost callback.
 //	@param callback Callback function.
 //
 //	@return Listener ID.
 //
-//plugify:export OnSetNextRoundPostRegister
-func OnSetNextRoundPostRegister(callback OnSetNextRoundPostCallback) listeners.ListenerID {
+//plugify:export OnSetNextRoundPost_Register
+func OnSetNextRoundPost_Register(callback OnSetNextRoundPostCallback) listeners.ListenerID {
 	return OnSetNextRoundPost.Add(callback, listeners.Post)
 }
 
-// OnSetNextRoundPostUnregister
+// OnSetNextRoundPost_Unregister
 //
 //	@brief Unregisters a OnSetNextRoundPost callback.
 //	@param index Listener ID.
 //
-//plugify:export OnSetNextRoundPostUnregister
-func OnSetNextRoundPostUnregister(index listeners.ListenerID) {
+//plugify:export OnSetNextRoundPost_Unregister
+func OnSetNextRoundPost_Unregister(index listeners.ListenerID) {
 	OnSetNextRoundPost.Remove(index)
 }
 
@@ -331,25 +331,25 @@ type OnCancelCurrentRoundPreCallback func(round uintptr, client int32) listeners
 
 var OnCancelCurrentRoundPre = listeners.NewListener[OnCancelCurrentRoundPreCallback]()
 
-// OnCancelCurrentRoundPreRegister
+// OnCancelCurrentRoundPre_Register
 //
 //	@brief Registers a OnCancelCurrentRoundPre callback.
 //	@param callback Callback function.
 //
 //	@return Listener ID.
 //
-//plugify:export OnCancelCurrentRoundPreRegister
-func OnCancelCurrentRoundPreRegister(callback OnCancelCurrentRoundPreCallback) listeners.ListenerID {
+//plugify:export OnCancelCurrentRoundPre_Register
+func OnCancelCurrentRoundPre_Register(callback OnCancelCurrentRoundPreCallback) listeners.ListenerID {
 	return OnCancelCurrentRoundPre.Add(callback, listeners.Pre)
 }
 
-// OnCancelCurrentRoundPreUnregister
+// OnCancelCurrentRoundPre_Unregister
 //
 //	@brief Unregisters a OnCancelCurrentRoundPre callback.
 //	@param index Listener ID.
 //
-//plugify:export OnCancelCurrentRoundPreUnregister
-func OnCancelCurrentRoundPreUnregister(index listeners.ListenerID) {
+//plugify:export OnCancelCurrentRoundPre_Unregister
+func OnCancelCurrentRoundPre_Unregister(index listeners.ListenerID) {
 	OnCancelCurrentRoundPre.Remove(index)
 }
 
@@ -362,25 +362,25 @@ type OnCancelCurrentRoundPostCallback func(round uintptr, client int32)
 
 var OnCancelCurrentRoundPost = listeners.NewListener[OnCancelCurrentRoundPostCallback]()
 
-// OnCancelCurrentRoundPostRegister
+// OnCancelCurrentRoundPost_Register
 //
 //	@brief Registers a OnCancelCurrentRoundPost callback.
 //	@param callback Callback function.
 //
 //	@return Listener ID.
 //
-//plugify:export OnCancelCurrentRoundPostRegister
-func OnCancelCurrentRoundPostRegister(callback OnCancelCurrentRoundPostCallback) listeners.ListenerID {
+//plugify:export OnCancelCurrentRoundPost_Register
+func OnCancelCurrentRoundPost_Register(callback OnCancelCurrentRoundPostCallback) listeners.ListenerID {
 	return OnCancelCurrentRoundPost.Add(callback, listeners.Post)
 }
 
-// OnCancelCurrentRoundPostUnregister
+// OnCancelCurrentRoundPost_Unregister
 //
 //	@brief Unregisters a OnCancelCurrentRoundPost callback.
 //	@param index Listener ID.
 //
-//plugify:export OnCancelCurrentRoundPostUnregister
-func OnCancelCurrentRoundPostUnregister(index listeners.ListenerID) {
+//plugify:export OnCancelCurrentRoundPost_Unregister
+func OnCancelCurrentRoundPost_Unregister(index listeners.ListenerID) {
 	OnCancelCurrentRoundPost.Remove(index)
 }
 
@@ -415,25 +415,25 @@ type OnCancelNextRoundPreCallback func(round uintptr, client int32) listeners.Pl
 
 var OnCancelNextRoundPre = listeners.NewListener[OnCancelNextRoundPreCallback]()
 
-// OnCancelNextRoundPreRegister
+// OnCancelNextRoundPre_Register
 //
 //	@brief Registers a OnCancelNextRoundPre callback.
 //	@param callback Callback function.
 //
 //	@return Listener ID.
 //
-//plugify:export OnCancelNextRoundPreRegister
-func OnCancelNextRoundPreRegister(callback OnCancelNextRoundPreCallback) listeners.ListenerID {
+//plugify:export OnCancelNextRoundPre_Register
+func OnCancelNextRoundPre_Register(callback OnCancelNextRoundPreCallback) listeners.ListenerID {
 	return OnCancelNextRoundPre.Add(callback, listeners.Pre)
 }
 
-// OnCancelNextRoundPreUnregister
+// OnCancelNextRoundPre_Unregister
 //
 //	@brief Unregisters a OnCancelNextRoundPre callback.
 //	@param index Listener ID.
 //
-//plugify:export OnCancelNextRoundPreUnregister
-func OnCancelNextRoundPreUnregister(index listeners.ListenerID) {
+//plugify:export OnCancelNextRoundPre_Unregister
+func OnCancelNextRoundPre_Unregister(index listeners.ListenerID) {
 	OnCancelNextRoundPre.Remove(index)
 }
 
@@ -446,25 +446,25 @@ type OnCancelNextRoundPostCallback func(round uintptr, client int32)
 
 var OnCancelNextRoundPost = listeners.NewListener[OnCancelNextRoundPostCallback]()
 
-// OnCancelNextRoundPostRegister
+// OnCancelNextRoundPost_Register
 //
 //	@brief Registers a OnCancelNextRoundPost callback.
 //	@param callback Callback function.
 //
 //	@return Listener ID.
 //
-//plugify:export OnCancelNextRoundPostRegister
-func OnCancelNextRoundPostRegister(callback OnCancelNextRoundPostCallback) listeners.ListenerID {
+//plugify:export OnCancelNextRoundPost_Register
+func OnCancelNextRoundPost_Register(callback OnCancelNextRoundPostCallback) listeners.ListenerID {
 	return OnCancelNextRoundPost.Add(callback, listeners.Post)
 }
 
-// OnCancelNextRoundPostUnregister
+// OnCancelNextRoundPost_Unregister
 //
 //	@brief Unregisters a OnCancelNextRoundPost callback.
 //	@param index Listener ID.
 //
-//plugify:export OnCancelNextRoundPostUnregister
-func OnCancelNextRoundPostUnregister(index listeners.ListenerID) {
+//plugify:export OnCancelNextRoundPost_Unregister
+func OnCancelNextRoundPost_Unregister(index listeners.ListenerID) {
 	OnCancelNextRoundPost.Remove(index)
 }
 
@@ -497,25 +497,25 @@ type OnPlayerSpawnCallback func(client int32, round uintptr)
 
 var OnPlayerSpawn = listeners.NewListener[OnPlayerSpawnCallback]()
 
-// OnPlayerSpawnRegister
+// OnPlayerSpawn_Register
 //
 //	@brief Registers a OnPlayerSpawn callback.
 //	@param callback Callback function.
 //
 //	@return Listener ID.
 //
-//plugify:export OnPlayerSpawnRegister
-func OnPlayerSpawnRegister(callback OnPlayerSpawnCallback) listeners.ListenerID {
+//plugify:export OnPlayerSpawn_Register
+func OnPlayerSpawn_Register(callback OnPlayerSpawnCallback) listeners.ListenerID {
 	return OnPlayerSpawn.Add(callback, listeners.Post)
 }
 
-// OnPlayerSpawnUnregister
+// OnPlayerSpawn_Unregister
 //
 //	@brief Unregisters a OnPlayerSpawn callback.
 //	@param index Listener ID.
 //
-//plugify:export OnPlayerSpawnUnregister
-func OnPlayerSpawnUnregister(index listeners.ListenerID) {
+//plugify:export OnPlayerSpawn_Unregister
+func OnPlayerSpawn_Unregister(index listeners.ListenerID) {
 	OnPlayerSpawn.Remove(index)
 }
 
@@ -535,25 +535,25 @@ type OnRoundStartCallback func(round uintptr)
 
 var OnRoundStart = listeners.NewListener[OnRoundStartCallback]()
 
-// OnRoundStartRegister
+// OnRoundStart_Register
 //
 //	@brief Registers a OnRoundStart callback.
 //	@param callback Callback function.
 //
 //	@return Listener ID.
 //
-//plugify:export OnRoundStartRegister
-func OnRoundStartRegister(callback OnRoundStartCallback) listeners.ListenerID {
+//plugify:export OnRoundStart_Register
+func OnRoundStart_Register(callback OnRoundStartCallback) listeners.ListenerID {
 	return OnRoundStart.Add(callback, listeners.Post)
 }
 
-// OnRoundStartUnregister
+// OnRoundStart_Unregister
 //
 //	@brief Unregisters a OnRoundStart callback.
 //	@param index Listener ID.
 //
-//plugify:export OnRoundStartUnregister
-func OnRoundStartUnregister(index listeners.ListenerID) {
+//plugify:export OnRoundStart_Unregister
+func OnRoundStart_Unregister(index listeners.ListenerID) {
 	OnRoundStart.Remove(index)
 }
 
@@ -575,25 +575,25 @@ type OnRoundEndCallback func(round uintptr)
 
 var OnRoundEnd = listeners.NewListener[OnRoundEndCallback]()
 
-// OnRoundEndRegister
+// OnRoundEnd_Register
 //
 //	@brief Registers a OnRoundEnd callback.
 //	@param callback Callback function.
 //
 //	@return Listener ID.
 //
-//plugify:export OnRoundEndRegister
-func OnRoundEndRegister(callback OnRoundEndCallback) listeners.ListenerID {
+//plugify:export OnRoundEnd_Register
+func OnRoundEnd_Register(callback OnRoundEndCallback) listeners.ListenerID {
 	return OnRoundEnd.Add(callback, listeners.Post)
 }
 
-// OnRoundEndUnregister
+// OnRoundEnd_Unregister
 //
 //	@brief Unregisters a OnRoundEnd callback.
 //	@param index Listener ID.
 //
-//plugify:export OnRoundEndUnregister
-func OnRoundEndUnregister(index listeners.ListenerID) {
+//plugify:export OnRoundEnd_Unregister
+func OnRoundEnd_Unregister(index listeners.ListenerID) {
 	OnRoundEnd.Remove(index)
 }
 

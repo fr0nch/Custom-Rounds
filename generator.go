@@ -5,16 +5,41 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"io/fs"
 	"os"
+	"path/filepath"
+	"runtime"
+	"slices"
+	"strings"
 
 	"github.com/untrustedmodders/go-plugify"
 	"github.com/untrustedmodders/go-plugify/manifest"
 )
 
-const manifestPath = "customrounds.pplugin"
+const (
+	manifestPath        = "customrounds.pplugin"
+	releaseManifestPath = ".github/release-please-manifest.json"
+)
+
+var configMethods = []string{
+	"ReloadConfig",
+	"IsRoundExists",
+	"GetRound",
+	"GetRounds",
+	"GetRoundNames",
+	"GetRoundIndex",
+	"GetJsonString",
+}
 
 func main() {
+	_, file, _, _ := runtime.Caller(0)
+	if err := os.Chdir(filepath.Dir(file)); err != nil {
+		fmt.Fprintf(os.Stderr, "Error changing to project directory: %v\n", err)
+		os.Exit(1)
+	}
+
 	dependencies := []manifest.Dependency{
 		{Name: "s2sdk", Constraints: ">=3.0.0"},
 		{Name: "permissions", Optional: true},
@@ -49,8 +74,8 @@ func CreateManifest(name, author string, dependencies []manifest.Dependency, ent
 		os.Exit(1)
 	}
 
-	if err := setDependencies(dependencies); err != nil {
-		fmt.Fprintf(os.Stderr, "Error writing manifest dependencies: %v\n", err)
+	if err := updateManifest(dependencies); err != nil {
+		fmt.Fprintf(os.Stderr, "Error updating manifest: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -60,20 +85,22 @@ func CreateManifest(name, author string, dependencies []manifest.Dependency, ent
 }
 
 func currentVersion() (string, error) {
-	data, err := os.ReadFile(manifestPath)
-	if err != nil {
+	data, err := os.ReadFile(releaseManifestPath)
+	if errors.Is(err, fs.ErrNotExist) {
+		return "0.0.1", nil
+	} else if err != nil {
 		return "", err
 	}
 
-	var man manifest.Manifest
-	if err := json.Unmarshal(data, &man); err != nil {
+	var versions map[string]string
+	if err := json.Unmarshal(data, &versions); err != nil {
 		return "", err
 	}
 
-	return man.Version, nil
+	return versions["."], nil
 }
 
-func setDependencies(dependencies []manifest.Dependency) error {
+func updateManifest(dependencies []manifest.Dependency) error {
 	data, err := os.ReadFile(manifestPath)
 	if err != nil {
 		return err
@@ -86,10 +113,30 @@ func setDependencies(dependencies []manifest.Dependency) error {
 
 	man.Dependencies = dependencies
 
-	data, err = json.MarshalIndent(man, "", "  ")
+	for i := range man.Methods {
+		man.Methods[i].Group = methodGroup(man.Methods[i].Name)
+	}
+
+	file, err := os.Create(manifestPath)
 	if err != nil {
 		return err
 	}
+	defer file.Close()
 
-	return os.WriteFile(manifestPath, data, 0644)
+	encoder := json.NewEncoder(file)
+	encoder.SetEscapeHTML(false)
+	encoder.SetIndent("", "  ")
+
+	return encoder.Encode(man)
+}
+
+func methodGroup(name string) string {
+	switch {
+	case strings.HasSuffix(name, "_Register"), strings.HasSuffix(name, "_Unregister"):
+		return "Listeners"
+	case slices.Contains(configMethods, name):
+		return "Config"
+	}
+
+	return "Rounds"
 }
