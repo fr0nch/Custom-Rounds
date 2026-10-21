@@ -1,0 +1,1222 @@
+{
+  "$schema": "https://raw.githubusercontent.com/untrustedmodders/plugify/refs/heads/main/schemas/plugin.schema.json",
+  "name": "customrounds",
+  "version": "1.2.11",
+  "description": "Custom rounds for CS2: loads round presets from a JSON config and passes their settings to other plugins as KeyValues3.",
+  "author": "Fr4nch",
+  "website": "https://github.com/fr0nch",
+  "license": "GPLv3",
+  "dependencies": [
+    {
+      "name": "s2sdk",
+      "constraints": "\u003e=3.0.0"
+    },
+    {
+      "name": "permissions",
+      "optional": true
+    }
+  ],
+  "entry": "bin/libcustomrounds",
+  "language": "golang",
+  "methods": [
+    {
+      "name": "CancelNextRound",
+      "funcName": "__CancelNextRound",
+      "description": "Cancels the next round.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "client",
+          "description": "Player slot of the initiator."
+        }
+      ],
+      "retType": {
+        "type": "bool",
+        "description": "True if the round was cancelled."
+      }
+    },
+    {
+      "name": "GetCurrentRound",
+      "funcName": "__GetCurrentRound",
+      "description": "Returns the current round.",
+      "paramTypes": [],
+      "retType": {
+        "type": "ptr64",
+        "description": "Round settings (KeyValues3), or 0 if the round is not custom. Valid until the round ends."
+      }
+    },
+    {
+      "name": "GetCurrentRoundJsonString",
+      "funcName": "__GetCurrentRoundJsonString",
+      "description": "Returns the current round in JSON.",
+      "paramTypes": [],
+      "retType": {
+        "type": "string",
+        "description": "Round in JSON, or \"null\" if the round is not custom."
+      }
+    },
+    {
+      "name": "GetCurrentRoundName",
+      "funcName": "__GetCurrentRoundName",
+      "description": "Returns the current round name.",
+      "paramTypes": [],
+      "retType": {
+        "type": "string",
+        "description": "Round name, or empty string if the round is not custom."
+      }
+    },
+    {
+      "name": "GetJsonString",
+      "funcName": "__GetJsonString",
+      "description": "Returns all rounds from the config in JSON.",
+      "paramTypes": [],
+      "retType": {
+        "type": "string",
+        "description": "Rounds in JSON."
+      }
+    },
+    {
+      "name": "GetNextRound",
+      "funcName": "__GetNextRound",
+      "description": "Returns the next round.",
+      "paramTypes": [],
+      "retType": {
+        "type": "ptr64",
+        "description": "Round settings (KeyValues3), or 0 if not set. Valid until the round starts or is canceled."
+      }
+    },
+    {
+      "name": "GetNextRoundKeyValueJsonString",
+      "funcName": "__GetNextRoundKeyValueJsonString",
+      "description": "Returns the next round in JSON.",
+      "paramTypes": [],
+      "retType": {
+        "type": "string",
+        "description": "Round in JSON, or \"null\" if not set."
+      }
+    },
+    {
+      "name": "GetNextRoundName",
+      "funcName": "__GetNextRoundName",
+      "description": "Returns the next round name.",
+      "paramTypes": [],
+      "retType": {
+        "type": "string",
+        "description": "Round name, or empty string if not set."
+      }
+    },
+    {
+      "name": "GetRound",
+      "funcName": "__GetRound",
+      "description": "Returns a round from the config by name.",
+      "paramTypes": [
+        {
+          "type": "string",
+          "name": "name",
+          "description": "Round name."
+        }
+      ],
+      "retType": {
+        "type": "ptr64",
+        "description": "Round settings (KeyValues3), or 0 if not found. Valid until the config is reloaded."
+      }
+    },
+    {
+      "name": "GetRoundIndex",
+      "funcName": "__GetRoundIndex",
+      "description": "Returns the index of a round in the config.",
+      "paramTypes": [
+        {
+          "type": "string",
+          "name": "name",
+          "description": "Round name."
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Round index, or -1 if not found."
+      }
+    },
+    {
+      "name": "GetRoundNames",
+      "funcName": "__GetRoundNames",
+      "description": "Returns the names of all rounds from the config.",
+      "paramTypes": [],
+      "retType": {
+        "type": "string[]",
+        "description": "Round names."
+      }
+    },
+    {
+      "name": "GetRounds",
+      "funcName": "__GetRounds",
+      "description": "Returns all rounds from the config.",
+      "paramTypes": [],
+      "retType": {
+        "type": "ptr64[]",
+        "description": "Round settings (KeyValues3). Valid until the config is reloaded."
+      }
+    },
+    {
+      "name": "IsCustomRound",
+      "funcName": "__IsCustomRound",
+      "description": "Checks if the current round is custom.",
+      "paramTypes": [],
+      "retType": {
+        "type": "bool",
+        "description": "True if the current round is custom."
+      }
+    },
+    {
+      "name": "IsNextRoundCustom",
+      "funcName": "__IsNextRoundCustom",
+      "description": "Checks if the next round is custom.",
+      "paramTypes": [],
+      "retType": {
+        "type": "bool",
+        "description": "True if the next round is set."
+      }
+    },
+    {
+      "name": "IsRoundEnd",
+      "funcName": "__IsRoundEnd",
+      "description": "Checks if the round has ended (between round_end and round_start).",
+      "paramTypes": [],
+      "retType": {
+        "type": "bool",
+        "description": "True if the round has ended."
+      }
+    },
+    {
+      "name": "IsRoundExists",
+      "funcName": "__IsRoundExists",
+      "description": "Checks if a round exists in the config.",
+      "paramTypes": [
+        {
+          "type": "string",
+          "name": "name",
+          "description": "Round name."
+        }
+      ],
+      "retType": {
+        "type": "bool",
+        "description": "True if the round exists."
+      }
+    },
+    {
+      "name": "OnCancelCurrentRoundPostRegister",
+      "funcName": "__OnCancelCurrentRoundPostRegister",
+      "description": "Registers a OnCancelCurrentRoundPost callback.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Callback function.",
+          "prototype": "OnCancelCurrentRoundPostCallback"
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Listener ID.",
+        "alias": {
+          "name": "ListenerID",
+          "description": "Listener ID."
+        }
+      }
+    },
+    {
+      "name": "OnCancelCurrentRoundPostUnregister",
+      "funcName": "__OnCancelCurrentRoundPostUnregister",
+      "description": "Unregisters a OnCancelCurrentRoundPost callback.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Listener ID.",
+          "alias": {
+            "name": "ListenerID"
+          }
+        }
+      ],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "OnCancelCurrentRoundPreRegister",
+      "funcName": "__OnCancelCurrentRoundPreRegister",
+      "description": "Registers a OnCancelCurrentRoundPre callback.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Callback function.",
+          "prototype": "OnCancelCurrentRoundPreCallback"
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Listener ID.",
+        "alias": {
+          "name": "ListenerID",
+          "description": "Listener ID."
+        }
+      }
+    },
+    {
+      "name": "OnCancelCurrentRoundPreUnregister",
+      "funcName": "__OnCancelCurrentRoundPreUnregister",
+      "description": "Unregisters a OnCancelCurrentRoundPre callback.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Listener ID.",
+          "alias": {
+            "name": "ListenerID"
+          }
+        }
+      ],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "OnCancelNextRoundPostRegister",
+      "funcName": "__OnCancelNextRoundPostRegister",
+      "description": "Registers a OnCancelNextRoundPost callback.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Callback function.",
+          "prototype": "OnCancelNextRoundPostCallback"
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Listener ID.",
+        "alias": {
+          "name": "ListenerID",
+          "description": "Listener ID."
+        }
+      }
+    },
+    {
+      "name": "OnCancelNextRoundPostUnregister",
+      "funcName": "__OnCancelNextRoundPostUnregister",
+      "description": "Unregisters a OnCancelNextRoundPost callback.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Listener ID.",
+          "alias": {
+            "name": "ListenerID"
+          }
+        }
+      ],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "OnCancelNextRoundPreRegister",
+      "funcName": "__OnCancelNextRoundPreRegister",
+      "description": "Registers a OnCancelNextRoundPre callback.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Callback function.",
+          "prototype": "OnCancelNextRoundPreCallback"
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Listener ID.",
+        "alias": {
+          "name": "ListenerID",
+          "description": "Listener ID."
+        }
+      }
+    },
+    {
+      "name": "OnCancelNextRoundPreUnregister",
+      "funcName": "__OnCancelNextRoundPreUnregister",
+      "description": "Unregisters a OnCancelNextRoundPre callback.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Listener ID.",
+          "alias": {
+            "name": "ListenerID"
+          }
+        }
+      ],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "OnConfigLoadRegister",
+      "funcName": "__OnConfigLoadRegister",
+      "description": "Registers a OnConfigLoad callback.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Callback function.",
+          "prototype": "OnConfigLoadCallback"
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Listener ID.",
+        "alias": {
+          "name": "ListenerID",
+          "description": "Listener ID."
+        }
+      }
+    },
+    {
+      "name": "OnConfigLoadUnregister",
+      "funcName": "__OnConfigLoadUnregister",
+      "description": "Unregisters a OnConfigLoad callback.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Listener ID.",
+          "alias": {
+            "name": "ListenerID"
+          }
+        }
+      ],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "OnConfigLoadedRegister",
+      "funcName": "__OnConfigLoadedRegister",
+      "description": "Registers a OnConfigLoaded callback.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Callback function.",
+          "prototype": "OnConfigLoadedCallback"
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Listener ID.",
+        "alias": {
+          "name": "ListenerID",
+          "description": "Listener ID."
+        }
+      }
+    },
+    {
+      "name": "OnConfigLoadedUnregister",
+      "funcName": "__OnConfigLoadedUnregister",
+      "description": "Unregisters a OnConfigLoaded callback.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Listener ID.",
+          "alias": {
+            "name": "ListenerID"
+          }
+        }
+      ],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "OnConfigSectionLoadPostRegister",
+      "funcName": "__OnConfigSectionLoadPostRegister",
+      "description": "Registers a OnConfigSectionLoadPost callback.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Callback function.",
+          "prototype": "OnConfigSectionLoadPostCallback"
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Listener ID.",
+        "alias": {
+          "name": "ListenerID",
+          "description": "Listener ID."
+        }
+      }
+    },
+    {
+      "name": "OnConfigSectionLoadPostUnregister",
+      "funcName": "__OnConfigSectionLoadPostUnregister",
+      "description": "Unregisters a OnConfigSectionLoadPost callback.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Listener ID.",
+          "alias": {
+            "name": "ListenerID"
+          }
+        }
+      ],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "OnConfigSectionLoadRegister",
+      "funcName": "__OnConfigSectionLoadRegister",
+      "description": "Registers a OnConfigSectionLoad callback.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Callback function.",
+          "prototype": "OnConfigSectionLoadCallback"
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Listener ID.",
+        "alias": {
+          "name": "ListenerID",
+          "description": "Listener ID."
+        }
+      }
+    },
+    {
+      "name": "OnConfigSectionLoadUnregister",
+      "funcName": "__OnConfigSectionLoadUnregister",
+      "description": "Unregisters a OnConfigSectionLoad callback.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Listener ID.",
+          "alias": {
+            "name": "ListenerID"
+          }
+        }
+      ],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "OnForceRoundStartPostRegister",
+      "funcName": "__OnForceRoundStartPostRegister",
+      "description": "Registers a OnForceRoundStartPost callback.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Callback function.",
+          "prototype": "OnForceRoundStartPostCallback"
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Listener ID.",
+        "alias": {
+          "name": "ListenerID",
+          "description": "Listener ID."
+        }
+      }
+    },
+    {
+      "name": "OnForceRoundStartPostUnregister",
+      "funcName": "__OnForceRoundStartPostUnregister",
+      "description": "Unregisters a OnForceRoundStartPost callback.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Listener ID.",
+          "alias": {
+            "name": "ListenerID"
+          }
+        }
+      ],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "OnForceRoundStartPreRegister",
+      "funcName": "__OnForceRoundStartPreRegister",
+      "description": "Registers a OnForceRoundStartPre callback.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Callback function.",
+          "prototype": "OnForceRoundStartPreCallback"
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Listener ID.",
+        "alias": {
+          "name": "ListenerID",
+          "description": "Listener ID."
+        }
+      }
+    },
+    {
+      "name": "OnForceRoundStartPreUnregister",
+      "funcName": "__OnForceRoundStartPreUnregister",
+      "description": "Unregisters a OnForceRoundStartPre callback.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Listener ID.",
+          "alias": {
+            "name": "ListenerID"
+          }
+        }
+      ],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "OnPlayerSpawnRegister",
+      "funcName": "__OnPlayerSpawnRegister",
+      "description": "Registers a OnPlayerSpawn callback.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Callback function.",
+          "prototype": "OnPlayerSpawnCallback"
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Listener ID.",
+        "alias": {
+          "name": "ListenerID",
+          "description": "Listener ID."
+        }
+      }
+    },
+    {
+      "name": "OnPlayerSpawnUnregister",
+      "funcName": "__OnPlayerSpawnUnregister",
+      "description": "Unregisters a OnPlayerSpawn callback.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Listener ID.",
+          "alias": {
+            "name": "ListenerID"
+          }
+        }
+      ],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "OnRoundEndRegister",
+      "funcName": "__OnRoundEndRegister",
+      "description": "Registers a OnRoundEnd callback.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Callback function.",
+          "prototype": "OnRoundEndCallback"
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Listener ID.",
+        "alias": {
+          "name": "ListenerID",
+          "description": "Listener ID."
+        }
+      }
+    },
+    {
+      "name": "OnRoundEndUnregister",
+      "funcName": "__OnRoundEndUnregister",
+      "description": "Unregisters a OnRoundEnd callback.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Listener ID.",
+          "alias": {
+            "name": "ListenerID"
+          }
+        }
+      ],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "OnRoundStartRegister",
+      "funcName": "__OnRoundStartRegister",
+      "description": "Registers a OnRoundStart callback.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Callback function.",
+          "prototype": "OnRoundStartCallback"
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Listener ID.",
+        "alias": {
+          "name": "ListenerID",
+          "description": "Listener ID."
+        }
+      }
+    },
+    {
+      "name": "OnRoundStartUnregister",
+      "funcName": "__OnRoundStartUnregister",
+      "description": "Unregisters a OnRoundStart callback.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Listener ID.",
+          "alias": {
+            "name": "ListenerID"
+          }
+        }
+      ],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "OnSetNextRoundPostRegister",
+      "funcName": "__OnSetNextRoundPostRegister",
+      "description": "Registers a OnSetNextRoundPost callback.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Callback function.",
+          "prototype": "OnSetNextRoundPostCallback"
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Listener ID.",
+        "alias": {
+          "name": "ListenerID",
+          "description": "Listener ID."
+        }
+      }
+    },
+    {
+      "name": "OnSetNextRoundPostUnregister",
+      "funcName": "__OnSetNextRoundPostUnregister",
+      "description": "Unregisters a OnSetNextRoundPost callback.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Listener ID.",
+          "alias": {
+            "name": "ListenerID"
+          }
+        }
+      ],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "OnSetNextRoundPreRegister",
+      "funcName": "__OnSetNextRoundPreRegister",
+      "description": "Registers a OnSetNextRoundPre callback.",
+      "paramTypes": [
+        {
+          "type": "function",
+          "name": "callback",
+          "description": "Callback function.",
+          "prototype": "OnSetNextRoundPreCallback"
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Listener ID.",
+        "alias": {
+          "name": "ListenerID",
+          "description": "Listener ID."
+        }
+      }
+    },
+    {
+      "name": "OnSetNextRoundPreUnregister",
+      "funcName": "__OnSetNextRoundPreUnregister",
+      "description": "Unregisters a OnSetNextRoundPre callback.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "index",
+          "description": "Listener ID.",
+          "alias": {
+            "name": "ListenerID"
+          }
+        }
+      ],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "ReloadConfig",
+      "funcName": "__ReloadConfig",
+      "description": "Reloads the config.",
+      "paramTypes": [],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "SetNextRound",
+      "funcName": "__SetNextRound",
+      "description": "Sets the next round by name.",
+      "paramTypes": [
+        {
+          "type": "string",
+          "name": "name",
+          "description": "Round name."
+        },
+        {
+          "type": "int32",
+          "name": "client",
+          "description": "Player slot of the initiator."
+        }
+      ],
+      "retType": {
+        "type": "bool",
+        "description": "True if the round was set."
+      }
+    },
+    {
+      "name": "SetNextRoundFromJson",
+      "funcName": "__SetNextRoundFromJson",
+      "description": "Sets the next round from JSON settings.",
+      "paramTypes": [
+        {
+          "type": "string",
+          "name": "presetRound",
+          "description": "Round settings in JSON."
+        },
+        {
+          "type": "int32",
+          "name": "client",
+          "description": "Player slot of the initiator."
+        }
+      ],
+      "retType": {
+        "type": "bool",
+        "description": "True if the round was set."
+      }
+    },
+    {
+      "name": "SetNextRoundFromKeyValue",
+      "funcName": "__SetNextRoundFromKeyValue",
+      "description": "Sets the next round from KeyValues3 settings. The settings are copied.",
+      "paramTypes": [
+        {
+          "type": "ptr64",
+          "name": "round",
+          "description": "Round settings (KeyValues3)."
+        },
+        {
+          "type": "int32",
+          "name": "client",
+          "description": "Player slot of the initiator."
+        }
+      ],
+      "retType": {
+        "type": "bool",
+        "description": "True if the round was set."
+      }
+    },
+    {
+      "name": "StartRound",
+      "funcName": "__StartRound",
+      "description": "Ends the current round and starts a round by name. The next round is kept.",
+      "paramTypes": [
+        {
+          "type": "string",
+          "name": "name",
+          "description": "Round name."
+        },
+        {
+          "type": "int32",
+          "name": "client",
+          "description": "Player slot of the initiator."
+        }
+      ],
+      "retType": {
+        "type": "bool",
+        "description": "True if the round was started."
+      }
+    },
+    {
+      "name": "StartRoundFromKeyValue",
+      "funcName": "__StartRoundFromKeyValue",
+      "description": "Ends the current round and starts a round from KeyValues3 settings. The settings are copied.",
+      "paramTypes": [
+        {
+          "type": "ptr64",
+          "name": "round",
+          "description": "Round settings (KeyValues3)."
+        },
+        {
+          "type": "int32",
+          "name": "client",
+          "description": "Player slot of the initiator."
+        }
+      ],
+      "retType": {
+        "type": "bool",
+        "description": "True if the round was started."
+      }
+    },
+    {
+      "name": "StopRound",
+      "funcName": "__StopRound",
+      "description": "Ends the current custom round.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "client",
+          "description": "Player slot of the initiator."
+        }
+      ],
+      "retType": {
+        "type": "bool",
+        "description": "True if the round was stopped."
+      }
+    }
+  ],
+  "prototypes": [
+    {
+      "name": "OnCancelCurrentRoundPostCallback",
+      "funcName": "_",
+      "description": "Called after the current round is cancelled.",
+      "paramTypes": [
+        {
+          "type": "ptr64",
+          "name": "round",
+          "description": "Round settings (KeyValues3). Valid only during the call."
+        },
+        {
+          "type": "int32",
+          "name": "client",
+          "description": "Player slot of the initiator."
+        }
+      ],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "OnCancelCurrentRoundPreCallback",
+      "funcName": "_",
+      "description": "Called before the current round is cancelled.",
+      "paramTypes": [
+        {
+          "type": "ptr64",
+          "name": "round",
+          "description": "Round settings (KeyValues3). Valid only during the call."
+        },
+        {
+          "type": "int32",
+          "name": "client",
+          "description": "Player slot of the initiator."
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Handled or Stop to block, Continue or Changed to allow.",
+        "enum": "PluginResult"
+      }
+    },
+    {
+      "name": "OnCancelNextRoundPostCallback",
+      "funcName": "_",
+      "description": "Called after the next round is cancelled.",
+      "paramTypes": [
+        {
+          "type": "ptr64",
+          "name": "round",
+          "description": "Round settings (KeyValues3). Valid only during the call."
+        },
+        {
+          "type": "int32",
+          "name": "client",
+          "description": "Player slot of the initiator."
+        }
+      ],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "OnCancelNextRoundPreCallback",
+      "funcName": "_",
+      "description": "Called before the next round is cancelled.",
+      "paramTypes": [
+        {
+          "type": "ptr64",
+          "name": "round",
+          "description": "Round settings (KeyValues3). Valid only during the call."
+        },
+        {
+          "type": "int32",
+          "name": "client",
+          "description": "Player slot of the initiator."
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Handled or Stop to block, Continue or Changed to allow.",
+        "enum": "PluginResult"
+      }
+    },
+    {
+      "name": "OnConfigLoadCallback",
+      "funcName": "_",
+      "description": "Called before the config is loaded.",
+      "paramTypes": [],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "OnConfigLoadedCallback",
+      "funcName": "_",
+      "description": "Called after the config is loaded.",
+      "paramTypes": [
+        {
+          "type": "ptr64[]",
+          "name": "rounds",
+          "description": "Loaded rounds (KeyValues3). Valid until the config is reloaded."
+        }
+      ],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "OnConfigSectionLoadCallback",
+      "funcName": "_",
+      "description": "Called for each round while the config is loading.",
+      "paramTypes": [
+        {
+          "type": "ptr64",
+          "name": "round",
+          "description": "Round settings (KeyValues3). Can be modified."
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Handled or Stop to skip the round, Continue or Changed to load it.",
+        "enum": "PluginResult"
+      }
+    },
+    {
+      "name": "OnConfigSectionLoadPostCallback",
+      "funcName": "_",
+      "description": "Called after a round is loaded from the config.",
+      "paramTypes": [
+        {
+          "type": "ptr64",
+          "name": "round",
+          "description": "Round settings (KeyValues3). Valid until the config is reloaded."
+        }
+      ],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "OnForceRoundStartPostCallback",
+      "funcName": "_",
+      "description": "Called after a round is force started.",
+      "paramTypes": [
+        {
+          "type": "ptr64",
+          "name": "round",
+          "description": "Round settings (KeyValues3). Valid only during the call."
+        },
+        {
+          "type": "int32",
+          "name": "client",
+          "description": "Player slot of the initiator."
+        }
+      ],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "OnForceRoundStartPreCallback",
+      "funcName": "_",
+      "description": "Called before a round is force started.",
+      "paramTypes": [
+        {
+          "type": "ptr64",
+          "name": "round",
+          "description": "Round settings (KeyValues3). Can be modified. Valid only during the call."
+        },
+        {
+          "type": "int32",
+          "name": "client",
+          "description": "Player slot of the initiator."
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Handled or Stop to block, Continue or Changed to allow.",
+        "enum": "PluginResult"
+      }
+    },
+    {
+      "name": "OnPlayerSpawnCallback",
+      "funcName": "_",
+      "description": "Called after a player spawns.",
+      "paramTypes": [
+        {
+          "type": "int32",
+          "name": "client",
+          "description": "Player slot."
+        },
+        {
+          "type": "ptr64",
+          "name": "round",
+          "description": "Current round settings (KeyValues3), or 0 if the round is not custom. Valid only during the call."
+        }
+      ],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "OnRoundEndCallback",
+      "funcName": "_",
+      "description": "Called when a round ends.",
+      "paramTypes": [
+        {
+          "type": "ptr64",
+          "name": "round",
+          "description": "Current round settings (KeyValues3), or 0 if the round is not custom. Valid only during the call."
+        }
+      ],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "OnRoundStartCallback",
+      "funcName": "_",
+      "description": "Called when a round starts.",
+      "paramTypes": [
+        {
+          "type": "ptr64",
+          "name": "round",
+          "description": "Current round settings (KeyValues3), or 0 if the round is not custom. Valid only during the call."
+        }
+      ],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "OnSetNextRoundPostCallback",
+      "funcName": "_",
+      "description": "Called after the next round is set.",
+      "paramTypes": [
+        {
+          "type": "ptr64",
+          "name": "round",
+          "description": "Round settings (KeyValues3). Valid only during the call."
+        },
+        {
+          "type": "int32",
+          "name": "client",
+          "description": "Player slot of the initiator."
+        }
+      ],
+      "retType": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "OnSetNextRoundPreCallback",
+      "funcName": "_",
+      "description": "Called before the next round is set.",
+      "paramTypes": [
+        {
+          "type": "ptr64",
+          "name": "round",
+          "description": "Round settings (KeyValues3). Can be modified. Valid only during the call."
+        },
+        {
+          "type": "int32",
+          "name": "client",
+          "description": "Player slot of the initiator."
+        }
+      ],
+      "retType": {
+        "type": "int32",
+        "description": "Handled or Stop to block, Continue or Changed to allow.",
+        "enum": "PluginResult"
+      }
+    }
+  ],
+  "enums": [
+    {
+      "name": "PluginResult",
+      "description": "Handled or Stop to skip the round, Continue or Changed to load it.",
+      "values": [
+        {
+          "name": "Continue",
+          "value": 0
+        },
+        {
+          "name": "Changed",
+          "value": 1
+        },
+        {
+          "name": "Handled",
+          "value": 2
+        },
+        {
+          "name": "Stop",
+          "value": 3
+        }
+      ]
+    }
+  ]
+}
