@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/untrustedmodders/plugify/refs/heads/main/schemas/plugin.schema.json",
   "name": "customrounds",
-  "version": "1.2.11",
+  "version": "2.0.0",
   "description": "Custom rounds for CS2: loads round presets from a JSON config and passes their settings to other plugins as KeyValues3.",
   "author": "Fr4nch",
   "website": "https://github.com/fr0nch",
@@ -9,7 +9,7 @@
   "dependencies": [
     {
       "name": "s2sdk",
-      "constraints": "\u003e=3.0.0"
+      "constraints": ">=3.0.0"
     },
     {
       "name": "permissions",
