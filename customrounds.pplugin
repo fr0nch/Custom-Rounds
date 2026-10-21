@@ -32,8 +32,9 @@
       ],
       "retType": {
         "type": "bool",
-        "description": "True if the round was cancelled."
-      }
+        "description": "True if the round was canceled."
+      },
+      "group": "Rounds"
     },
     {
       "name": "GetCurrentRound",
@@ -43,7 +44,8 @@
       "retType": {
         "type": "ptr64",
         "description": "Round settings (KeyValues3), or 0 if the round is not custom. Valid until the round ends."
-      }
+      },
+      "group": "Rounds"
     },
     {
       "name": "GetCurrentRoundJsonString",
@@ -52,8 +54,9 @@
       "paramTypes": [],
       "retType": {
         "type": "string",
-        "description": "Round in JSON, or \"null\" if the round is not custom."
-      }
+        "description": "Round in JSON, or 'null' if the round is not custom."
+      },
+      "group": "Rounds"
     },
     {
       "name": "GetCurrentRoundName",
@@ -63,7 +66,8 @@
       "retType": {
         "type": "string",
         "description": "Round name, or empty string if the round is not custom."
-      }
+      },
+      "group": "Rounds"
     },
     {
       "name": "GetJsonString",
@@ -73,7 +77,8 @@
       "retType": {
         "type": "string",
         "description": "Rounds in JSON."
-      }
+      },
+      "group": "Config"
     },
     {
       "name": "GetNextRound",
@@ -83,7 +88,8 @@
       "retType": {
         "type": "ptr64",
         "description": "Round settings (KeyValues3), or 0 if not set. Valid until the round starts or is canceled."
-      }
+      },
+      "group": "Rounds"
     },
     {
       "name": "GetNextRoundKeyValueJsonString",
@@ -92,8 +98,9 @@
       "paramTypes": [],
       "retType": {
         "type": "string",
-        "description": "Round in JSON, or \"null\" if not set."
-      }
+        "description": "Round in JSON, or 'null' if not set."
+      },
+      "group": "Rounds"
     },
     {
       "name": "GetNextRoundName",
@@ -103,7 +110,8 @@
       "retType": {
         "type": "string",
         "description": "Round name, or empty string if not set."
-      }
+      },
+      "group": "Rounds"
     },
     {
       "name": "GetRound",
@@ -119,7 +127,8 @@
       "retType": {
         "type": "ptr64",
         "description": "Round settings (KeyValues3), or 0 if not found. Valid until the config is reloaded."
-      }
+      },
+      "group": "Config"
     },
     {
       "name": "GetRoundIndex",
@@ -135,7 +144,8 @@
       "retType": {
         "type": "int32",
         "description": "Round index, or -1 if not found."
-      }
+      },
+      "group": "Config"
     },
     {
       "name": "GetRoundNames",
@@ -145,7 +155,8 @@
       "retType": {
         "type": "string[]",
         "description": "Round names."
-      }
+      },
+      "group": "Config"
     },
     {
       "name": "GetRounds",
@@ -155,7 +166,8 @@
       "retType": {
         "type": "ptr64[]",
         "description": "Round settings (KeyValues3). Valid until the config is reloaded."
-      }
+      },
+      "group": "Config"
     },
     {
       "name": "IsCustomRound",
@@ -165,7 +177,8 @@
       "retType": {
         "type": "bool",
         "description": "True if the current round is custom."
-      }
+      },
+      "group": "Rounds"
     },
     {
       "name": "IsNextRoundCustom",
@@ -175,7 +188,8 @@
       "retType": {
         "type": "bool",
         "description": "True if the next round is set."
-      }
+      },
+      "group": "Rounds"
     },
     {
       "name": "IsRoundEnd",
@@ -185,7 +199,8 @@
       "retType": {
         "type": "bool",
         "description": "True if the round has ended."
-      }
+      },
+      "group": "Rounds"
     },
     {
       "name": "IsRoundExists",
@@ -201,11 +216,12 @@
       "retType": {
         "type": "bool",
         "description": "True if the round exists."
-      }
+      },
+      "group": "Config"
     },
     {
-      "name": "OnCancelCurrentRoundPostRegister",
-      "funcName": "__OnCancelCurrentRoundPostRegister",
+      "name": "OnCancelCurrentRoundPost_Register",
+      "funcName": "__OnCancelCurrentRoundPost_Register",
       "description": "Registers a OnCancelCurrentRoundPost callback.",
       "paramTypes": [
         {
@@ -222,11 +238,12 @@
           "name": "ListenerID",
           "description": "Listener ID."
         }
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnCancelCurrentRoundPostUnregister",
-      "funcName": "__OnCancelCurrentRoundPostUnregister",
+      "name": "OnCancelCurrentRoundPost_Unregister",
+      "funcName": "__OnCancelCurrentRoundPost_Unregister",
       "description": "Unregisters a OnCancelCurrentRoundPost callback.",
       "paramTypes": [
         {
@@ -240,11 +257,12 @@
       ],
       "retType": {
         "type": "void"
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnCancelCurrentRoundPreRegister",
-      "funcName": "__OnCancelCurrentRoundPreRegister",
+      "name": "OnCancelCurrentRoundPre_Register",
+      "funcName": "__OnCancelCurrentRoundPre_Register",
       "description": "Registers a OnCancelCurrentRoundPre callback.",
       "paramTypes": [
         {
@@ -261,11 +279,12 @@
           "name": "ListenerID",
           "description": "Listener ID."
         }
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnCancelCurrentRoundPreUnregister",
-      "funcName": "__OnCancelCurrentRoundPreUnregister",
+      "name": "OnCancelCurrentRoundPre_Unregister",
+      "funcName": "__OnCancelCurrentRoundPre_Unregister",
       "description": "Unregisters a OnCancelCurrentRoundPre callback.",
       "paramTypes": [
         {
@@ -279,11 +298,12 @@
       ],
       "retType": {
         "type": "void"
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnCancelNextRoundPostRegister",
-      "funcName": "__OnCancelNextRoundPostRegister",
+      "name": "OnCancelNextRoundPost_Register",
+      "funcName": "__OnCancelNextRoundPost_Register",
       "description": "Registers a OnCancelNextRoundPost callback.",
       "paramTypes": [
         {
@@ -300,11 +320,12 @@
           "name": "ListenerID",
           "description": "Listener ID."
         }
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnCancelNextRoundPostUnregister",
-      "funcName": "__OnCancelNextRoundPostUnregister",
+      "name": "OnCancelNextRoundPost_Unregister",
+      "funcName": "__OnCancelNextRoundPost_Unregister",
       "description": "Unregisters a OnCancelNextRoundPost callback.",
       "paramTypes": [
         {
@@ -318,11 +339,12 @@
       ],
       "retType": {
         "type": "void"
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnCancelNextRoundPreRegister",
-      "funcName": "__OnCancelNextRoundPreRegister",
+      "name": "OnCancelNextRoundPre_Register",
+      "funcName": "__OnCancelNextRoundPre_Register",
       "description": "Registers a OnCancelNextRoundPre callback.",
       "paramTypes": [
         {
@@ -339,11 +361,12 @@
           "name": "ListenerID",
           "description": "Listener ID."
         }
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnCancelNextRoundPreUnregister",
-      "funcName": "__OnCancelNextRoundPreUnregister",
+      "name": "OnCancelNextRoundPre_Unregister",
+      "funcName": "__OnCancelNextRoundPre_Unregister",
       "description": "Unregisters a OnCancelNextRoundPre callback.",
       "paramTypes": [
         {
@@ -357,11 +380,12 @@
       ],
       "retType": {
         "type": "void"
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnConfigLoadRegister",
-      "funcName": "__OnConfigLoadRegister",
+      "name": "OnConfigLoad_Register",
+      "funcName": "__OnConfigLoad_Register",
       "description": "Registers a OnConfigLoad callback.",
       "paramTypes": [
         {
@@ -378,11 +402,12 @@
           "name": "ListenerID",
           "description": "Listener ID."
         }
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnConfigLoadUnregister",
-      "funcName": "__OnConfigLoadUnregister",
+      "name": "OnConfigLoad_Unregister",
+      "funcName": "__OnConfigLoad_Unregister",
       "description": "Unregisters a OnConfigLoad callback.",
       "paramTypes": [
         {
@@ -396,11 +421,12 @@
       ],
       "retType": {
         "type": "void"
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnConfigLoadedRegister",
-      "funcName": "__OnConfigLoadedRegister",
+      "name": "OnConfigLoaded_Register",
+      "funcName": "__OnConfigLoaded_Register",
       "description": "Registers a OnConfigLoaded callback.",
       "paramTypes": [
         {
@@ -417,11 +443,12 @@
           "name": "ListenerID",
           "description": "Listener ID."
         }
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnConfigLoadedUnregister",
-      "funcName": "__OnConfigLoadedUnregister",
+      "name": "OnConfigLoaded_Unregister",
+      "funcName": "__OnConfigLoaded_Unregister",
       "description": "Unregisters a OnConfigLoaded callback.",
       "paramTypes": [
         {
@@ -435,11 +462,12 @@
       ],
       "retType": {
         "type": "void"
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnConfigSectionLoadPostRegister",
-      "funcName": "__OnConfigSectionLoadPostRegister",
+      "name": "OnConfigSectionLoadPost_Register",
+      "funcName": "__OnConfigSectionLoadPost_Register",
       "description": "Registers a OnConfigSectionLoadPost callback.",
       "paramTypes": [
         {
@@ -456,11 +484,12 @@
           "name": "ListenerID",
           "description": "Listener ID."
         }
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnConfigSectionLoadPostUnregister",
-      "funcName": "__OnConfigSectionLoadPostUnregister",
+      "name": "OnConfigSectionLoadPost_Unregister",
+      "funcName": "__OnConfigSectionLoadPost_Unregister",
       "description": "Unregisters a OnConfigSectionLoadPost callback.",
       "paramTypes": [
         {
@@ -474,11 +503,12 @@
       ],
       "retType": {
         "type": "void"
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnConfigSectionLoadRegister",
-      "funcName": "__OnConfigSectionLoadRegister",
+      "name": "OnConfigSectionLoad_Register",
+      "funcName": "__OnConfigSectionLoad_Register",
       "description": "Registers a OnConfigSectionLoad callback.",
       "paramTypes": [
         {
@@ -495,11 +525,12 @@
           "name": "ListenerID",
           "description": "Listener ID."
         }
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnConfigSectionLoadUnregister",
-      "funcName": "__OnConfigSectionLoadUnregister",
+      "name": "OnConfigSectionLoad_Unregister",
+      "funcName": "__OnConfigSectionLoad_Unregister",
       "description": "Unregisters a OnConfigSectionLoad callback.",
       "paramTypes": [
         {
@@ -513,11 +544,12 @@
       ],
       "retType": {
         "type": "void"
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnForceRoundStartPostRegister",
-      "funcName": "__OnForceRoundStartPostRegister",
+      "name": "OnForceRoundStartPost_Register",
+      "funcName": "__OnForceRoundStartPost_Register",
       "description": "Registers a OnForceRoundStartPost callback.",
       "paramTypes": [
         {
@@ -534,11 +566,12 @@
           "name": "ListenerID",
           "description": "Listener ID."
         }
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnForceRoundStartPostUnregister",
-      "funcName": "__OnForceRoundStartPostUnregister",
+      "name": "OnForceRoundStartPost_Unregister",
+      "funcName": "__OnForceRoundStartPost_Unregister",
       "description": "Unregisters a OnForceRoundStartPost callback.",
       "paramTypes": [
         {
@@ -552,11 +585,12 @@
       ],
       "retType": {
         "type": "void"
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnForceRoundStartPreRegister",
-      "funcName": "__OnForceRoundStartPreRegister",
+      "name": "OnForceRoundStartPre_Register",
+      "funcName": "__OnForceRoundStartPre_Register",
       "description": "Registers a OnForceRoundStartPre callback.",
       "paramTypes": [
         {
@@ -573,11 +607,12 @@
           "name": "ListenerID",
           "description": "Listener ID."
         }
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnForceRoundStartPreUnregister",
-      "funcName": "__OnForceRoundStartPreUnregister",
+      "name": "OnForceRoundStartPre_Unregister",
+      "funcName": "__OnForceRoundStartPre_Unregister",
       "description": "Unregisters a OnForceRoundStartPre callback.",
       "paramTypes": [
         {
@@ -591,11 +626,12 @@
       ],
       "retType": {
         "type": "void"
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnPlayerSpawnRegister",
-      "funcName": "__OnPlayerSpawnRegister",
+      "name": "OnPlayerSpawn_Register",
+      "funcName": "__OnPlayerSpawn_Register",
       "description": "Registers a OnPlayerSpawn callback.",
       "paramTypes": [
         {
@@ -612,11 +648,12 @@
           "name": "ListenerID",
           "description": "Listener ID."
         }
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnPlayerSpawnUnregister",
-      "funcName": "__OnPlayerSpawnUnregister",
+      "name": "OnPlayerSpawn_Unregister",
+      "funcName": "__OnPlayerSpawn_Unregister",
       "description": "Unregisters a OnPlayerSpawn callback.",
       "paramTypes": [
         {
@@ -630,11 +667,12 @@
       ],
       "retType": {
         "type": "void"
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnRoundEndRegister",
-      "funcName": "__OnRoundEndRegister",
+      "name": "OnRoundEnd_Register",
+      "funcName": "__OnRoundEnd_Register",
       "description": "Registers a OnRoundEnd callback.",
       "paramTypes": [
         {
@@ -651,11 +689,12 @@
           "name": "ListenerID",
           "description": "Listener ID."
         }
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnRoundEndUnregister",
-      "funcName": "__OnRoundEndUnregister",
+      "name": "OnRoundEnd_Unregister",
+      "funcName": "__OnRoundEnd_Unregister",
       "description": "Unregisters a OnRoundEnd callback.",
       "paramTypes": [
         {
@@ -669,11 +708,12 @@
       ],
       "retType": {
         "type": "void"
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnRoundStartRegister",
-      "funcName": "__OnRoundStartRegister",
+      "name": "OnRoundStart_Register",
+      "funcName": "__OnRoundStart_Register",
       "description": "Registers a OnRoundStart callback.",
       "paramTypes": [
         {
@@ -690,11 +730,12 @@
           "name": "ListenerID",
           "description": "Listener ID."
         }
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnRoundStartUnregister",
-      "funcName": "__OnRoundStartUnregister",
+      "name": "OnRoundStart_Unregister",
+      "funcName": "__OnRoundStart_Unregister",
       "description": "Unregisters a OnRoundStart callback.",
       "paramTypes": [
         {
@@ -708,11 +749,12 @@
       ],
       "retType": {
         "type": "void"
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnSetNextRoundPostRegister",
-      "funcName": "__OnSetNextRoundPostRegister",
+      "name": "OnSetNextRoundPost_Register",
+      "funcName": "__OnSetNextRoundPost_Register",
       "description": "Registers a OnSetNextRoundPost callback.",
       "paramTypes": [
         {
@@ -729,11 +771,12 @@
           "name": "ListenerID",
           "description": "Listener ID."
         }
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnSetNextRoundPostUnregister",
-      "funcName": "__OnSetNextRoundPostUnregister",
+      "name": "OnSetNextRoundPost_Unregister",
+      "funcName": "__OnSetNextRoundPost_Unregister",
       "description": "Unregisters a OnSetNextRoundPost callback.",
       "paramTypes": [
         {
@@ -747,11 +790,12 @@
       ],
       "retType": {
         "type": "void"
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnSetNextRoundPreRegister",
-      "funcName": "__OnSetNextRoundPreRegister",
+      "name": "OnSetNextRoundPre_Register",
+      "funcName": "__OnSetNextRoundPre_Register",
       "description": "Registers a OnSetNextRoundPre callback.",
       "paramTypes": [
         {
@@ -768,11 +812,12 @@
           "name": "ListenerID",
           "description": "Listener ID."
         }
-      }
+      },
+      "group": "Listeners"
     },
     {
-      "name": "OnSetNextRoundPreUnregister",
-      "funcName": "__OnSetNextRoundPreUnregister",
+      "name": "OnSetNextRoundPre_Unregister",
+      "funcName": "__OnSetNextRoundPre_Unregister",
       "description": "Unregisters a OnSetNextRoundPre callback.",
       "paramTypes": [
         {
@@ -786,7 +831,8 @@
       ],
       "retType": {
         "type": "void"
-      }
+      },
+      "group": "Listeners"
     },
     {
       "name": "ReloadConfig",
@@ -795,7 +841,8 @@
       "paramTypes": [],
       "retType": {
         "type": "void"
-      }
+      },
+      "group": "Config"
     },
     {
       "name": "SetNextRound",
@@ -816,7 +863,8 @@
       "retType": {
         "type": "bool",
         "description": "True if the round was set."
-      }
+      },
+      "group": "Rounds"
     },
     {
       "name": "SetNextRoundFromJson",
@@ -837,7 +885,8 @@
       "retType": {
         "type": "bool",
         "description": "True if the round was set."
-      }
+      },
+      "group": "Rounds"
     },
     {
       "name": "SetNextRoundFromKeyValue",
@@ -858,7 +907,8 @@
       "retType": {
         "type": "bool",
         "description": "True if the round was set."
-      }
+      },
+      "group": "Rounds"
     },
     {
       "name": "StartRound",
@@ -879,7 +929,8 @@
       "retType": {
         "type": "bool",
         "description": "True if the round was started."
-      }
+      },
+      "group": "Rounds"
     },
     {
       "name": "StartRoundFromKeyValue",
@@ -900,7 +951,8 @@
       "retType": {
         "type": "bool",
         "description": "True if the round was started."
-      }
+      },
+      "group": "Rounds"
     },
     {
       "name": "StopRound",
@@ -916,7 +968,8 @@
       "retType": {
         "type": "bool",
         "description": "True if the round was stopped."
-      }
+      },
+      "group": "Rounds"
     }
   ],
   "prototypes": [
