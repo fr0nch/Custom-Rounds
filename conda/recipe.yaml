@@ -1,0 +1,44 @@
+context:
+  name: customrounds
+  version: ${{ env.get("PACKAGE_VERSION") }}
+
+package:
+  name: ${{ name }}
+  version: ${{ version }}
+
+source:
+  path: .
+  use_gitignore: false
+
+build:
+  number: 0
+  string: ${{ target_platform | replace("-", "_") }}
+  dynamic_linking:
+    missing_dso_allowlist:
+      - if: linux
+        then:
+          - "*/ld-linux*.so.*"
+          - "*/libc.so.*"
+          - "*/libm.so.*"
+          - "*/libdl.so.*"
+          - "*/libpthread.so.*"
+          - "*/librt.so.*"
+
+requirements:
+  run:
+    - if: linux
+      then: __glibc >=2.28
+
+about:
+  homepage: https://github.com/${{ env.get("GITHUB_REPOSITORY", default="fr0nch/Custom-Rounds") }}
+  license: GPL-3.0-only
+  license_file: LICENSE
+  summary: "Custom rounds for CS2: loads round presets from a JSON config and passes their settings to other plugins as KeyValues3."
+  description: |
+    Custom rounds for CS2: loads round presets from a JSON config and passes their settings to other plugins as KeyValues3.
+  documentation: https://github.com/${{ env.get("GITHUB_REPOSITORY", default="fr0nch/Custom-Rounds") }}/blob/main/README.md
+  repository: https://github.com/${{ env.get("GITHUB_REPOSITORY", default="fr0nch/Custom-Rounds") }}
+
+extra:
+  recipe-maintainers:
+    - ${{ env.get("GITHUB_ACTOR", default="fr0nch") }}
